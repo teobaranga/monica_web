@@ -17,7 +17,7 @@ on:
 
 env:
   default-php-version: '8.2'
-  node-version: 20
+  node-version: 22
 
 concurrency:
   group: Unit tests ${{ github.ref }}

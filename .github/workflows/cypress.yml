@@ -5,7 +5,7 @@ on:
     types: [labeled, opened, synchronize, reopened]
 
 env:
-  node-version: 20
+  node-version: 22
 
 concurrency:
   group: Cypress tests ${{ github.ref }}
