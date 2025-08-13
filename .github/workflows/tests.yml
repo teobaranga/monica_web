@@ -240,9 +240,18 @@ jobs:
       - name: Test coverage page
         run: REQUEST_URI=/ php scripts/tests/server-cc.php
 
+      - uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          chrome-version: 126
+          install-chromedriver: true
+
     # Test
       - name: Upgrade Chrome Driver
-        run: php artisan dusk:chrome-driver --detect
+        run: |
+          # https://stackoverflow.com/questions/78827506/invalid-path-to-chromedriver-when-running-laravel-dusk
+          # revert to `--detect` once updating to Laravel 9+
+          php artisan dusk:chrome-driver 126
       - name: Start Chrome Driver
         run: |
           chmod -R 0755 vendor/laravel/dusk/bin/
@@ -257,6 +266,7 @@ jobs:
         run: php artisan dusk --log-junit results/junit/results0.xml
         env:
           APP_URL: http://localhost:8000
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Fix coverage
         run: |

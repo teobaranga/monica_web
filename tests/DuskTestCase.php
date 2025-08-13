@@ -51,8 +51,15 @@ abstract class DuskTestCase extends BaseTestCase
             return $items->merge([
                 '--disable-gpu',
                 '--headless',
+                // WORKAROUND: https://issues.chromium.org/issues/42323434#comment62
+                // Review after updating Chrome Driver
+                '--no-sandbox',
             ]);
         })->all());
+        $binary = env('CHROME_PATH');
+        if ($binary != null) {
+            $options->setBinary($binary);
+        }
 
         return RemoteWebDriver::create(
             $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
