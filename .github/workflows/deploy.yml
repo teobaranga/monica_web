@@ -15,7 +15,7 @@ on:
 
 env:
   php-version: '8.2'
-  node-version: 20
+  node-version: 22
 
 concurrency:
   group: Deploy ${{ github.ref }}
@@ -116,7 +116,7 @@ jobs:
         run: yarn run production
 
       - name: Store assets
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: assets
           path: |
@@ -127,7 +127,7 @@ jobs:
             !public/**/*.map
 
       - name: Store source maps
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sourcemaps
           path: |
@@ -156,7 +156,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Download assets
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: assets
           path: public
@@ -211,13 +211,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download assets
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: assets
           path: public
 
       - name: Download source maps
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: sourcemaps
           path: public

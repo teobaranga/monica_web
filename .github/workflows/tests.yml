@@ -17,7 +17,7 @@ on:
 
 env:
   default-php-version: '8.2'
-  node-version: 20
+  node-version: 22
 
 concurrency:
   group: Unit tests ${{ github.ref }}
@@ -138,9 +138,9 @@ jobs:
 
       - name: Store results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: results
+          name: results-${{ matrix.testsuite }}
           path: results
 
 
@@ -240,13 +240,22 @@ jobs:
       - name: Test coverage page
         run: REQUEST_URI=/ php scripts/tests/server-cc.php
 
+      - uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          chrome-version: 126
+          install-chromedriver: true
+
     # Test
       - name: Upgrade Chrome Driver
-        run: php artisan dusk:chrome-driver --detect
+        run: |
+          # https://stackoverflow.com/questions/78827506/invalid-path-to-chromedriver-when-running-laravel-dusk
+          # revert to `--detect` once updating to Laravel 9+
+          php artisan dusk:chrome-driver 126
       - name: Start Chrome Driver
         run: |
           chmod -R 0755 vendor/laravel/dusk/bin/
-          ./vendor/laravel/dusk/bin/chromedriver-linux &
+          ./vendor/laravel/dusk/bin/chromedriver-linux64/chromedriver &
 
       - name: Run http server
         run: |
@@ -257,6 +266,7 @@ jobs:
         run: php artisan dusk --log-junit results/junit/results0.xml
         env:
           APP_URL: http://localhost:8000
+          CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Fix coverage
         run: |
@@ -269,7 +279,7 @@ jobs:
 
       - name: Store results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: results
           path: results
@@ -291,7 +301,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Download results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           path: results
           name: results
