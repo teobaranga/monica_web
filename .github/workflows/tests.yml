@@ -301,7 +301,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Download results
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           path: results
           name: results
