@@ -246,7 +246,7 @@ jobs:
       - name: Start Chrome Driver
         run: |
           chmod -R 0755 vendor/laravel/dusk/bin/
-          ./vendor/laravel/dusk/bin/chromedriver-linux &
+          ./vendor/laravel/dusk/bin/chromedriver-linux64/chromedriver &
 
       - name: Run http server
         run: |
