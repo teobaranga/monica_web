@@ -7589,10 +7589,10 @@ vue@^2.6:
     "@vue/compiler-sfc" "2.7.16"
     csstype "^3.1.0"
 
-vuejs-clipper@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-4.0.0.tgz#28b216f6a4d0cc42700cb8e3f94fd0259304f276"
-  integrity sha512-rzATt89TjeGEYaOI6kbGnjKhWCY3JKGcfuFshFh4H7tk+BQVHVWz5WhxJmH/2wVA6yAmW4EzA1LCbMnjQPhWRg==
+vuejs-clipper@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/vuejs-clipper/-/vuejs-clipper-4.1.0.tgz#5c30582be6961702d270c381164a69b65fe270c8"
+  integrity sha512-VvHWq5+IL2yrbHueJFwPSqTRfD9nDgAd30Hglz3gcJoOO51+NZycMWFJywOEsQNPZtGCHauEoVmQFPhvRAttbw==
   dependencies:
     core-js "^3.6.4"
     exif-js "^2.3.0"
