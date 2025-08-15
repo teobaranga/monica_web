@@ -16,7 +16,7 @@ on:
     types: [completed]
 
 env:
-  default-php-version: '8.2'
+  default-php-version: '8.3'
   node-version: 22
 
 concurrency:
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.2']
+        php-version: ['8.3']
         connection: [mysql]
         testsuite: [Api, Feature, Commands-Other, Commands-Scheduling, Unit-Models, Unit-Services]
         # exclude:
@@ -154,7 +154,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.2']
+        php-version: ['8.3']
         connection: [mysql]
 
     steps:
