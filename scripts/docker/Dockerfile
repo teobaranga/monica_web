@@ -6,7 +6,7 @@
 ### This file is based off of the `apache` variant in the above mentioned repo
 ###
 
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 # opencontainers annotations https://github.com/opencontainers/image-spec/blob/master/annotations.md
 LABEL org.opencontainers.image.authors="Alexis Saettler <alexis@saettler.org>" \
@@ -14,6 +14,10 @@ LABEL org.opencontainers.image.authors="Alexis Saettler <alexis@saettler.org>" \
       org.opencontainers.image.description="This is MonicaHQ, your personal memory! MonicaHQ is like a CRM but for the friends, family, and acquaintances around you." \
       org.opencontainers.image.url="https://monicahq.com" \
       org.opencontainers.image.vendor="Monica"
+
+# Simplifies installation of PHP extensions
+# https://github.com/mlocati/docker-php-extension-installer
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 # entrypoint.sh dependencies
 RUN set -ex; \
@@ -85,6 +89,8 @@ RUN set -ex; \
         \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*
+
+RUN install-php-extensions zip
 
 # Set crontab for schedules
 RUN set -ex; \
@@ -164,7 +170,7 @@ RUN set -ex; \
 # Install node dependencies
 RUN set -ex; \
     \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash -; \
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -; \
     apt-get install -y nodejs; \
     npm install -g yarn; \
     yarn run inst; \

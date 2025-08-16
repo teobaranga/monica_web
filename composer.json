@@ -11,9 +11,6 @@
     "require": {
         "php": "^8.1",
         "ext-bcmath": "*",
-        "ext-gd": "*",
-        "ext-gmp": "*",
-        "ext-intl": "*",
         "ext-redis": "*",
         "asbiin/laravel-adorable": "^1.0",
         "asbiin/laravel-webauthn": "^4.0",
