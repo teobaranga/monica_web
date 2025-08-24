@@ -19,12 +19,9 @@ class Conversation extends Model
      */
     protected $guarded = ['id'];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array<string>
-     */
-    protected $dates = ['happened_at'];
+    protected $casts = [
+        'happened_at' => 'datetime',
+    ];
 
     /**
      * Get the account record associated with the conversation.

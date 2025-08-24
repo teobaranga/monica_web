@@ -38,12 +38,9 @@ class Entry extends Model implements IsJournalableInterface
         'date',
     ];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array<string>
-     */
-    protected $dates = ['date'];
+    protected $casts = [
+        'date' => 'datetime',
+    ];
 
     /**
      * Get the account record associated with the entry.
