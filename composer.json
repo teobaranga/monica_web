@@ -74,7 +74,7 @@
         "nunomaduro/larastan": "^2.2",
         "phpunit/phpcov": "^8.0",
         "phpunit/phpunit": "^9.0",
-        "psalm/plugin-laravel": "^2.0",
+        "psalm/plugin-laravel": "^2.9",
         "ryoluo/sail-ssl": "^1.4",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
         "vimeo/psalm": "^5.5"
