@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d02bd626a343cf5085ffbed351e1df2f",
+    "content-hash": "4ad6157664b1696a12ca8bcbc65868b4",
     "packages": [
         {
             "name": "asbiin/laravel-adorable",
