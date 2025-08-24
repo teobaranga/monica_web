@@ -30,13 +30,8 @@ class ReminderOutbox extends Model
      */
     protected $guarded = ['id'];
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array<string>
-     */
-    protected $dates = [
-        'planned_date',
+    protected $casts = [
+        'planned_date' => 'datetime',
     ];
 
     /**
