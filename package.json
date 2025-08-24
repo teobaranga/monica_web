@@ -41,7 +41,7 @@
   "devDependencies": {
     "@snyk/protect": "^1.1034.0",
     "cross-env": "^10.0.0",
-    "cypress": "^14.0.0",
+    "cypress": "^15.0.0",
     "eslint": "^8",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-cypress": "^3",
