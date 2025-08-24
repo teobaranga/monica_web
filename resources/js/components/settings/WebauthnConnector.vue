@@ -326,8 +326,8 @@ export default {
         self.success = true;
         self.notify(self.$t('settings.webauthn_success'), true);
         self.currentkeys.push({
-          id: response.result.id,
-          name: response.result.name,
+          id: response.data.result.id,
+          name: response.data.result.name,
         });
       }).then(response => {
         if (redirect) {
