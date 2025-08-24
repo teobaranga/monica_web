@@ -64,7 +64,7 @@
         "barryvdh/laravel-debugbar": "^3",
         "fakerphp/faker": "^1.10",
         "khanamiryan/qrcode-detector-decoder": "^2.0",
-        "laravel/dusk": "^7.11",
+        "laravel/dusk": "^8.0",
         "laravel/legacy-factories": "^1.0",
         "laravel/sail": "^1.44",
         "laravel/tinker": "^2.6",
