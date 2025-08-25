@@ -29,7 +29,7 @@ jobs:
   #############
   tests:
     runs-on: ubuntu-latest
-    name: Testsuite ${{ matrix.testsuite }} with PHP ${{ default-php-version }} (${{ matrix.connection }})
+    name: Testsuite ${{ matrix.testsuite }} (${{ matrix.connection }})
 
     strategy:
       fail-fast: false
