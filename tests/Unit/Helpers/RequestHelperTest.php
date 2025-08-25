@@ -36,10 +36,10 @@ class RequestHelperTest extends TestCase
     /** @test */
     public function get_country_from_cf()
     {
-        Request::instance()->headers->set('Cf-Ipcountry', 'XX');
+        Request::instance()->headers->set('cf-ipcountry', 'GB');
 
         $this->assertEquals(
-            'XX',
+            'GB',
             RequestHelper::country('1.2.3.4')
         );
     }
@@ -49,7 +49,9 @@ class RequestHelperTest extends TestCase
     {
         $driver = $this->mock(\Stevebauman\Location\Drivers\Driver::class, function (MockInterface $mock) {
             $mock->shouldReceive('get')
-                ->with('123.45.67.89')
+                ->with(\Mockery::on(function (\Stevebauman\Location\Request $request) {
+                    return $request->getIp() == '123.45.67.89';
+                }))
                 ->andReturn(tap(new \Stevebauman\Location\Position(), function ($position) {
                     $position->countryCode = 'TEST';
                 }));
@@ -92,11 +94,11 @@ class RequestHelperTest extends TestCase
         Http::fake([
             'https://api.ipdata.co/*' => Http::response(null, 500),
         ]);
-        Request::instance()->headers->set('Cf-Ipcountry', 'XX');
+        Request::instance()->headers->set('Cf-Ipcountry', 'GB');
 
         $this->assertEquals(
             [
-                'country' => 'XX',
+                'country' => 'GB',
                 'currency' => null,
                 'timezone' => null,
             ],

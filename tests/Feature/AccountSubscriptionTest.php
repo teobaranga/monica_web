@@ -147,13 +147,13 @@ class AccountSubscriptionTest extends FeatureTestCase
 
         factory(Subscription::class)->create([
             'account_id' => $user->account_id,
-            'name' => 'Annual',
+            'type' => 'Annual',
             'stripe_price' => 'annual',
             'stripe_id' => 'test',
             'quantity' => 1,
         ]);
 
-        $this->assertEquals('Annual', $user->account->getSubscribedPlanName());
+        $this->assertEquals('Annual', $user->account->getSubscribedPlanType());
     }
 
     public function test_it_throw_an_error_on_cancel()
@@ -162,7 +162,7 @@ class AccountSubscriptionTest extends FeatureTestCase
 
         factory(Subscription::class)->create([
             'account_id' => $user->account_id,
-            'name' => 'Annual',
+            'type' => 'Annual',
             'stripe_price' => 'annual',
             'stripe_id' => 'test',
             'quantity' => 1,

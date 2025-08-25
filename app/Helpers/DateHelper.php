@@ -219,7 +219,10 @@ class DateHelper
     {
         $format = trans($format, [], Carbon::getLocale());
         if ($withTimezone) {
-            $date = $date->setTimezone(static::getTimezone());
+            $timezone = static::getTimezone();
+            if ($timezone) {
+                $date = $date->setTimezone($timezone);
+            }
         }
 
         return $date->translatedFormat($format) ?: '';

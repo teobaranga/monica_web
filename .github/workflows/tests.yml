@@ -29,12 +29,11 @@ jobs:
   #############
   tests:
     runs-on: ubuntu-latest
-    name: Testsuite ${{ matrix.testsuite }} with PHP ${{ matrix.php-version }} (${{ matrix.connection }})
+    name: Testsuite ${{ matrix.testsuite }} (${{ matrix.connection }})
 
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.3']
         connection: [mysql]
         testsuite: [Api, Feature, Commands-Other, Commands-Scheduling, Unit-Models, Unit-Services]
         # exclude:
@@ -45,12 +44,12 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v5
 
-      - name: Setup PHP ${{ matrix.php-version }}
+      - name: Setup PHP ${{ env.default-php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: ${{ env.default-php-version }}
           extensions: redis, ${{ matrix.connection }}
-          coverage: none
+          coverage: xdebug
       - name: Check PHP Version
         run: php -v
       - name: Check Composer Version
@@ -69,10 +68,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
-            ${{ runner.os }}-composer-${{ matrix.php-version }}
+            ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
+            ${{ runner.os }}-composer-${{ env.default-php-version }}
             ${{ runner.os }}-composer-
 
       - name: Install composer dependencies
@@ -120,17 +119,16 @@ jobs:
 
     # Test
       - name: Run Unit test suite
-        if: matrix.php-version == env.default-php-version && matrix.testsuite != 'Feature'
-        run: phpdbg -dmemory_limit=6G -qrr vendor/bin/phpunit -c phpunit.xml --testsuite ${{ matrix.testsuite }} --log-junit ./results/junit/results${{ matrix.testsuite }}.xml --coverage-clover ./results/coverage/coverage${{ matrix.testsuite }}.xml
+        run: | 
+          vendor/bin/phpunit -c phpunit.xml \
+            --testsuite ${{ matrix.testsuite }} \
+            --log-junit ./results/junit/results${{ matrix.testsuite }}.xml \
+            --coverage-clover ./results/coverage/coverage${{ matrix.testsuite }}.xml \
+            --coverage-php ./results/cov/${{ matrix.testsuite }}.cov
         env:
           DB_CONNECTION: ${{ matrix.connection }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
-      - name: Run Unit test suite
-        if: matrix.php-version != env.default-php-version || matrix.testsuite == 'Feature'
-        run: vendor/bin/phpunit -c phpunit.xml --testsuite ${{ matrix.testsuite }} --log-junit ./results/junit/results${{ matrix.testsuite }}.xml
-        env:
-          DB_CONNECTION: ${{ matrix.connection }}
-          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+          XDEBUG_MODE: coverage
 
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
@@ -149,22 +147,21 @@ jobs:
   ###################
   tests_browser:
     runs-on: ubuntu-latest
-    name: Tests browser with PHP ${{ matrix.php-version }} (${{ matrix.connection }})
+    name: Tests browser (${{ matrix.connection }})
 
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['8.3']
         connection: [mysql]
 
     steps:
       - name: Checkout sources
         uses: actions/checkout@v5
 
-      - name: Setup PHP ${{ matrix.php-version }}
+      - name: Setup PHP ${{ env.default-php-version }}
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-version }}
+          php-version: ${{ env.default-php-version }}
           extensions: redis, ${{ matrix.connection }}
           coverage: xdebug
       - name: Check PHP Version
@@ -185,10 +182,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
-            ${{ runner.os }}-composer-${{ matrix.php-version }}
+            ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
+            ${{ runner.os }}-composer-${{ env.default-php-version }}
             ${{ runner.os }}-composer-
 
       - name: Install composer dependencies
@@ -268,11 +265,6 @@ jobs:
           APP_URL: http://localhost:8000
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
-      - name: Fix coverage
-        run: |
-          vendor/bin/phpcov merge --clover=results/coverage/coverageBrowser.xml results/cov/
-          rm -rf results/cov
-
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
         working-directory: results
@@ -300,16 +292,46 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
+      - name: Setup PHP ${{ env.default-php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.default-php-version }}
+
       - name: Download results
         uses: actions/download-artifact@v5
         with:
           path: results
-          name: results
+          merge-multiple: true
+
+    # Composer
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - name: Cache composer files
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-${{ env.default-php-version }}-${{ hashFiles('**/composer.lock') }}
+            ${{ runner.os }}-composer-${{ env.default-php-version }}
+            ${{ runner.os }}-composer-
+
+      - name: Install composer dependencies
+        run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader $ext
+      
+      - name: Fix coverage
+        run: |
+          vendor/bin/phpcov merge --clover=results/coverage/coverageBrowser.xml results/cov/
+          rm -rf results/cov
 
       - name: Merge junit files
         run: |
-          yarn global add junit-merge
-          $(yarn global bin)/junit-merge --recursive --dir results/junit --out results/results.xml
+          yarn global add junit-report-merger
+          $(yarn global bin)/jrm ./results/results.xml ./junit/*.xml
 
       - name: Set version parameter
         id: version
@@ -326,7 +348,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@v5.0.0
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

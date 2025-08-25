@@ -14,11 +14,6 @@ use League\Flysystem\FilesystemException;
 
 class StorageController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['setEtag', 'ifMatch', 'ifNoneMatch']);
-    }
-
     /**
      * Download file with authorization.
      *
