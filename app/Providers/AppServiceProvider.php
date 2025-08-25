@@ -104,14 +104,6 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perDay(5000),
             ];
         });
-
-        EtagConditionals::etagGenerateUsing(function (\Illuminate\Http\Request $request, \Symfony\Component\HttpFoundation\Response $response) {
-            $url = $request->getRequestUri();
-
-            return Cache::rememberForever('etag.'.$url, function () use ($url) {
-                return sha1($url);
-            });
-        });
     }
 
     /**
@@ -121,8 +113,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Passport::ignoreMigrations();
-        Cashier::ignoreMigrations();
         Cashier::formatCurrencyUsing(function ($amount, $currency) {
             $currency = \App\Models\Settings\Currency::where('iso', strtoupper($currency ?? config('cashier.currency')))->first();
 
