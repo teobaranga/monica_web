@@ -147,7 +147,7 @@ jobs:
   ###################
   tests_browser:
     runs-on: ubuntu-latest
-    name: Tests browser with PHP ${{ env.default-php-version }} (${{ matrix.connection }})
+    name: Tests browser (${{ matrix.connection }})
 
     strategy:
       fail-fast: false
