@@ -331,7 +331,7 @@ jobs:
       - name: Merge junit files
         run: |
           yarn global add junit-merge
-          $(yarn global bin)/junit-merge --recursive --dir results/junit --out results/results.xml
+          $(yarn global bin)/junit-merge --recursive --dir junit --out results/results.xml
 
       - name: Set version parameter
         id: version
@@ -348,7 +348,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: env.SONAR_TOKEN != ''
-        uses: SonarSource/sonarcloud-github-action@v5.0.0
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
