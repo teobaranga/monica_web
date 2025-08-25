@@ -275,11 +275,6 @@ jobs:
           APP_URL: http://localhost:8000
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
-      - name: Fix coverage
-        run: |
-          vendor/bin/phpcov merge --clover=results/coverage/coverageBrowser.xml results/cov/
-          rm -rf results/cov
-
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
         working-directory: results
@@ -312,6 +307,11 @@ jobs:
         with:
           path: results
           name: results
+      
+      - name: Fix coverage
+        run: |
+          vendor/bin/phpcov merge --clover=results/coverage/coverageBrowser.xml results/cov/
+          rm -rf results/cov
 
       - name: Merge junit files
         run: |
