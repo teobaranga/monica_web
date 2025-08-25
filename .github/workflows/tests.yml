@@ -330,8 +330,8 @@ jobs:
 
       - name: Merge junit files
         run: |
-          yarn global add junit-merge
-          $(yarn global bin)/junit-merge --recursive --dir junit --out results/results.xml
+          yarn global add junit-report-merger
+          $(yarn global bin)/jrm ./results/results.xml ./junit/*.xml
 
       - name: Set version parameter
         id: version
