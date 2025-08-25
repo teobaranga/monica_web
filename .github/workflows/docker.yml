@@ -101,6 +101,7 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
           file: scripts/docker/Dockerfile
           context: .
+          provenance: true
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
