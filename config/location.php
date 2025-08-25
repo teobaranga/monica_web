@@ -20,7 +20,7 @@ return [
     | The default driver you would like to use for location retrieval.
     |
     */
-    'driver' => App\Http\Location\Drivers\CloudflareDriver::class,
+    'driver' => Stevebauman\Location\Drivers\Cloudflare::class,
 
     /*
     |--------------------------------------------------------------------------
