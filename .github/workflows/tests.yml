@@ -50,7 +50,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: redis, ${{ matrix.connection }}
-          coverage: none
+          coverage: xdebug
       - name: Check PHP Version
         run: php -v
       - name: Check Composer Version
