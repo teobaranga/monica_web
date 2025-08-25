@@ -1,76 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
   backupGlobals="false"
-  backupStaticAttributes="false"
   bootstrap="vendor/autoload.php"
   colors="true"
-  convertErrorsToExceptions="true"
-  convertNoticesToExceptions="true"
-  convertWarningsToExceptions="true"
   processIsolation="false"
   stopOnFailure="false"
->
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./app</directory>
-    </include>
-    <exclude>
-      <file>./app/Http/routes.php</file>
-    </exclude>
-  </coverage>
-
+  cacheDirectory=".phpunit.cache"
+  backupStaticProperties="false">
   <testsuites>
     <testsuite name="Api">
       <directory suffix="Test.php">./tests/Api</directory>
     </testsuite>
-
     <testsuite name="Feature">
       <directory suffix="Test.php">./tests/Feature</directory>
     </testsuite>
-
     <testsuite name="Commands-Other">
       <directory suffix="Test.php">./tests/Commands/OneTime</directory>
       <directory suffix="Test.php">./tests/Commands/Other</directory>
     </testsuite>
-
     <testsuite name="Commands-Scheduling">
       <directory suffix="Test.php">./tests/Commands/Scheduling</directory>
       <directory suffix="Test.php">./tests/Commands/Tests</directory>
     </testsuite>
-
     <testsuite name="Unit-Models">
       <directory suffix="Test.php">./tests/Unit/Controllers</directory>
       <directory suffix="Test.php">./tests/Unit/Events</directory>
       <directory suffix="Test.php">./tests/Unit/Helpers</directory>
       <directory suffix="Test.php">./tests/Unit/Models</directory>
     </testsuite>
-
     <testsuite name="Unit-Services">
       <directory suffix="Test.php">./tests/Unit/Services</directory>
       <directory suffix="Test.php">./tests/Unit/Traits</directory>
       <directory suffix="Test.php">./tests/Unit/Jobs</directory>
     </testsuite>
   </testsuites>
-
   <php>
-    <env name="APP_ENV" value="testing"/>
-    <env name="APP_KEY" value="base64:NTrXToqFZJlv48dgPc+kNpc3SBt333TfDnF1mDShsBg="/>
-    <env name="BCRYPT_ROUNDS" value="4"/>
-    <env name="CACHE_DRIVER" value="array"/>
-    <env name="CHECK_VERSION" value="false"/>
-    <env name="MAIL_MAILER" value="array"/>
-    <env name="QUEUE_CONNECTION" value="sync"/>
-    <env name="SESSION_DRIVER" value="array"/>
-    <env name="FILESYSTEM_DISK" value="public"/>
-    <env name="DEBUGBAR_ENABLED" value="false"/>
-    <env name="APP_DEFAULT_LOCALE" value="en"/>
-    <env name="LOG_CHANNEL" value="testing"/>
-    <env name="DAV_ENABLED" value="true"/>
-    <env name="REQUIRES_SUBSCRIPTION" value="false"/>
-    <env name="MAIL_HOST" value=""/>
-    <env name="MAIL_PORT" value=""/>
-    <env name="MAIL_ENCRYPTION" value=""/>
-    <env name="APP_EMAIL_NEW_USERS_NOTIFICATION" value=""/>
-    <env name="LARAVEL_CLOUDFLARE_ENABLED" value="false"/>
+    <env name="APP_ENV" value="testing" />
+    <env name="APP_KEY" value="base64:NTrXToqFZJlv48dgPc+kNpc3SBt333TfDnF1mDShsBg=" />
+    <env name="BCRYPT_ROUNDS" value="4" />
+    <env name="CACHE_DRIVER" value="array" />
+    <env name="CHECK_VERSION" value="false" />
+    <env name="MAIL_MAILER" value="array" />
+    <env name="QUEUE_CONNECTION" value="sync" />
+    <env name="SESSION_DRIVER" value="array" />
+    <env name="FILESYSTEM_DISK" value="public" />
+    <env name="DEBUGBAR_ENABLED" value="false" />
+    <env name="APP_DEFAULT_LOCALE" value="en" />
+    <env name="LOG_CHANNEL" value="testing" />
+    <env name="DAV_ENABLED" value="true" />
+    <env name="REQUIRES_SUBSCRIPTION" value="false" />
+    <env name="MAIL_HOST" value="" />
+    <env name="MAIL_PORT" value="" />
+    <env name="MAIL_ENCRYPTION" value="" />
+    <env name="APP_EMAIL_NEW_USERS_NOTIFICATION" value="" />
+    <env name="LARAVEL_CLOUDFLARE_ENABLED" value="false" />
   </php>
+  <source>
+    <include>
+      <directory suffix=".php">./app</directory>
+    </include>
+    <exclude>
+      <file>./app/Http/routes.php</file>
+    </exclude>
+  </source>
+  <coverage>
+    <report>
+      <html outputDirectory="results/cov" />
+      <text outputFile="results/coverage.txt" />
+      <clover outputFile="results/logs/clover.xml" />
+    </report>
+  </coverage>
 </phpunit>
