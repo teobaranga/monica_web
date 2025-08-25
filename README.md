@@ -7,12 +7,8 @@
 
 <div align="center">
 
-[![Build Status](https://img.shields.io/github/workflow/status/monicahq/monica/Build?style=flat-square&label=Build%20Status)](https://github.com/monicahq/monica/actions)
-[![Docker pulls](https://img.shields.io/docker/pulls/library/monica)](https://hub.docker.com/_/monica/)
-![Lines of code](https://img.shields.io/tokei/lines/github/monicahq/monica)
-[![Code coverage](https://img.shields.io/sonar/coverage/monica?server=https%3A%2F%2Fsonarcloud.io&style=flat-square&label=Coverage%20Status)](https://sonarcloud.io/project/activity?custom_metrics=coverage&amp;graph=custom&amp;id=monica)
-[![License](https://img.shields.io/github/license/monicahq/monica)](https://github.com/monicahq/monica/blob/main/LICENSE.md)
-
+[![Docker pulls](https://img.shields.io/docker/pulls/teobaranga/monica)](https://hub.docker.com/r/teobaranga/monica/)
+[![Code coverage](https://img.shields.io/sonar/coverage/teobaranga_monica_web?server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/project/activity?custom_metrics=coverage&amp;graph=custom&amp;id=teobaranga_monica_web)
 
 </div>
 
