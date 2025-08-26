@@ -57,7 +57,7 @@
     "moment-locales-webpack-plugin": "^1.2",
     "postcss": "^8.2.13",
     "resolve-url-loader": "^5.0.0",
-    "sass-loader": "^11.0",
+    "sass-loader": "^16.0.0",
     "vue-template-compiler": "^2.6"
   },
   "dependencies": {
