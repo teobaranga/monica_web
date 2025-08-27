@@ -31,7 +31,7 @@
         "mariuzzo/laravel-js-localization": "^1.7",
         "matriphe/iso-639": "^1.0",
         "moneyphp/money": "^4.7",
-        "monicahq/laravel-cloudflare": "^3.0",
+        "monicahq/laravel-cloudflare": "^4.0",
         "monicahq/laravel-sabre": "^1.2",
         "ok/ipstack-client": "^2.0",
         "phar-io/version": "^3.1",
