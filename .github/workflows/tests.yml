@@ -2,7 +2,7 @@ name: Unit tests
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - 4.x
   pull_request:
@@ -16,7 +16,7 @@ on:
     types: [completed]
 
 env:
-  default-php-version: '8.3'
+  default-php-version: '8.4'
   node-version: 22
 
 concurrency:
@@ -119,7 +119,7 @@ jobs:
 
     # Test
       - name: Run Unit test suite
-        run: | 
+        run: |
           vendor/bin/phpunit -c phpunit.xml \
             --testsuite ${{ matrix.testsuite }} \
             --log-junit ./results/junit/results${{ matrix.testsuite }}.xml \
@@ -322,7 +322,7 @@ jobs:
 
       - name: Install composer dependencies
         run: composer install --no-progress --no-interaction --prefer-dist --optimize-autoloader $ext
-      
+
       - name: Fix coverage
         run: |
           vendor/bin/phpcov merge --clover=results/coverage/coverageBrowser.xml results/cov/
