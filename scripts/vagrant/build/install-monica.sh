@@ -56,7 +56,7 @@ apt-get install -y php8.1-bcmath php8.1-curl php8.1-common php8.1-fpm \
     php8.1-opcache php8.1-redis php8.1-xml php8.1-zip >/dev/null
 
 echo -e "\n\033[4;32mInstalling node.js\033[0;40m"
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash - >/dev/null
+curl -fsSL https://deb.nodesource.com/setup_22.x | bash - >/dev/null
 apt-get install -y nodejs >/dev/null
 
 echo -e "\n\033[4;32mInstalling yarn\033[0;40m"

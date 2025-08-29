@@ -57,7 +57,7 @@ php composer-setup.php --install-dir=/usr/local/bin/ --filename=composer
 php -r "unlink('composer-setup.php');"
 ```
 
-**Node.js:** Install node.js 16+ minimum
+**Node.js:** Install node.js 22+ minimum
 
 
 **Yarn:** Install yarn using npm
