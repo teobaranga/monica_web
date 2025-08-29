@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  php-version: '8.2'
+  php-version: '8.4'
   build-node-version: 22
   semantic-node-version: 22
 

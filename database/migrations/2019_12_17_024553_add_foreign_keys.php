@@ -559,7 +559,7 @@ class AddForeignKeys extends Migration
 
         Schema::table('tasks', function (Blueprint $table) {
             $table->unsignedInteger('account_id')->change();
-            $table->unsignedInteger('contact_id')->change();
+            $table->unsignedInteger('contact_id')->nullable()->change();
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
         });

@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  php-version: '8.2'
+  php-version: '8.4'
   node-version: 22
 
 concurrency:

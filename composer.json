@@ -9,7 +9,7 @@
     ],
     "license": "AGPL",
     "require": {
-        "php": "^8.1",
+        "php": "^8.4",
         "ext-bcmath": "*",
         "ext-redis": "*",
         "asbiin/laravel-adorable": "^1.3",
