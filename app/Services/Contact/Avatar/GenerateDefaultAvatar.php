@@ -2,13 +2,13 @@
 
 namespace App\Services\Contact\Avatar;
 
-use Illuminate\Support\Str;
-use App\Services\BaseService;
 use App\Models\Contact\Contact;
-use Illuminate\Support\Facades\Cache;
-use Laravolt\Avatar\Facade as Avatar;
-use Illuminate\Support\Facades\Storage;
+use App\Services\BaseService;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Laravolt\Avatar\Facade as Avatar;
 
 class GenerateDefaultAvatar extends BaseService
 {
@@ -19,16 +19,14 @@ class GenerateDefaultAvatar extends BaseService
      */
     public function rules()
     {
-        return [
-            'contact_id' => 'required|integer|exists:contacts,id',
-        ];
+        return ['contact_id' => 'required|integer|exists:contacts,id',];
     }
 
     /**
      * Generate the default image for the avatar, based on the initals of the
      * contact and returns the filename.
      *
-     * @param  array  $data
+     * @param array $data
      * @return Contact
      */
     public function execute(array $data)
@@ -48,7 +46,7 @@ class GenerateDefaultAvatar extends BaseService
         $contact->avatar_default_url = $filename;
         $contact->save();
 
-        Cache::forget('etag'.Str::before('?', $filename));
+        Cache::forget('etag' . Str::before('?', $filename));
 
         return $contact;
     }
@@ -56,12 +54,12 @@ class GenerateDefaultAvatar extends BaseService
     /**
      * Create an uuid for the contact if it does not exist.
      *
-     * @param  Contact  $contact
+     * @param Contact $contact
      * @return Contact
      */
     private function generateContactUUID(Contact $contact)
     {
-        if (! $contact->uuid) {
+        if (!$contact->uuid) {
             $contact->uuid = Str::uuid()->toString();
             $contact->save();
         }
@@ -70,45 +68,16 @@ class GenerateDefaultAvatar extends BaseService
     }
 
     /**
-     * Create a new avatar for the contact based on the name of the contact.
-     *
-     * @param  Contact  $contact
-     * @return string
-     */
-    private function createNewAvatar(Contact $contact)
-    {
-        $img = null;
-        try {
-            $img = Avatar::create($contact->name)
-                ->setBackground($contact->default_avatar_color)
-                ->getImageObject()
-                ->encode('jpg');
-
-            $filename = 'avatars/'.$contact->uuid.'.jpg';
-            Storage::disk(config('filesystems.default'))
-                ->put($filename, $img, config('filesystems.default_visibility'));
-
-            // This will force the browser to reload the new avatar
-            return $filename.'?'.now()->format('U');
-        } finally {
-            if ($img) {
-                $img->destroy();
-            }
-        }
-    }
-
-    /**
      * Delete the existing default avatar.
      *
-     * @param  Contact  $contact
+     * @param Contact $contact
      * @return Contact
      */
     private function deleteExistingDefaultAvatar(Contact $contact)
     {
         if ($contact->avatar_default_url !== null) {
             try {
-                Storage::disk(config('filesystems.default'))
-                    ->delete($contact->avatar_default_url);
+                Storage::disk(config('filesystems.default'))->delete($contact->avatar_default_url);
                 $contact->avatar_default_url = null;
             } catch (FileNotFoundException $e) {
                 // ignore
@@ -116,5 +85,29 @@ class GenerateDefaultAvatar extends BaseService
         }
 
         return $contact;
+    }
+
+    /**
+     * Create a new avatar for the contact based on the name of the contact.
+     *
+     * @param Contact $contact
+     * @return string
+     */
+    private function createNewAvatar(Contact $contact)
+    {
+        $img = null;
+        try {
+            $img = Avatar::create($contact->name)->setBackground($contact->default_avatar_color)->getImageObject()->encodeByMediaType('image/jpeg');
+
+            $filename = 'avatars/' . $contact->uuid . '.jpg';
+            Storage::disk(config('filesystems.default'))->put($filename, $img, config('filesystems.default_visibility'));
+
+            // This will force the browser to reload the new avatar
+            return $filename . '?' . now()->format('U');
+        } finally {
+            if ($img) {
+                unset($img);
+            }
+        }
     }
 }

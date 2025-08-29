@@ -25,7 +25,6 @@ use App\Notifications\StayInTouchEmail;
 use App\Models\Relationship\Relationship;
 use App\Jobs\StayInTouch\ScheduleStayInTouch;
 use App\Models\Relationship\RelationshipType;
-use LaravelAdorable\Adorable\LaravelAdorable;
 use App\Models\Relationship\RelationshipTypeGroup;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
@@ -557,21 +556,6 @@ class ContactTest extends FeatureTestCase
 
         $this->assertStringContainsString(
             'store/defaultURL',
-            $contact->getAvatarURL()
-        );
-
-        // adorable
-        $contact = factory(Contact::class)->create([
-            'avatar_adorable_uuid' => 'uuid',
-            'avatar_source' => 'adorable',
-        ]);
-
-        $this->mock(LaravelAdorable::class, function (MockInterface $mock) {
-            $mock->shouldReceive('get')->andReturn('adorableURL');
-        });
-
-        $this->assertEquals(
-            'adorableURL',
             $contact->getAvatarURL()
         );
 

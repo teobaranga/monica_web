@@ -50,12 +50,12 @@ class PushVCardTest extends TestCase
             $ifmatch = [$etag];
         }
 
-        Http::fake(function (Request $request, $options) use ($card, $ifmatch) {
+        Http::fake(function (Request $request) use ($card, $ifmatch) {
             $this->assertEquals('https://test/dav/uri', $request->url());
             $this->assertEquals('PUT', $request->method());
             $this->assertEquals($ifmatch, $request->header('If-Match'));
 
-            return Http::response($card, 200);
+            return Http::response($card);
         });
 
         $pendingBatch = $fake->batch([
@@ -74,7 +74,7 @@ class PushVCardTest extends TestCase
         $job->withBatchId($batch->id)->handle();
     }
 
-    public function modes(): array
+    public static function modes(): array
     {
         return [
             [0, []],
