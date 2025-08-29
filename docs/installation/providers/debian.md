@@ -86,7 +86,7 @@ curl -sSL https://getcomposer.org/installer | sudo php -- --install-dir=/usr/loc
 **Node.js:** Install node.js with package manager.
 
 ```sh
-curl -sSL https://deb.nodesource.com/setup_16.x | sudo bash -
+curl -sSL https://deb.nodesource.com/setup_22.x | sudo bash -
 sudo apt install -y nodejs
 ```
 
