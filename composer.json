@@ -47,7 +47,7 @@
         "stevebauman/location": "^7.6",
         "symfony/http-client": "^7.0",
         "symfony/mailgun-mailer": "^7.3",
-        "thecodingmachine/safe": "^2.0",
+        "thecodingmachine/safe": "^3.0",
         "vectorface/whip": "^0.5",
         "vinkla/hashids": "^13.0",
         "vluzrmos/language-detector": "^2.2",
