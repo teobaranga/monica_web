@@ -44,7 +44,7 @@
                     <li>{{ trans('settings.import_upload_rule_vcard') }}</li>
                     <li>{!! trans('settings.import_upload_rule_instructions', [
                       'url1' => 'http://osxdaily.com/2015/07/14/export-contacts-mac-os-x/',
-                      'url2' => 'http://www.akruto.com/backup-phone-contacts-calendar/how-to-export-google-contacts-to-csv-or-vcard/'
+                      'url2' => 'https://support.google.com/contacts/answer/7199294'
                     ]) !!}</li>
                     <li>{{ trans('settings.import_upload_rule_multiple') }}</li>
                     <li>{{ trans('settings.import_upload_rule_limit') }}</li>

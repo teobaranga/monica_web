@@ -2,19 +2,20 @@
 
 namespace App\Services\Account\Photo;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use App\Models\Account\Photo;
-use App\Services\BaseService;
-use function Safe\finfo_open;
-use function Safe\preg_match;
 use App\Helpers\StorageHelper;
+use App\Models\Account\Photo;
 use App\Models\Contact\Contact;
-use function Safe\base64_decode;
-use Intervention\Image\Facades\Image;
+use App\Services\BaseService;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Intervention\Image\Exception\NotReadableException;
+use Illuminate\Support\Str;
+use Intervention\Image\EncodedImage;
+use Intervention\Image\Laravel\Facades\Image;
+use Mimey\MimeTypes;
+use function Safe\base64_decode;
+use function Safe\finfo_open;
+use function Safe\preg_match;
 
 class UploadPhoto extends BaseService
 {
@@ -23,6 +24,58 @@ class UploadPhoto extends BaseService
         Validator::extend('photo', function ($attribute, $value, $parameters, $validator) {
             return $this->isValidPhoto($value);
         });
+    }
+
+    /**
+     * Determines if the source photo is a valid encoded photo.
+     *
+     * @param string $data
+     * @return bool
+     */
+    private function isValidPhoto(string $data): bool
+    {
+        return $this->isBinary($data) || $this->isDataUrl($data) || $this->isBase64($data);
+    }
+
+    /**
+     * Determines if source data is binary data.
+     */
+    private function isBinary(string $data): bool
+    {
+        $mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data); // @phpstan-ignore-line
+
+        return !str_starts_with($mime, 'text') && $mime != 'application/x-empty';
+    }
+
+    /**
+     * Determines if source data is data-url format.
+     */
+    private function isDataUrl(string $data): bool
+    {
+        if (!is_string($data)) {
+            return false;
+        }
+
+        $pattern = "/^data:(?:image\/[a-zA-Z\-\.]+)(?:charset=\".+\")?;base64,(?P<data>.+)$/";
+        preg_match($pattern, $data, $matches);
+
+        if (is_array($matches) && Arr::has($matches, 'data')) {
+            return !empty(base64_decode($matches['data']));
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines if source data is base64 encoded.
+     */
+    private function isBase64(string $data): bool
+    {
+        if (!is_string($data)) {
+            return false;
+        }
+
+        return base64_encode(base64_decode($data)) === str_replace(["\n", "\r"], '', $data);
     }
 
     /**
@@ -44,7 +97,7 @@ class UploadPhoto extends BaseService
     /**
      * Upload a photo.
      *
-     * @param  array  $data
+     * @param array $data
      * @return Photo|null
      */
     public function execute(array $data): ?Photo
@@ -63,7 +116,7 @@ class UploadPhoto extends BaseService
             $array = $this->importFile($data);
         }
 
-        if (! $array) {
+        if (!$array) {
             return null;
         }
 
@@ -85,7 +138,7 @@ class UploadPhoto extends BaseService
             'account_id' => $data['account_id'],
             'original_filename' => $photo->getClientOriginalName(),
             'filesize' => $photo->getSize(),
-            'mime_type' => (new \Mimey\MimeTypes)->getMimeType($photo->guessClientExtension()),
+            'mime_type' => (new MimeTypes)->getMimeType($photo->guessClientExtension()),
             'new_filename' => $photo->store('photos', [
                 'disk' => config('filesystems.default'),
                 'visibility' => config('filesystems.default_visibility'),
@@ -95,41 +148,33 @@ class UploadPhoto extends BaseService
 
     /**
      * Upload the photo.
-     *
-     * @return array|null
      */
     private function importFile(array $data): ?array
     {
         $filename = Str::random(40);
 
-        try {
-            $image = Image::make($data['data']);
-        } catch (NotReadableException $e) {
-            return null;
-        }
+        $image = Image::read($data['data'])->encodeByMediaType();
 
-        $tempfile = $this->storeImage('local', $image, 'temp/'.$filename);
+        $tempfile = $this->storeImage('local', $image, 'temp/' . $filename);
 
         try {
             $storagePath = StorageHelper::disk('local')->path($tempfile);
-            // This sets the basePath to get the filesize later
-            $image = $image->setFileInfoFromPath($storagePath);
-            $extension = (new \Mimey\MimeTypes)->getExtension($image->mime());
+            $extension = (new MimeTypes)->getExtension($image->mimetype());
             if (empty($extension)) {
                 $extension = str_replace(' ', '', Arr::get($data, 'extension'));
             }
-            if (! empty($extension)) {
-                $filename .= '.'.$extension;
+            if (!empty($extension)) {
+                $filename .= '.' . $extension;
             }
 
             $array = [
                 'account_id' => $data['account_id'],
                 'original_filename' => $filename,
-                'filesize' => $image->filesize(),
-                'mime_type' => $image->mime(),
+                'filesize' => $image->size(),
+                'mime_type' => $image->mimetype(),
             ];
 
-            $array['new_filename'] = $this->storeImage(config('filesystems.default'), $image, 'photos/'.$filename);
+            $array['new_filename'] = $this->storeImage(config('filesystems.default'), $image, 'photos/' . $filename);
         } finally {
             $storage = Storage::disk('local');
             if ($storage->exists($tempfile)) {
@@ -142,78 +187,12 @@ class UploadPhoto extends BaseService
 
     /**
      * Store the decoded image in the temp file.
-     *
-     * @param  string  $disk
-     * @param  \Intervention\Image\Image  $image
-     * @param  string  $filename
-     * @return string|null
      */
-    private function storeImage(string $disk, $image, string $filename): ?string
+    private function storeImage(string $disk, EncodedImage $image, string $filename): ?string
     {
         $result = Storage::disk($disk)
-            ->put($path = $filename, (string) $image->stream(), config('filesystems.default_visibility'));
+            ->put($path = $filename, $image->toFilePointer(), config('filesystems.default_visibility'));
 
         return $result ? $path : null;
-    }
-
-    /**
-     * Determines if the source photo is a valid encoded photo.
-     *
-     * @param  string  $data
-     * @return bool
-     */
-    private function isValidPhoto(string $data): bool
-    {
-        return $this->isBinary($data) || $this->isDataUrl($data) || $this->isBase64($data);
-    }
-
-    /**
-     * Determines if source data is binary data.
-     *
-     * @param  string  $data
-     * @return bool
-     */
-    private function isBinary(string $data): bool
-    {
-        $mime = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $data); // @phpstan-ignore-line
-
-        return substr($mime, 0, 4) != 'text' && $mime != 'application/x-empty';
-    }
-
-    /**
-     * Determines if source data is data-url format.
-     *
-     * @param  string  $data
-     * @return bool
-     */
-    private function isDataUrl(string $data): bool
-    {
-        if (! is_string($data)) {
-            return false;
-        }
-
-        $pattern = "/^data:(?:image\/[a-zA-Z\-\.]+)(?:charset=\".+\")?;base64,(?P<data>.+)$/";
-        preg_match($pattern, $data, $matches);
-
-        if (is_array($matches) && Arr::has($matches, 'data')) {
-            return ! empty(base64_decode($matches['data']));
-        }
-
-        return false;
-    }
-
-    /**
-     * Determines if source data is base64 encoded.
-     *
-     * @param  string  $data
-     * @return bool
-     */
-    private function isBase64(string $data): bool
-    {
-        if (! is_string($data)) {
-            return false;
-        }
-
-        return base64_encode(base64_decode($data)) === str_replace(["\n", "\r"], '', $data);
     }
 }

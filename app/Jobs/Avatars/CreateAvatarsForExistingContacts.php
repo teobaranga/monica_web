@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 /**
- * This creates all the avatars (default, adorable and gravatars) for existing
+ * This creates all the avatars (default and gravatars) for existing
  * contacts.
  */
 class CreateAvatarsForExistingContacts implements ShouldQueue
@@ -31,8 +31,7 @@ class CreateAvatarsForExistingContacts implements ShouldQueue
      */
     public function retryUntil()
     {
-        $totalContact = Contact::whereNull('avatar_adorable_url')
-            ->orWhere('avatar_default_url', 'not like', 'avatars/%')
+        $totalContact = Contact::where('avatar_default_url', 'not like', 'avatars/%')
             ->count();
 
         return now()->addSeconds($totalContact / 500);
@@ -48,8 +47,7 @@ class CreateAvatarsForExistingContacts implements ShouldQueue
         $delay = $this->retryUntil();
 
         Contact::without(['account', 'avatarPhoto', 'gender'])
-            ->whereNull('avatar_adorable_url')
-            ->orWhere('avatar_default_url', 'not like', 'avatars/%')
+            ->where('avatar_default_url', 'not like', 'avatars/%')
             ->chunk(1000, function ($contacts) use ($delay) {
                 foreach ($contacts as $contact) {
                     GetAvatarsFromInternet::dispatch($contact)

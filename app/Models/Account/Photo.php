@@ -6,11 +6,11 @@ use App\Traits\HasUuid;
 use App\Helpers\StorageHelper;
 use App\Models\Contact\Contact;
 use App\Models\ModelBinding as Model;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Intervention\Image\Laravel\Facades\Image;
 
 class Photo extends Model
 {
@@ -85,7 +85,7 @@ class Photo extends Model
             $url = $this->new_filename;
             $file = StorageHelper::disk(config('filesystems.default'))->get($url);
 
-            return (string) Image::make($file)->encode('data-url');
+            return Image::read($file)->encodeByMediaType()->toDataUri();
         } catch (FileNotFoundException $e) {
             return null;
         }

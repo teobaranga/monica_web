@@ -28,7 +28,6 @@ use App\Models\Relationship\Relationship;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Prunable;
 use App\Models\ModelBindingHasher as Model;
-use LaravelAdorable\Facades\LaravelAdorable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -82,7 +81,6 @@ class Contact extends Model
         'is_partial',
         'is_starred',
         'avatar_source',
-        'avatar_adorable_uuid',
         'avatar_gravatar_url',
         'avatar_default_url',
         'avatar_photo_id',
@@ -1132,25 +1130,9 @@ class Contact extends Model
     }
 
     /**
-     * Get the adorable avatar URL.
-     *
-     * @param  string|null  $value
-     * @return string|null
-     */
-    public function getAvatarAdorableDataUrlAttribute(?string $value): ?string
-    {
-        if (isset($this->avatar_adorable_uuid) && $this->avatar_adorable_uuid !== '') {
-            return LaravelAdorable::get(config('monica.avatar_size'), $this->avatar_adorable_uuid);
-        }
-
-        return null;
-    }
-
-    /**
      * Returns the URL of the avatar, properly sized.
      * The avatar can come from 4 sources:
      *  - default,
-     *  - Adorable avatar,
      *  - Gravatar
      *  - or a photo that has been uploaded.
      *
@@ -1161,9 +1143,6 @@ class Contact extends Model
         $avatarURL = '';
 
         switch ($this->avatar_source) {
-            case 'adorable':
-                $avatarURL = $this->avatar_adorable_data_url;
-                break;
             case 'gravatar':
                 $avatarURL = $this->avatar_gravatar_url;
                 break;

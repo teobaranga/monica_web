@@ -17,7 +17,7 @@ class GetAvatarsFromInternetTest extends TestCase
     /** @test */
     public function it_returns_a_contact_object_with_avatars()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $contactFieldType = factory(ContactFieldType::class)->create([
             'account_id' => $contact->account_id,
         ]);
@@ -40,10 +40,6 @@ class GetAvatarsFromInternetTest extends TestCase
         );
 
         $this->assertNotNull(
-            $contact->avatar_adorable_url
-        );
-
-        $this->assertNotNull(
             $contact->avatar_gravatar_url
         );
     }
@@ -51,7 +47,7 @@ class GetAvatarsFromInternetTest extends TestCase
     /** @test */
     public function gravatar_is_null_if_contact_doesnt_have_an_email()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -65,7 +61,7 @@ class GetAvatarsFromInternetTest extends TestCase
     }
 
     /** @test */
-    public function avatar_source_is_reset_and_set_to_adorable_if_gravatar_doesnt_exist_anymore()
+    public function avatar_source_is_reset_and_set_to_default_if_gravatar_doesnt_exist_anymore()
     {
         $contact = factory(Contact::class)->create([
             'avatar_source' => 'gravatar',
@@ -95,7 +91,7 @@ class GetAvatarsFromInternetTest extends TestCase
         );
 
         $this->assertEquals(
-            'adorable',
+            'default',
             $contact->avatar_source
         );
     }

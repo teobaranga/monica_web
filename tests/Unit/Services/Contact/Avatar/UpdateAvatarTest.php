@@ -18,7 +18,7 @@ class UpdateAvatarTest extends TestCase
     /** @test */
     public function it_updates_the_avatar_with_gravatar()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -42,7 +42,7 @@ class UpdateAvatarTest extends TestCase
     /** @test */
     public function it_updates_the_avatar_with_default_avatar()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -64,33 +64,9 @@ class UpdateAvatarTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_the_avatar_with_adorable()
-    {
-        $contact = factory(Contact::class)->create([]);
-
-        $request = [
-            'account_id' => $contact->account_id,
-            'contact_id' => $contact->id,
-            'source' => 'adorable',
-        ];
-
-        $contact = app(UpdateAvatar::class)->execute($request);
-
-        $this->assertDatabaseHas('contacts', [
-            'id' => $contact->id,
-            'avatar_source' => 'adorable',
-        ]);
-
-        $this->assertInstanceOf(
-            Contact::class,
-            $contact
-        );
-    }
-
-    /** @test */
     public function it_updates_the_avatar_with_existing_photo()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $photo = factory(Photo::class)->create([
             'account_id' => $contact->account_id,
         ]);
@@ -119,7 +95,7 @@ class UpdateAvatarTest extends TestCase
     /** @test */
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -133,7 +109,7 @@ class UpdateAvatarTest extends TestCase
     /** @test */
     public function it_fails_if_contact_is_archived()
     {
-        $contact = factory(Contact::class)->state('archived')->create([]);
+        $contact = factory(Contact::class)->state('archived')->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -148,13 +124,13 @@ class UpdateAvatarTest extends TestCase
     /** @test */
     public function it_throws_an_exception_if_contact_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $contact = factory(Contact::class)->create([]);
+        $account = factory(Account::class)->create();
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $account->id,
             'contact_id' => $contact->id,
-            'source' => 'adorable',
+            'source' => 'gravatar',
         ];
 
         $this->expectException(ModelNotFoundException::class);
@@ -165,7 +141,7 @@ class UpdateAvatarTest extends TestCase
     public function it_throws_an_exception_if_photo_not_linked_to_account()
     {
         // Case: photo doesn't exist
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
