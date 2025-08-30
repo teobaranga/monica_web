@@ -2,102 +2,31 @@
 
 namespace Tests;
 
-use Tests\Traits\SignIn;
 use App\Models\User\User;
-use Laravel\Dusk\Browser;
 use App\Services\User\AcceptPolicy;
-use Tests\Traits\CreatesApplication;
-use Laravel\Dusk\TestCase as BaseTestCase;
 use Facebook\WebDriver\Chrome\ChromeOptions;
-use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Illuminate\Support\Collection;
+use Laravel\Dusk\Browser;
+use Laravel\Dusk\TestCase as BaseTestCase;
+use PHPUnit\Framework\Attributes\BeforeClass;
+use Tests\Traits\CreatesApplication;
+use Tests\Traits\SignIn;
 
 abstract class DuskTestCase extends BaseTestCase
 {
     use CreatesApplication, SignIn;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Browser::$storeScreenshotsAt = base_path('results/screenshots');
-        Browser::$storeConsoleLogAt = base_path('results/console');
-        Browser::$storeSourceAt = base_path('results/source');
-    }
-
     /**
      * Prepare for Dusk test execution.
-     *
-     * @beforeClass
-     *
-     * @return void
      */
-    public static function prepare()
+    #[BeforeClass]
+    public static function prepare(): void
     {
-        if (! static::runningInSail()) {
-            static::startChromeDriver();
+        if (!static::runningInSail()) {
+            static::startChromeDriver(['--port=9515']);
         }
-    }
-
-    /**
-     * Create the RemoteWebDriver instance.
-     *
-     * @return \Facebook\WebDriver\Remote\RemoteWebDriver
-     */
-    protected function driver()
-    {
-        $options = (new ChromeOptions)->addArguments(collect([
-            '--window-size=1920,1080',
-        ])->unless($this->hasHeadlessDisabled(), function ($items) {
-            return $items->merge([
-                '--disable-gpu',
-                '--headless',
-                // WORKAROUND: https://issues.chromium.org/issues/42323434#comment62
-                // Review after updating Chrome Driver
-                '--no-sandbox',
-            ]);
-        })->all());
-        $binary = env('CHROME_PATH');
-        if ($binary != null) {
-            $options->setBinary($binary);
-        }
-
-        return RemoteWebDriver::create(
-            $_ENV['DUSK_DRIVER_URL'] ?? 'http://localhost:9515',
-            DesiredCapabilities::chrome()->setCapability(
-                ChromeOptions::CAPABILITY, $options
-            )
-        );
-    }
-
-    /**
-     * Determine whether the Dusk command has disabled headless mode.
-     *
-     * @return bool
-     */
-    protected function hasHeadlessDisabled(): bool
-    {
-        return isset($_SERVER['DUSK_HEADLESS_DISABLED']) ||
-               isset($_ENV['DUSK_HEADLESS_DISABLED']);
-    }
-
-    /**
-     * Return the default user to authenticate.
-     *
-     * @return \App\Models\User\User
-     */
-    protected function user()
-    {
-        $user = factory(User::class)->create();
-        $user->account->populateDefaultFields();
-        $user->account->update(['has_access_to_paid_version_for_free' => true]);
-
-        app(AcceptPolicy::class)->execute([
-            'account_id' => $user->account->id,
-            'user_id' => $user->id,
-            'ip_address' => null,
-        ]);
-
-        return $user;
     }
 
     public function hasDivAlert(Browser $browser)
@@ -128,5 +57,72 @@ abstract class DuskTestCase extends BaseTestCase
         if (count($res) > 0) {
             return $res[0];
         }
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Browser::$storeScreenshotsAt = base_path('results/screenshots');
+        Browser::$storeConsoleLogAt = base_path('results/console');
+        Browser::$storeSourceAt = base_path('results/source');
+    }
+
+    /**
+     * Create the RemoteWebDriver instance.
+     */
+    protected function driver(): RemoteWebDriver
+    {
+        $options = (new ChromeOptions)->addArguments(collect([
+            $this->shouldStartMaximized() ? '--start-maximized' : '--window-size=1920,1080',
+            '--disable-search-engine-choice-screen',
+            '--disable-smooth-scrolling',
+        ])->unless($this->hasHeadlessDisabled(), function (Collection $items) {
+            return $items->merge([
+                '--disable-gpu',
+                '--headless=new',
+                // TODO: Remove once fixed https://github.com/laravel/dusk/issues/1155
+                '--no-sandbox',
+            ]);
+        })->all());
+        $binary = env('CHROME_PATH');
+        if ($binary != null) {
+            $options->setBinary($binary);
+        }
+
+        return RemoteWebDriver::create(
+            $_ENV['DUSK_DRIVER_URL'] ?? env('DUSK_DRIVER_URL') ?? 'http://localhost:9515',
+            DesiredCapabilities::chrome()->setCapability(
+                ChromeOptions::CAPABILITY, $options
+            )
+        );
+    }
+
+    /**
+     * Determine whether the Dusk command has disabled headless mode.
+     *
+     * @return bool
+     */
+    protected function hasHeadlessDisabled(): bool
+    {
+        return isset($_SERVER['DUSK_HEADLESS_DISABLED']) ||
+            isset($_ENV['DUSK_HEADLESS_DISABLED']);
+    }
+
+    /**
+     * Return the default user to authenticate.
+     */
+    protected function user(): User
+    {
+        $user = factory(User::class)->create();
+        $user->account->populateDefaultFields();
+        $user->account->update(['has_access_to_paid_version_for_free' => true]);
+
+        app(AcceptPolicy::class)->execute([
+            'account_id' => $user->account->id,
+            'user_id' => $user->id,
+            'ip_address' => null,
+        ]);
+
+        return $user;
     }
 }

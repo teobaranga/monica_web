@@ -240,19 +240,11 @@ jobs:
       - uses: browser-actions/setup-chrome@v2
         id: setup-chrome
         with:
-          chrome-version: 126
           install-chromedriver: true
 
     # Test
       - name: Upgrade Chrome Driver
-        run: |
-          # https://stackoverflow.com/questions/78827506/invalid-path-to-chromedriver-when-running-laravel-dusk
-          # revert to `--detect` once updating to Laravel 9+
-          php artisan dusk:chrome-driver 126
-      - name: Start Chrome Driver
-        run: |
-          chmod -R 0755 vendor/laravel/dusk/bin/
-          ./vendor/laravel/dusk/bin/chromedriver-linux64/chromedriver &
+        run: php artisan dusk:chrome-driver --detect
 
       - name: Run http server
         run: |
