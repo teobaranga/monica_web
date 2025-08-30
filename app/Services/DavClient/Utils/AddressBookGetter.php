@@ -197,7 +197,7 @@ class AddressBookGetter
                 continue;
             }
 
-            if (($resources = Arr::get($properties, '{DAV:}resourcetype', null)) &&
+            if (($resources = Arr::get($properties, '{DAV:}resourcetype')) &&
                 $resources->is('{'.CardDAVPlugin::NS_CARDDAV.'}addressbook')) {
                 return $book;
             }

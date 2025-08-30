@@ -15,7 +15,7 @@ class AddExportJobs extends Migration
     {
         Schema::create('export_jobs', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->nullable()->index();
+            $table->uuid()->nullable()->index();
             $table->unsignedInteger('account_id');
             $table->unsignedInteger('user_id');
             $table->string('type', 4);

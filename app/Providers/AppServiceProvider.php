@@ -3,123 +3,22 @@
 namespace App\Providers;
 
 use App\Helpers\DBHelper;
-use Laravel\Cashier\Cashier;
-use Laravel\Passport\Passport;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\View;
 use App\Notifications\EmailMessaging;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Auth\Notifications\VerifyEmail;
-use Werk365\EtagConditionals\EtagConditionals;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Console\Command;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\Rules\Password;
+use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        if (App::runningInConsole()) {
-            Command::macro('exec', function (string $message, string $commandline) {
-                // @codeCoverageIgnoreStart
-                /** @var \Illuminate\Console\Command */
-                $command = $this;
-                \App\Console\Commands\Helpers\Command::exec($command, $message, $commandline);
-                // @codeCoverageIgnoreEnd
-            });
-            Command::macro('artisan', function (string $message, string $commandline, array $arguments = []) {
-                /** @var \Illuminate\Console\Command */
-                $command = $this;
-                \App\Console\Commands\Helpers\Command::artisan($command, $message, $commandline, $arguments);
-            });
-        }
-
-        View::composer(
-            'partials.components.currency-select', 'App\Http\ViewComposers\CurrencySelectViewComposer'
-        );
-
-        View::composer(
-            'partials.components.date-select', 'App\Http\ViewComposers\DateSelectViewComposer'
-        );
-
-        View::composer(
-            'partials.check', 'App\Http\ViewComposers\InstanceViewComposer'
-        );
-
-        Password::defaults(function () {
-            if (! $this->app->environment('production')) {
-                return Password::min(6);
-            }
-            $rules = Password::min(config('app.password_min'));
-            $config = explode(',', config('app.password_rules'));
-            if (in_array('mixedCase', $config)) {
-                $rules = $rules->mixedCase();
-            }
-            if (in_array('letters', $config)) {
-                $rules = $rules->letters();
-            }
-            if (in_array('numbers', $config)) {
-                $rules = $rules->numbers();
-            }
-            if (in_array('symbols', $config)) {
-                $rules = $rules->symbols();
-            }
-            if (in_array('uncompromised', $config)) {
-                $rules = $rules->uncompromised();
-            }
-
-            return $rules;
-        });
-
-        if (config('database.use_utf8mb4')
-            && DBHelper::connection()->getDriverName() == 'mysql'
-            && ! DBHelper::testVersion('5.7.7')) {
-            Schema::defaultStringLength(191);
-        }
-
-        Cashier::useCustomerModel(\App\Models\Account\Account::class);
-
-        VerifyEmail::toMailUsing(function ($user, $verificationUrl) {
-            return EmailMessaging::verifyEmailMail($user, $verificationUrl);
-        });
-        ResetPassword::toMailUsing(function ($user, $token) {
-            return EmailMessaging::resetPasswordMail($user, $token);
-        });
-
-        Paginator::defaultView('vendor.pagination.default');
-
-        RateLimiter::for('GPSCoordinate', function () {
-            return [
-                Limit::perMinute(60),
-                Limit::perDay(5000),
-            ];
-        });
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        Cashier::formatCurrencyUsing(function ($amount, $currency) {
-            $currency = \App\Models\Settings\Currency::where('iso', strtoupper($currency ?? config('cashier.currency')))->first();
-
-            return \App\Helpers\MoneyHelper::format($amount, $currency);
-        });
-    }
-
     /**
      * All of the container singletons that should be registered.
      *
@@ -224,4 +123,102 @@ class AppServiceProvider extends ServiceProvider
         \App\Services\User\UpdateViewPreference::class => \App\Services\User\UpdateViewPreference::class,
         \App\Services\User\AcceptPolicy::class => \App\Services\User\AcceptPolicy::class,
     ];
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if (App::runningInConsole()) {
+            Command::macro('exec', function (string $message, string $commandline) {
+                // @codeCoverageIgnoreStart
+                /** @var \Illuminate\Console\Command */
+                $command = $this;
+                \App\Console\Commands\Helpers\Command::exec($command, $message, $commandline);
+                // @codeCoverageIgnoreEnd
+            });
+            Command::macro('artisan', function (string $message, string $commandline, array $arguments = []) {
+                /** @var \Illuminate\Console\Command */
+                $command = $this;
+                \App\Console\Commands\Helpers\Command::artisan($command, $message, $commandline, $arguments);
+            });
+        }
+
+        View::composer(
+            'partials.components.currency-select', 'App\Http\ViewComposers\CurrencySelectViewComposer'
+        );
+
+        View::composer(
+            'partials.components.date-select', 'App\Http\ViewComposers\DateSelectViewComposer'
+        );
+
+        View::composer(
+            'partials.check', 'App\Http\ViewComposers\InstanceViewComposer'
+        );
+
+        Password::defaults(function () {
+            if (!$this->app->environment('production')) {
+                return Password::min(6);
+            }
+            $rules = Password::min(config('app.password_min'));
+            $config = explode(',', config('app.password_rules'));
+            if (in_array('mixedCase', $config)) {
+                $rules = $rules->mixedCase();
+            }
+            if (in_array('letters', $config)) {
+                $rules = $rules->letters();
+            }
+            if (in_array('numbers', $config)) {
+                $rules = $rules->numbers();
+            }
+            if (in_array('symbols', $config)) {
+                $rules = $rules->symbols();
+            }
+            if (in_array('uncompromised', $config)) {
+                $rules = $rules->uncompromised();
+            }
+
+            return $rules;
+        });
+
+        if (config('database.use_utf8mb4')
+            && DBHelper::connection()->getDriverName() == 'mysql'
+            && !DBHelper::testVersion('5.7.7')) {
+            Schema::defaultStringLength(191);
+        }
+
+        Cashier::useCustomerModel(\App\Models\Account\Account::class);
+
+        VerifyEmail::toMailUsing(function ($user, $verificationUrl) {
+            return EmailMessaging::verifyEmailMail($user, $verificationUrl);
+        });
+        ResetPassword::toMailUsing(function ($user, $token) {
+            return EmailMessaging::resetPasswordMail($user, $token);
+        });
+
+        Paginator::defaultView('vendor.pagination.default');
+
+        RateLimiter::for('GPSCoordinate', function () {
+            return [
+                Limit::perMinute(60),
+                Limit::perDay(5000),
+            ];
+        });
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        Cashier::formatCurrencyUsing(function ($amount, $currency) {
+            $currency = \App\Models\Settings\Currency::where('iso', strtoupper($currency ?? config('cashier.currency')))->first();
+
+            return \App\Helpers\MoneyHelper::format($amount, $currency);
+        });
+    }
 }

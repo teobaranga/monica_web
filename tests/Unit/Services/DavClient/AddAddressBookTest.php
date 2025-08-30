@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\DavClient;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use Mockery\MockInterface;
@@ -16,10 +17,10 @@ class AddAddressBookTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_creates_an_addressbook()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
 
         $this->mock(AddressBookGetter::class, function (MockInterface $mock) {
             $mock->shouldReceive('execute')
@@ -65,10 +66,10 @@ class AddAddressBookTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_next_addressbook()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         AddressBook::factory()->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,

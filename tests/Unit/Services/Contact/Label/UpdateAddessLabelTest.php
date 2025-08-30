@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Label;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Address;
@@ -15,10 +16,10 @@ class UpdateAddessLabelTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_creates_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $address = factory(Address::class)->create([
             'account_id' => $account->id,
         ]);
@@ -45,10 +46,10 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_contact_field_multiple_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $address = factory(Address::class)->create([
             'account_id' => $account->id,
         ]);
@@ -101,10 +102,10 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_adds_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $address = factory(Address::class)->create([
             'account_id' => $account->id,
         ]);
@@ -142,10 +143,10 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_removes_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $address = factory(Address::class)->create([
             'account_id' => $account->id,
         ]);
@@ -183,7 +184,7 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_doesnt_exist()
     {
         $address = factory(Address::class)->create();
@@ -197,10 +198,10 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_field_doesnt_exist()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $this->expectException(ValidationException::class);
 
@@ -211,10 +212,10 @@ class UpdateAddessLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_field_is_wrong_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $address = factory(Address::class)->create();
 
         $this->expectException(ModelNotFoundException::class);

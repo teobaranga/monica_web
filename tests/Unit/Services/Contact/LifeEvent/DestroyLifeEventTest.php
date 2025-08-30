@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\LifeEvent;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Reminder;
@@ -15,10 +16,10 @@ class DestroyLifeEventTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_life_event()
     {
-        $lifeEvent = factory(LifeEvent::class)->create([]);
+        $lifeEvent = factory(LifeEvent::class)->create();
 
         $request = [
             'account_id' => $lifeEvent->account_id,
@@ -36,10 +37,10 @@ class DestroyLifeEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_life_event_and_associated_reminder()
     {
-        $lifeEvent = factory(LifeEvent::class)->create([]);
+        $lifeEvent = factory(LifeEvent::class)->create();
         $reminder = factory(Reminder::class)->create([
             'account_id' => $lifeEvent->account_id,
         ]);
@@ -58,7 +59,7 @@ class DestroyLifeEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -70,11 +71,11 @@ class DestroyLifeEventTest extends TestCase
         app(DestroyLifeEvent::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_life_event_doesnt_exist()
     {
         $account = factory(Account::class)->create();
-        $lifeEvent = factory(LifeEvent::class)->create([]);
+        $lifeEvent = factory(LifeEvent::class)->create();
 
         $request = [
             'account_id' => $account->id,

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Activity\ActivityTypeCategory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\ActivityTypeCategory;
@@ -14,10 +15,10 @@ class UpdateActivityTypeCategoryTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_activity_type_category()
     {
-        $activityTypeCategory = factory(ActivityTypeCategory::class)->create([]);
+        $activityTypeCategory = factory(ActivityTypeCategory::class)->create();
 
         $request = [
             'account_id' => $activityTypeCategory->account_id,
@@ -41,10 +42,10 @@ class UpdateActivityTypeCategoryTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $activityTypeCategory = factory(ActivityTypeCategory::class)->create([]);
+        $activityTypeCategory = factory(ActivityTypeCategory::class)->create();
 
         $request = [
             'name' => '199 Lafayette Street',
@@ -54,11 +55,11 @@ class UpdateActivityTypeCategoryTest extends TestCase
         app(UpdateActivityTypeCategory::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_activity_is_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $activityTypeCategory = factory(ActivityTypeCategory::class)->create([]);
+        $account = factory(Account::class)->create();
+        $activityTypeCategory = factory(ActivityTypeCategory::class)->create();
 
         $request = [
             'account_id' => $account->id,

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\Activity;
@@ -12,23 +13,23 @@ class ActivityTypeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $activityType = factory(ActivityType::class)->create([]);
+        $activityType = factory(ActivityType::class)->create();
 
         $this->assertTrue($activityType->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_category()
     {
-        $activityType = factory(ActivityType::class)->create([]);
+        $activityType = factory(ActivityType::class)->create();
 
         $this->assertTrue($activityType->category()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_activities()
     {
         $account = factory(Account::class)->create();
@@ -43,7 +44,7 @@ class ActivityTypeTest extends TestCase
         $this->assertTrue($account->activities()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_name_attribute()
     {
         $activityType = factory(ActivityType::class)->create([
@@ -67,10 +68,10 @@ class ActivityTypeTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_resets_the_associated_activities()
     {
-        $activityType = factory(ActivityType::class)->create([]);
+        $activityType = factory(ActivityType::class)->create();
         $activity = factory(Activity::class, 10)->create([
             'activity_type_id' => $activityType->id,
         ]);

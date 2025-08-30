@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Contact\Contact;
@@ -13,11 +14,11 @@ class UpdateContactTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_contact()
     {
-        $contact = factory(Contact::class)->create([]);
-        $user = factory(User::class)->create([]);
+        $contact = factory(Contact::class)->create();
+        $user = factory(User::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -58,11 +59,11 @@ class UpdateContactTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_contact_is_archived()
     {
-        $contact = factory(Contact::class)->state('archived')->create([]);
-        $user = factory(User::class)->create([]);
+        $contact = factory(Contact::class)->state('archived')->create();
+        $user = factory(User::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -93,10 +94,10 @@ class UpdateContactTest extends TestCase
         app(UpdateContact::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -125,11 +126,11 @@ class UpdateContactTest extends TestCase
         app(UpdateContact::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_doesnt_exist()
     {
-        $contact = factory(Contact::class)->create([]);
-        $user = factory(User::class)->create([]);
+        $contact = factory(Contact::class)->create();
+        $user = factory(User::class)->create();
 
         $request = [
             'account_id' => 11111,

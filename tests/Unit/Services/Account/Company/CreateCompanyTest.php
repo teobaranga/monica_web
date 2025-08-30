@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Company;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use function Safe\json_encode;
@@ -17,12 +18,12 @@ class CreateCompanyTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_stores_a_company()
     {
         Queue::fake();
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);
@@ -61,10 +62,10 @@ class CreateCompanyTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $request = [
             'street' => '199 Lafayette Street',

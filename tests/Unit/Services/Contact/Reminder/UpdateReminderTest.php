@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Contact\Reminder;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Contact\Contact;
@@ -15,11 +16,11 @@ class UpdateReminderTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_reminder()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
-        $user = factory(User::class)->create([]);
+        Carbon::setTestNow(Carbon::create(2017));
+        $user = factory(User::class)->create();
         $reminder = factory(Reminder::class)->create([
             'account_id' => $user->account_id,
             'initial_date' => '2017-02-02',
@@ -61,10 +62,10 @@ class UpdateReminderTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -76,7 +77,7 @@ class UpdateReminderTest extends TestCase
         app(UpdateReminder::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_frequency_type_is_not_right()
     {
         $reminder = factory(Reminder::class)->create([

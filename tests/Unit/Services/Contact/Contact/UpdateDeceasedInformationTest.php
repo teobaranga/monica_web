@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Contact;
 use App\Models\Contact\Reminder;
@@ -14,12 +15,12 @@ class UpdateDeceasedInformationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_sets_contact_as_not_deceased()
     {
         // first we are going to update a contact and set it as deceased,
         // then we are going to update it again and set it as non deceased
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -57,10 +58,10 @@ class UpdateDeceasedInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_complete_date()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -91,10 +92,10 @@ class UpdateDeceasedInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_complete_date_with_unknown_year()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -125,10 +126,10 @@ class UpdateDeceasedInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_complete_date_and_sets_a_reminder()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -154,10 +155,10 @@ class UpdateDeceasedInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -173,10 +174,10 @@ class UpdateDeceasedInformationTest extends TestCase
         app(UpdateDeceasedInformation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_and_account_are_not_linked()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => 11111111,
@@ -193,10 +194,10 @@ class UpdateDeceasedInformationTest extends TestCase
         app(UpdateDeceasedInformation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_removes_deceased_reminder()
     {
-        $reminder = factory(Reminder::class)->create([]);
+        $reminder = factory(Reminder::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $reminder->account_id,
             'deceased_reminder_id' => $reminder->id,
@@ -220,7 +221,7 @@ class UpdateDeceasedInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_removes_deceased_special_date()
     {
         $special_date = factory(SpecialDate::class)->create();

@@ -3,6 +3,7 @@
 namespace Tests\Commands\Scheduling;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Instance\Cron;
 use App\Console\Scheduling\CronEvent;
@@ -12,7 +13,7 @@ class CronEventTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_get_the_right_command()
     {
         $cron = factory(Cron::class)->create();
@@ -22,7 +23,7 @@ class CronEventTest extends TestCase
         $this->assertEquals($event->cron()->id, $cron->id);
     }
 
-    /** @test */
+    #[Test]
     public function now_not_due()
     {
         $cron = factory(Cron::class)->create();
@@ -31,17 +32,17 @@ class CronEventTest extends TestCase
         $this->assertFalse($event->isDue());
     }
 
-    /** @test */
+    #[Test]
     public function next_minute_is_due()
     {
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7));
 
         $cron = factory(Cron::class)->create();
         $event = new CronEvent($cron);
 
         $this->assertFalse($event->isDue());
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7, 1, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7, 1));
 
         $this->assertTrue($event->isDue());
 
@@ -51,10 +52,10 @@ class CronEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function hourly_cron()
     {
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7));
 
         $cron = factory(Cron::class)->create();
         $event = new CronEvent($cron);
@@ -62,7 +63,7 @@ class CronEventTest extends TestCase
 
         $this->assertFalse($event->isDue());
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 8, 22, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 8, 22));
 
         $this->assertTrue($event->isDue());
 
@@ -71,11 +72,11 @@ class CronEventTest extends TestCase
             'last_run' => '2019-05-01 08:22:00',
         ]);
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 8, 59, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 8, 59));
 
         $this->assertFalse($event->isDue());
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 9, 01, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 9, 01));
 
         $this->assertTrue($event->isDue());
 
@@ -85,16 +86,16 @@ class CronEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function daily_cron()
     {
-        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 1, 7));
 
         $cron = factory(Cron::class)->create();
         $event = new CronEvent($cron);
         $event->daily();
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 2, 8, 10, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 2, 8, 10));
 
         $this->assertTrue($event->isDue());
 
@@ -103,11 +104,11 @@ class CronEventTest extends TestCase
             'last_run' => '2019-05-02 08:10:00',
         ]);
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 2, 10, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 2, 10));
 
         $this->assertFalse($event->isDue());
 
-        Carbon::setTestNow(Carbon::create(2019, 5, 3, 0, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 5, 3));
 
         $this->assertTrue($event->isDue());
 

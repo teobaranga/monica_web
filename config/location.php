@@ -10,7 +10,7 @@ return [
     | Get your ipstack apikey here https://ipstack.com/dashboard
     |
     */
-    'ipstack_apikey' => env('IPSTACK_APIKEY', null),
+    'ipstack_apikey' => env('IPSTACK_APIKEY'),
 
     /*
     |--------------------------------------------------------------------------

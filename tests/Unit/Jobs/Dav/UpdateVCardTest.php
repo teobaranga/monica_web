@@ -2,24 +2,25 @@
 
 namespace Tests\Unit\Jobs\Dav;
 
-use Tests\TestCase;
-use App\Models\User\User;
-use Tests\Api\DAV\CardEtag;
 use App\Jobs\Dav\UpdateVCard;
-use App\Models\Contact\Contact;
-use Illuminate\Bus\PendingBatch;
 use App\Models\Account\AddressBook;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Bus\DatabaseBatchRepository;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Contact\Contact;
+use App\Models\User\User;
 use App\Services\DavClient\Utils\Model\ContactUpdateDto;
+use Illuminate\Bus\DatabaseBatchRepository;
+use Illuminate\Bus\PendingBatch;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Api\DAV\CardEtag;
+use Tests\TestCase;
 
 class UpdateVCardTest extends TestCase
 {
     use DatabaseTransactions;
     use CardEtag;
 
-    /** @test */
+    #[Test]
     public function it_create_a_contact()
     {
         $fake = Bus::fake();

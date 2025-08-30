@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use Carbon\Carbon;
 use App\Models\User\User;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FeatureTestCase;
 use App\Helpers\DateHelper;
 use App\Models\Contact\Debt;
@@ -33,10 +34,10 @@ class ContactTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_gender()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $gender = factory(Gender::class)->create([
             'account_id' => $account->id,
         ]);
@@ -46,10 +47,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->gender()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_relationships()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $relationship = factory(Relationship::class, 2)->create([
             'account_id' => $account->id,
@@ -59,10 +60,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->relationships()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_conversations()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $conversation = factory(Conversation::class, 2)->create([
             'account_id' => $account->id,
@@ -72,10 +73,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->conversations()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_messages()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $messages = factory(Message::class, 2)->create([
             'account_id' => $account->id,
@@ -85,10 +86,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->messages()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_documents()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $documents = factory(Document::class, 2)->create([
             'account_id' => $account->id,
@@ -98,10 +99,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->documents()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_photos()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $photo = factory(Photo::class)->create([
             'account_id' => $account->id,
@@ -112,10 +113,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->photos()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_life_events()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $lifeEvents = factory(LifeEvent::class, 2)->create([
             'account_id' => $account->id,
@@ -124,10 +125,10 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->lifeEvents()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_occupations()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $occupations = factory(Occupation::class, 2)->create([
             'account_id' => $account->id,
@@ -136,7 +137,7 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->occupations()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_logs()
     {
         $contact = factory(Contact::class)->create();
@@ -146,7 +147,7 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->logs()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_nickname()
     {
         $contact = new Contact;
@@ -158,7 +159,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_the_nickname()
     {
         $contact = new Contact;
@@ -170,7 +171,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function name_attribute_returns_name_in_the_right_order()
     {
         $contact = new Contact;
@@ -397,7 +398,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_initials()
     {
         $contact = new Contact;
@@ -441,7 +442,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function get_initials_returns_order_thanks_to_user_preferences()
     {
         $contact = new Contact;
@@ -456,7 +457,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function get_initials_with_special_chars()
     {
         $user = $this->signIn();
@@ -475,7 +476,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_last_activity_date_for_multiple_activities()
     {
         $contact = factory(Contact::class)->create();
@@ -504,7 +505,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_last_activity_date_for_one_activity()
     {
         $contact = factory(Contact::class)->create();
@@ -521,7 +522,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_last_activity_date_for_no_activity()
     {
         $contact = new Contact;
@@ -533,10 +534,10 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_default_avatar_color()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $contact->setAvatarColor();
 
         $this->assertEquals(
@@ -545,7 +546,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_url_of_the_avatar()
     {
         // default
@@ -584,7 +585,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_indicates_that_it_has_not_debts()
     {
         $contact = new Contact;
@@ -594,7 +595,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function a_contact_is_owned_money()
     {
         /** @var Contact $contact */
@@ -610,7 +611,7 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->isOwedMoney());
     }
 
-    /** @test */
+    #[Test]
     public function a_contact_is_not_owned_money()
     {
         /** @var Contact $contact */
@@ -626,7 +627,7 @@ class ContactTest extends FeatureTestCase
         $this->assertFalse($contact->isOwedMoney());
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_amount_of_money_due()
     {
         /** @var Contact $contact */
@@ -657,7 +658,7 @@ class ContactTest extends FeatureTestCase
         $this->assertEquals(10000, $contact->totalOutstandingDebtAmount());
     }
 
-    /** @test */
+    #[Test]
     public function set_special_date_with_age_creates_a_date_and_saves_the_id()
     {
         $contact = factory(Contact::class)->create();
@@ -670,7 +671,7 @@ class ContactTest extends FeatureTestCase
         $this->assertNotNull($contact->birthday_special_date_id);
     }
 
-    /** @test */
+    #[Test]
     public function has_first_met_information_returns_false_if_no_information_is_present()
     {
         $contact = factory(Contact::class)->create();
@@ -678,7 +679,7 @@ class ContactTest extends FeatureTestCase
         $this->assertFalse($contact->hasFirstMetInformation());
     }
 
-    /** @test */
+    #[Test]
     public function has_first_met_information_returns_true_if_at_least_one_info_is_present()
     {
         $contact = factory(Contact::class)->create();
@@ -687,7 +688,7 @@ class ContactTest extends FeatureTestCase
         $this->assertTrue($contact->hasFirstMetInformation());
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_unknown_birthday_state()
     {
         $contact = factory(Contact::class)->create();
@@ -698,7 +699,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_approximate_birthday_state()
     {
         $contact = factory(Contact::class)->create();
@@ -717,7 +718,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_almost_birthday_state()
     {
         $contact = factory(Contact::class)->create();
@@ -737,7 +738,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_exact_birthday_state()
     {
         $contact = factory(Contact::class)->create();
@@ -754,7 +755,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function set_name_returns_false_if_given_an_empty_firstname()
     {
         $contact = factory(Contact::class)->create();
@@ -762,7 +763,7 @@ class ContactTest extends FeatureTestCase
         $this->assertFalse($contact->setName('', 'Test', 'Test'));
     }
 
-    /** @test */
+    #[Test]
     public function set_name_returns_true()
     {
         $contact = factory(Contact::class)->create();
@@ -779,10 +780,10 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_related_relationships_of_a_certain_relationshiptype_group_name()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $relatedContact = factory(Contact::class)->create(['account_id' => $account->id]);
         $otherRelatedContact = factory(Contact::class)->create(['account_id' => $account->id]);
@@ -815,7 +816,7 @@ class ContactTest extends FeatureTestCase
         $this->assertNull($contact->getRelationshipsByRelationshipTypeGroup('love'));
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_right_number_of_birthdays_about_related_contacts()
     {
         $user = $this->signIn();
@@ -881,7 +882,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fetches_the_partial_contact_who_belongs_to_a_real_contact()
     {
         $user = $this->signIn();
@@ -915,10 +916,10 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_stay_in_touch_frequency()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
             'stay_in_touch_frequency' => null,
@@ -934,10 +935,10 @@ class ContactTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_resets_stay_in_touch_frequency_if_set_to_0()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
             'stay_in_touch_frequency' => 3,
@@ -953,10 +954,10 @@ class ContactTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_false_if_frequency_is_not_an_integer()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
         ]);
@@ -966,12 +967,12 @@ class ContactTest extends FeatureTestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_the_stay_in_touch_trigger_date()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
+        Carbon::setTestNow(Carbon::create(2017));
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
         ]);
@@ -990,9 +991,9 @@ class ContactTest extends FeatureTestCase
 
     public function it_resets_the_stay_in_touch_trigger_date()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
+        Carbon::setTestNow(Carbon::create(2017));
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
             'stay_in_touch_trigger_date' => '2018-03-03 00:00:00',
@@ -1003,13 +1004,13 @@ class ContactTest extends FeatureTestCase
         $this->assertNull($contact->stay_in_touch_trigger_date);
     }
 
-    /** @test */
+    #[Test]
     public function it_sends_the_stay_in_touch_email()
     {
         config(['monica.requires_subscription' => false]);
         NotificationFacade::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 15, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 15));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '10:00',
@@ -1035,7 +1036,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_age_at_death()
     {
         $contact = factory(Contact::class)->create();
@@ -1049,7 +1050,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function getting_age_at_death_returns_null()
     {
         $contact = factory(Contact::class)->create();
@@ -1061,7 +1062,7 @@ class ContactTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_default_avatar_url_attribute()
     {
         $contact = factory(Contact::class)->create([

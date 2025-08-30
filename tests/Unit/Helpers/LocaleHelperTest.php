@@ -2,91 +2,16 @@
 
 namespace Tests\Unit\Helpers;
 
-use Tests\FeatureTestCase;
 use App\Helpers\LocaleHelper;
-use Illuminate\Support\Facades\App;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\App;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\FeatureTestCase;
 
 class LocaleHelperTest extends FeatureTestCase
 {
     use DatabaseTransactions;
-
-    /** @test */
-    public function get_locale_returns_english_by_default()
-    {
-        $this->assertEquals(
-            'en',
-            LocaleHelper::getLocale()
-        );
-    }
-
-    /** @test */
-    public function get_locale_returns_right_locale_if_user_logged()
-    {
-        $user = $this->signIn();
-        $user->locale = 'fr';
-        $user->save();
-
-        $this->assertEquals(
-            'fr',
-            LocaleHelper::getLocale()
-        );
-    }
-
-    /** @test */
-    public function get_direction_default()
-    {
-        $this->assertEquals(
-            'ltr',
-            LocaleHelper::getDirection()
-        );
-    }
-
-    /** @test */
-    public function get_direction_french()
-    {
-        App::setLocale('fr');
-
-        $this->assertEquals(
-            'ltr',
-            LocaleHelper::getDirection()
-        );
-    }
-
-    /** @test */
-    public function get_direction_hebrew()
-    {
-        App::setLocale('he');
-
-        $this->assertEquals(
-            'rtl',
-            LocaleHelper::getDirection()
-        );
-    }
-
-    /** @test */
-    public function format_telephone_by_iso()
-    {
-        $tel = LocaleHelper::formatTelephoneNumberByISO('202-555-0191', 'gb');
-
-        $this->assertEquals(
-            '+44 20 2555 0191',
-            $tel
-        );
-    }
-
-    /**
-     * @dataProvider localeHelperGetLangProvider
-     */
-    public function test_locale_get_lang($locale, $expect)
-    {
-        $lang = LocaleHelper::getLang($locale);
-
-        $this->assertEquals(
-            $expect,
-            $lang
-        );
-    }
 
     public static function localeHelperGetLangProvider(): array
     {
@@ -102,19 +27,6 @@ class LocaleHelperTest extends FeatureTestCase
         ];
     }
 
-    /**
-     * @dataProvider localeHelperGetCountryProvider
-     */
-    public function test_locale_get_country($locale, $expect)
-    {
-        $country = LocaleHelper::getCountry($locale);
-
-        $this->assertEquals(
-            $expect,
-            $country
-        );
-    }
-
     public static function localeHelperGetCountryProvider(): array
     {
         return [
@@ -127,10 +39,108 @@ class LocaleHelperTest extends FeatureTestCase
         ];
     }
 
-    /**
-     * @dataProvider localeHelperExtractCountryProvider
-     */
-    public function test_locale_extract_country($locale, $expect)
+    public static function localeHelperExtractCountryProvider(): array
+    {
+        return [
+            ['en', null],
+            ['fr', null],
+            ['en-US', 'US'],
+            ['pt-BR', 'BR'],
+            ['xx-YY', 'YY'],
+        ];
+    }
+
+    #[Test]
+    public function get_locale_returns_english_by_default()
+    {
+        $this->assertEquals(
+            'en',
+            LocaleHelper::getLocale()
+        );
+    }
+
+    #[Test]
+    public function get_locale_returns_right_locale_if_user_logged()
+    {
+        $user = $this->signIn();
+        $user->locale = 'fr';
+        $user->save();
+
+        $this->assertEquals(
+            'fr',
+            LocaleHelper::getLocale()
+        );
+    }
+
+    #[Test]
+    public function get_direction_default()
+    {
+        $this->assertEquals(
+            'ltr',
+            LocaleHelper::getDirection()
+        );
+    }
+
+    #[Test]
+    public function get_direction_french()
+    {
+        App::setLocale('fr');
+
+        $this->assertEquals(
+            'ltr',
+            LocaleHelper::getDirection()
+        );
+    }
+
+    #[Test]
+    public function get_direction_hebrew()
+    {
+        App::setLocale('he');
+
+        $this->assertEquals(
+            'rtl',
+            LocaleHelper::getDirection()
+        );
+    }
+
+    #[Test]
+    public function format_telephone_by_iso()
+    {
+        $tel = LocaleHelper::formatTelephoneNumberByISO('202-555-0191', 'gb');
+
+        $this->assertEquals(
+            '+44 20 2555 0191',
+            $tel
+        );
+    }
+
+    #[Test]
+    #[DataProvider('localeHelperGetLangProvider')]
+    public function locale_get_lang($locale, $expect)
+    {
+        $lang = LocaleHelper::getLang($locale);
+
+        $this->assertEquals(
+            $expect,
+            $lang
+        );
+    }
+
+    #[Test]
+    #[DataProvider('localeHelperGetCountryProvider')]
+    public function locale_get_country($locale, $expect)
+    {
+        $country = LocaleHelper::getCountry($locale);
+
+        $this->assertEquals(
+            $expect,
+            $country
+        );
+    }
+
+    #[Test]
+    #[DataProvider('localeHelperExtractCountryProvider')]
+    public function locale_extract_country($locale, $expect)
     {
         $country = LocaleHelper::extractCountry($locale);
 
@@ -147,16 +157,5 @@ class LocaleHelperTest extends FeatureTestCase
             $expect,
             $country
         );
-    }
-
-    public static function localeHelperExtractCountryProvider(): array
-    {
-        return [
-            ['en', null],
-            ['fr', null],
-            ['en-US', 'US'],
-            ['pt-BR', 'BR'],
-            ['xx-YY', 'YY'],
-        ];
     }
 }

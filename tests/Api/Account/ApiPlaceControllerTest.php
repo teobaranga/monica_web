@@ -167,7 +167,7 @@ class ApiPlaceControllerTest extends ApiTestCase
     {
         $user = $this->signin();
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $place = factory(Place::class)->create([
             'account_id' => $account->id,
         ]);

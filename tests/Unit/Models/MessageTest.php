@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -13,10 +14,10 @@ class MessageTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $message = factory(Message::class)->create([
             'account_id' => $account->id,
         ]);
@@ -24,7 +25,7 @@ class MessageTest extends TestCase
         $this->assertTrue($message->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_contact()
     {
         $contact = factory(Contact::class)->create();
@@ -35,7 +36,7 @@ class MessageTest extends TestCase
         $this->assertTrue($message->contact()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_conversation()
     {
         $conversation = factory(Conversation::class)->create();
@@ -46,7 +47,7 @@ class MessageTest extends TestCase
         $this->assertTrue($message->conversation()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_content_attribute()
     {
         $message = factory(Message::class)->create([

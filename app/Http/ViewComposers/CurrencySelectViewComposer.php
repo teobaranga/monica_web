@@ -15,7 +15,7 @@ class CurrencySelectViewComposer
      */
     public function compose(View $view)
     {
-        $currencies = Currency::orderBy('name', 'asc')->get();
+        $currencies = Currency::orderBy('name')->get();
         $view->with('currencies', $currencies);
     }
 }

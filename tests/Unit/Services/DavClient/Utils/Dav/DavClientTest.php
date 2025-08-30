@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\DavClient\Utils\Dav;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Helpers\DavTester;
 use Illuminate\Support\Facades\Http;
@@ -13,7 +14,7 @@ class DavClientTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_get_options()
     {
         $tester = (new DavTester())
@@ -35,7 +36,7 @@ class DavClientTest extends TestCase
         $tester->assert();
     }
 
-    /** @test */
+    #[Test]
     public function it_get_serviceurl()
     {
         $tester = (new DavTester())
@@ -49,7 +50,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('https://test/dav/', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_get_non_standard_serviceurl()
     {
         $tester = (new DavTester())
@@ -65,7 +66,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('https://test/dav/', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_get_non_standard_serviceurl2()
     {
         $tester = (new DavTester())
@@ -81,7 +82,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('https://test/dav/', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_fail_non_standard()
     {
         $tester = (new DavTester())
@@ -93,7 +94,7 @@ class DavClientTest extends TestCase
         $client->getServiceUrl();
     }
 
-    /** @test */
+    #[Test]
     public function it_get_base_uri()
     {
         $tester = (new DavTester())
@@ -109,7 +110,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('https://test/xxx', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_set_base_uri()
     {
         $tester = (new DavTester())
@@ -122,7 +123,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('https://new', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_call_propfind()
     {
         $tester = (new DavTester())
@@ -141,7 +142,7 @@ class DavClientTest extends TestCase
               '<d:prop>'.
                 '<d:test/>'.
               '</d:prop>'.
-            "</d:propfind>\n", 'PROPFIND')
+            "</d:propfind>\n")
         ->fake();
 
         $client = $tester->client();
@@ -154,7 +155,7 @@ class DavClientTest extends TestCase
         ], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_get_property()
     {
         $tester = (new DavTester())
@@ -173,7 +174,7 @@ class DavClientTest extends TestCase
               '<d:prop>'.
                 '<d:test/>'.
               '</d:prop>'.
-            "</d:propfind>\n", 'PROPFIND')
+            "</d:propfind>\n")
         ->fake();
 
         $client = $tester->client();
@@ -184,7 +185,7 @@ class DavClientTest extends TestCase
         $this->assertEquals('value', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_get_supported_report()
     {
         $tester = (new DavTester('https://test/dav'))
@@ -210,7 +211,7 @@ class DavClientTest extends TestCase
               '<d:prop>'.
                 '<d:supported-report-set/>'.
               '</d:prop>'.
-            "</d:propfind>\n", 'PROPFIND')
+            "</d:propfind>\n")
         ->fake();
 
         $client = $tester->client();
@@ -221,7 +222,7 @@ class DavClientTest extends TestCase
         $this->assertEquals(['{DAV:}test1', '{DAV:}test2'], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_sync_collection()
     {
         $tester = (new DavTester())
@@ -266,7 +267,7 @@ class DavClientTest extends TestCase
         ], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_sync_collection_with_synctoken()
     {
         $tester = (new DavTester())
@@ -311,7 +312,7 @@ class DavClientTest extends TestCase
         ], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_run_addressbook_multiget_report()
     {
         $tester = (new DavTester())
@@ -354,7 +355,7 @@ class DavClientTest extends TestCase
         $tester->assert();
     }
 
-    /** @test */
+    #[Test]
     public function it_run_addressbook_query_report()
     {
         $tester = (new DavTester())
@@ -395,7 +396,7 @@ class DavClientTest extends TestCase
         ], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_run_proppatch()
     {
         $tester = (new DavTester())
@@ -427,7 +428,7 @@ class DavClientTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_run_proppatch_error()
     {
         $tester = (new DavTester())

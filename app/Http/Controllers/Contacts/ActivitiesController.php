@@ -77,11 +77,11 @@ class ActivitiesController extends Controller
     {
         $categories = auth()->user()->account->activityTypeCategories;
 
-        $array = collect([]);
+        $array = collect();
         foreach ($categories as $category) {
             $types = ActivityType::where('activity_type_category_id', $category->id)->get();
 
-            $typeCollection = collect([]);
+            $typeCollection = collect();
             foreach ($types as $type) {
                 $typeCollection->push([
                     'id' => $type->id,
@@ -122,7 +122,7 @@ class ActivitiesController extends Controller
      */
     public function year(ActivityStatisticService $activityStatisticService, Contact $contact, int $year)
     {
-        $startDate = Carbon::create($year, 1, 1);
+        $startDate = Carbon::create($year);
         $endDate = Carbon::create($year, 12, 31);
 
         $activitiesLastTwelveMonths = $activityStatisticService

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Settings\Term;
@@ -12,23 +13,23 @@ class ComplianceHelperTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_checks_if_the_user_has_signed_the_given_term()
     {
-        $user = factory(User::class)->create([]);
-        $term = factory(Term::class)->create([]);
+        $user = factory(User::class)->create();
+        $term = factory(Term::class)->create();
         $this->assertFalse(ComplianceHelper::hasSignedGivenTerm($user, $term));
 
-        $term = factory(Term::class)->create([]);
+        $term = factory(Term::class)->create();
         $user->terms()->sync([$term->id => ['account_id' => $user->account_id]]);
 
         $this->assertTrue(ComplianceHelper::hasSignedGivenTerm($user, $term));
     }
 
-    /** @test */
+    #[Test]
     public function it_checks_if_the_user_has_signed_the_latest_term()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $term = factory(Term::class)->create([
             'created_at' => '1990-02-07 02:26:07',
         ]);

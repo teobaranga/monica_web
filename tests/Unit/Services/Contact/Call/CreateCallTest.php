@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Call;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Call;
 use App\Models\Account\Account;
@@ -16,10 +17,10 @@ class CreateCallTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_stores_a_call()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -44,10 +45,10 @@ class CreateCallTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_a_call_and_who_called_information()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -68,12 +69,12 @@ class CreateCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_adds_emotions()
     {
-        $contact = factory(Contact::class)->create([]);
-        $emotion = factory(Emotion::class)->create([]);
-        $emotion2 = factory(Emotion::class)->create([]);
+        $contact = factory(Contact::class)->create();
+        $emotion = factory(Emotion::class)->create();
+        $emotion2 = factory(Emotion::class)->create();
 
         $emotionArray = [];
         $emotionArray[] = $emotion->id;
@@ -113,10 +114,10 @@ class CreateCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_adding_emotions_when_emotion_is_unknown()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $emotionArray = [];
         $emotionArray[] = 1111111;
 
@@ -134,10 +135,10 @@ class CreateCallTest extends TestCase
         app(CreateCall::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_a_call_without_the_content()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -155,7 +156,7 @@ class CreateCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_the_last_call_info()
     {
         $contact = factory(Contact::class)->create([
@@ -178,7 +179,7 @@ class CreateCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_update_the_last_call_info()
     {
         $contact = factory(Contact::class)->create([
@@ -201,10 +202,10 @@ class CreateCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -215,10 +216,10 @@ class CreateCallTest extends TestCase
         app(CreateCall::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_contact_is_archived()
     {
-        $contact = factory(Contact::class)->state('archived')->create([]);
+        $contact = factory(Contact::class)->state('archived')->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -231,7 +232,7 @@ class CreateCallTest extends TestCase
         app(CreateCall::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_is_not_linked_to_account()
     {
         $account = factory(Account::class)->create();

@@ -15,7 +15,7 @@ class PetsController extends Controller
      */
     public function getPetCategories()
     {
-        $petCategoriesData = collect([]);
+        $petCategoriesData = collect();
 
         $petCategories = PetCategory::all();
 
@@ -38,7 +38,7 @@ class PetsController extends Controller
      */
     public function index(Contact $contact)
     {
-        $petsCollection = collect([]);
+        $petsCollection = collect();
         $pets = $contact->pets;
 
         foreach ($pets as $pet) {

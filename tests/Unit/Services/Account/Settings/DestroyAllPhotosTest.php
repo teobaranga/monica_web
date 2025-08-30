@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Settings;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Contact;
 use Illuminate\Http\UploadedFile;
@@ -15,12 +16,12 @@ class DestroyAllPhotosTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_all_photos()
     {
         Storage::fake();
 
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $photos = [];
         for ($i = 0; $i < 2; $i++) {
@@ -42,7 +43,7 @@ class DestroyAllPhotosTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [];

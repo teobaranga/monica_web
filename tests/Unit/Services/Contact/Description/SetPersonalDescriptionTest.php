@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Description;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use function Safe\json_encode;
@@ -16,12 +17,12 @@ class SetPersonalDescriptionTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_sets_a_personal_description(): void
     {
         Queue::fake();
 
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $contact->account_id,
         ]);
@@ -59,7 +60,7 @@ class SetPersonalDescriptionTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given(): void
     {
         $request = [

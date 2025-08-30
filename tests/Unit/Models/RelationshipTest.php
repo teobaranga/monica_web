@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -13,10 +14,10 @@ class RelationshipTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $relationship = factory(Relationship::class)->create([
             'account_id' => $account->id,
         ]);
@@ -24,10 +25,10 @@ class RelationshipTest extends TestCase
         $this->assertTrue($relationship->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_contact()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $relationship = factory(Relationship::class)->create([
             'contact_is' => $contact->id,
         ]);
@@ -35,10 +36,10 @@ class RelationshipTest extends TestCase
         $this->assertTrue($relationship->contactIs()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_another_contact()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $relationship = factory(Relationship::class)->create([
             'of_contact' => $contact->id,
         ]);
@@ -46,10 +47,10 @@ class RelationshipTest extends TestCase
         $this->assertTrue($relationship->ofContact()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_relationship_type()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $relationshipType = factory(RelationshipType::class)->create([
             'account_id' => $account->id,
         ]);
@@ -61,10 +62,10 @@ class RelationshipTest extends TestCase
         $this->assertTrue($relationship->relationshipType()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_contact_through_with_contact_field()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $relationship = factory(Relationship::class)->create([
             'of_contact' => $contact->id,
         ]);
@@ -72,7 +73,7 @@ class RelationshipTest extends TestCase
         $this->assertTrue($relationship->ofContact()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_reverse_relationship()
     {
         $account = factory(Account::class)->create();
@@ -118,7 +119,7 @@ class RelationshipTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_not_gets_the_reverse_relationship()
     {
         $account = factory(Account::class)->create();

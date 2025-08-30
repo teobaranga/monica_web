@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use Illuminate\Session\Store;
@@ -13,7 +14,7 @@ class Google2FATest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_tests_a_wrong_key_for_Google2fa()
     {
         $google2fa = app('pragmarx.google2fa');
@@ -25,7 +26,7 @@ class Google2FATest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_tests_a_correct_key_for_Google2fa()
     {
         $google2fa = app('pragmarx.google2fa');
@@ -38,7 +39,7 @@ class Google2FATest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_logs_in_with_Google2Fa()
     {
         config(['google2fa.enabled' => true]);

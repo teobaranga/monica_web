@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Helpers\FormHelper;
@@ -11,10 +12,10 @@ class FormHelperTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_gets_name_order_for_a_form()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $user->name_order = 'firstname_lastname';
         $this->assertEquals(
             'firstname',

@@ -2,18 +2,19 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
-use App\Models\Contact\Contact;
-use App\Jobs\Avatars\UpdateGravatar;
-use Illuminate\Support\Facades\Queue;
 use App\Jobs\Avatars\UpdateAllGravatars;
+use App\Jobs\Avatars\UpdateGravatar;
+use App\Models\Contact\Contact;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class UpdateAllGravatarsTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_creates_jobs_for_update_gravatars()
     {
         Queue::fake();

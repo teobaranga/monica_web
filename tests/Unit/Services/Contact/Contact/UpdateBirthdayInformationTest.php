@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Contact;
 use App\Models\Instance\SpecialDate;
@@ -13,13 +14,13 @@ class UpdateBirthdayInformationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_deletes_all_birthday_information()
     {
         // to delete birthday information, we need first to update the contact
         // with its birthday info, then update it again by indicating that
         // we don't know his birthday info
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -66,10 +67,10 @@ class UpdateBirthdayInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_date_if_age_is_provided()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -96,10 +97,10 @@ class UpdateBirthdayInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_complete_date()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -130,10 +131,10 @@ class UpdateBirthdayInformationTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_complete_date_and_sets_a_reminder()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -154,10 +155,10 @@ class UpdateBirthdayInformationTest extends TestCase
         $this->assertNotNull($contact->birthday_reminder_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -174,10 +175,10 @@ class UpdateBirthdayInformationTest extends TestCase
         app(UpdateBirthdayInformation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_and_account_are_not_linked()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => 11111111,

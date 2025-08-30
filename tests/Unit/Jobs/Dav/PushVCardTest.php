@@ -2,29 +2,38 @@
 
 namespace Tests\Unit\Jobs\Dav;
 
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Jobs\Dav\PushVCard;
-use Tests\Api\DAV\CardEtag;
+use App\Models\Account\AddressBookSubscription;
 use App\Models\Contact\Contact;
+use App\Models\User\User;
+use App\Services\DavClient\Utils\Model\ContactPushDto;
+use Illuminate\Bus\DatabaseBatchRepository;
 use Illuminate\Bus\PendingBatch;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Bus\DatabaseBatchRepository;
-use App\Models\Account\AddressBookSubscription;
-use App\Services\DavClient\Utils\Model\ContactPushDto;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Api\DAV\CardEtag;
+use Tests\TestCase;
 
 class PushVCardTest extends TestCase
 {
     use DatabaseTransactions;
     use CardEtag;
 
-    /**
-     * @test
-     * @dataProvider modes
-     */
+    public static function modes(): array
+    {
+        return [
+            [0, []],
+            [1, ['etag']],
+            [2, ['*']],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('modes')]
     public function it_push_card($mode, $ifmatch)
     {
         $fake = Bus::fake();
@@ -72,14 +81,5 @@ class PushVCardTest extends TestCase
 
         $batch = app(DatabaseBatchRepository::class)->store($pendingBatch);
         $job->withBatchId($batch->id)->handle();
-    }
-
-    public static function modes(): array
-    {
-        return [
-            [0, []],
-            [1, ['etag']],
-            [2, ['*']],
-        ];
     }
 }

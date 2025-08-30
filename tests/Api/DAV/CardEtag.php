@@ -107,7 +107,7 @@ N:{$contact->last_name};{$contact->first_name};{$contact->middle_name};;
         $timestamp = $specialDate->created_at->format('Ymd\THis\Z');
 
         $start = $specialDate->date->format('Ymd');
-        $end = $specialDate->date->addDays(1)->format('Ymd');
+        $end = $specialDate->date->addDays()->format('Ymd');
 
         $data = "BEGIN:VCALENDAR
 VERSION:2.0

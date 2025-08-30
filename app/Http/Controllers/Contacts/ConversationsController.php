@@ -42,7 +42,7 @@ class ConversationsController extends Controller
      */
     public function index(Request $request, Contact $contact)
     {
-        $conversationsCollection = collect([]);
+        $conversationsCollection = collect();
         $conversations = $contact->conversations()->get();
 
         foreach ($conversations as $conversation) {
@@ -118,7 +118,7 @@ class ConversationsController extends Controller
         $contact->throwInactive();
 
         // preparing the messages for the Vue component
-        $messages = collect([]);
+        $messages = collect();
         foreach ($conversation->messages as $message) {
             $messages->push([
                 'uid' => $message->id,

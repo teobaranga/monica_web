@@ -2,6 +2,7 @@
 
 namespace Tests\Api\ContactField;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\ContactFieldType;
@@ -25,7 +26,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         'updated_at',
     ];
 
-    /** @test */
+    #[Test]
     public function contact_field_type_get_one()
     {
         $user = $this->signin();
@@ -52,7 +53,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_get_one_error()
     {
         $user = $this->signin();
@@ -62,7 +63,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_create()
     {
         $user = $this->signin();
@@ -93,20 +94,19 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_create_error()
     {
         $user = $this->signin();
 
-        $response = $this->json('POST', '/api/contactfieldtypes', [
-        ]);
+        $response = $this->json('POST', '/api/contactfieldtypes');
 
         $this->expectDataError($response, [
             'The name field is required.',
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_update()
     {
         $user = $this->signin();
@@ -141,7 +141,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_update_error()
     {
         $user = $this->signin();
@@ -149,14 +149,14 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/api/contactfieldtypes/'.$contactFieldType->id, []);
+        $response = $this->json('PUT', '/api/contactfieldtypes/'.$contactFieldType->id);
 
         $this->expectDataError($response, [
             'The name field is required.',
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_update_error_bad_account()
     {
         $user = $this->signin();
@@ -175,7 +175,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_delete()
     {
         $user = $this->signin();
@@ -196,7 +196,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_delete_error()
     {
         $user = $this->signin();
@@ -206,7 +206,7 @@ class ApiContactFieldTypeControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function contact_field_type_delete_bad_account()
     {
         $user = $this->signin();

@@ -36,7 +36,7 @@ class DashboardController extends Controller
         }
 
         // Fetch last updated contacts
-        $lastUpdatedContactsCollection = collect([]);
+        $lastUpdatedContactsCollection = collect();
         $lastUpdatedContacts = $account->contacts()
             ->real()
             ->active()
@@ -104,7 +104,7 @@ class DashboardController extends Controller
      */
     public function calls()
     {
-        $callsCollection = collect([]);
+        $callsCollection = collect();
         $calls = auth()->user()->account->calls()
             ->get()
             ->reject(function ($call) {
@@ -132,7 +132,7 @@ class DashboardController extends Controller
      */
     public function notes()
     {
-        $notesCollection = collect([]);
+        $notesCollection = collect();
         $notes = auth()->user()->account->notes()->favorited()->get();
 
         foreach ($notes as $note) {
@@ -163,7 +163,7 @@ class DashboardController extends Controller
      */
     public function debts()
     {
-        $debtsCollection = collect([]);
+        $debtsCollection = collect();
         $debts = auth()->user()->account->debts()->get();
 
         foreach ($debts as $debt) {

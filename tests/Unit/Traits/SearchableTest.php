@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Traits;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Contact;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -10,7 +11,7 @@ class SearchableTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function testSearchContactsReturnsCollection()
     {
         $contact = factory(Contact::class)->make();
@@ -20,7 +21,7 @@ class SearchableTest extends TestCase
         $this->assertInstanceOf('Illuminate\Pagination\LengthAwarePaginator', $searchResults);
     }
 
-    /** @test */
+    #[Test]
     public function testSearchContactsThroughFirstNameAndResultContainsContact()
     {
         $contact = factory(Contact::class)->create(['first_name' => 'FirstName']);
@@ -30,7 +31,7 @@ class SearchableTest extends TestCase
         $this->assertTrue($searchResults->contains($contact));
     }
 
-    /** @test */
+    #[Test]
     public function testSearchContactsThroughMiddleNameAndResultContainsContact()
     {
         $contact = factory(Contact::class)->create(['middle_name' => 'MiddleName']);
@@ -40,7 +41,7 @@ class SearchableTest extends TestCase
         $this->assertTrue($searchResults->contains($contact));
     }
 
-    /** @test */
+    #[Test]
     public function testSearchContactsThroughLastNameAndResultContainsContact()
     {
         $contact = factory(Contact::class)->create(['last_name' => 'LastName']);

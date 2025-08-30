@@ -17,11 +17,11 @@ class AddDavUuid extends Migration
             $table->index(['account_id', 'uuid']);
         });
         Schema::table('special_dates', function (Blueprint $table) {
-            $table->uuid('uuid')->after('contact_id')->nullable();
+            $table->uuid()->after('contact_id')->nullable();
             $table->index(['account_id', 'uuid']);
         });
         Schema::table('tasks', function (Blueprint $table) {
-            $table->uuid('uuid')->after('contact_id')->nullable();
+            $table->uuid()->after('contact_id')->nullable();
             $table->index(['account_id', 'uuid']);
         });
         Schema::table('synctoken', function (Blueprint $table) {

@@ -2,27 +2,28 @@
 
 namespace Tests\Unit\Jobs\Dav;
 
-use Tests\TestCase;
-use App\Models\User\User;
-use Mockery\MockInterface;
-use Tests\Api\DAV\CardEtag;
-use App\Jobs\Dav\UpdateVCard;
-use App\Models\Contact\Contact;
-use Illuminate\Bus\PendingBatch;
 use App\Jobs\Dav\GetMultipleVCard;
-use Illuminate\Support\Facades\Bus;
-use Sabre\CardDAV\Plugin as CardDAVPlugin;
-use Illuminate\Bus\DatabaseBatchRepository;
+use App\Jobs\Dav\UpdateVCard;
 use App\Models\Account\AddressBookSubscription;
+use App\Models\Contact\Contact;
+use App\Models\User\User;
 use App\Services\DavClient\Utils\Dav\DavClient;
+use Illuminate\Bus\DatabaseBatchRepository;
+use Illuminate\Bus\PendingBatch;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
+use Sabre\CardDAV\Plugin as CardDAVPlugin;
+use Tests\Api\DAV\CardEtag;
+use Tests\TestCase;
 
 class GetMultipleVCardTest extends TestCase
 {
     use DatabaseTransactions;
     use CardEtag;
 
-    /** @test */
+    #[Test]
     public function it_get_cards()
     {
         $fake = Bus::fake();
@@ -51,7 +52,7 @@ class GetMultipleVCardTest extends TestCase
                     $this->assertEquals([
                         '{DAV:}getetag',
                         [
-                            'name' => '{'.CardDAVPlugin::NS_CARDDAV.'}address-data',
+                            'name' => '{' . CardDAVPlugin::NS_CARDDAV . '}address-data',
                             'value' => null,
                             'attributes' => [
                                 'content-type' => 'text/vcard',
@@ -66,7 +67,7 @@ class GetMultipleVCardTest extends TestCase
                 ->andReturn([
                     'https://test/dav/uri' => [
                         200 => [
-                            '{'.CardDAVPlugin::NS_CARDDAV.'}address-data' => $card,
+                            '{' . CardDAVPlugin::NS_CARDDAV . '}address-data' => $card,
                             '{DAV:}getetag' => $etag,
                         ],
                     ],
@@ -98,7 +99,7 @@ class GetMultipleVCardTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_get_cards_mock_http()
     {
         $fake = Bus::fake();
@@ -127,7 +128,7 @@ class GetMultipleVCardTest extends TestCase
                     $this->assertEquals([
                         '{DAV:}getetag',
                         [
-                            'name' => '{'.CardDAVPlugin::NS_CARDDAV.'}address-data',
+                            'name' => '{' . CardDAVPlugin::NS_CARDDAV . '}address-data',
                             'value' => null,
                             'attributes' => [
                                 'content-type' => 'text/vcard',
@@ -142,7 +143,7 @@ class GetMultipleVCardTest extends TestCase
                 ->andReturn([
                     'https://test/dav/uri' => [
                         200 => [
-                            '{'.CardDAVPlugin::NS_CARDDAV.'}address-data' => $card,
+                            '{' . CardDAVPlugin::NS_CARDDAV . '}address-data' => $card,
                             '{DAV:}getetag' => $etag,
                         ],
                     ],

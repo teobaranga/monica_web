@@ -47,14 +47,14 @@ class ActivityStatisticService
      */
     public function activitiesPerMonthForYear(Contact $contact, int $year)
     {
-        $startDate = Carbon::create($year, 1, 1, 0, 0, 0);
+        $startDate = Carbon::create($year);
         $endDate = Carbon::create($year, 12, 31);
 
         $activities = $this->activitiesWithContactInTimeRange($contact, $startDate, $endDate);
 
-        $activitiesPerMonth = collect([]);
+        $activitiesPerMonth = collect();
         for ($month = 1; $month < 13; $month++) {
-            $activitiesInMonth = collect([]);
+            $activitiesInMonth = collect();
 
             foreach ($activities as $activity) {
                 if ($activity->happened_at->month === $month) {
@@ -112,7 +112,7 @@ class ActivityStatisticService
             return collect($item)->count();
         });
 
-        $activityTypes = collect([]);
+        $activityTypes = collect();
         foreach ($activities as $key => $value) {
             $activityTypes->push([
                 'object' => ActivityType::find($key),

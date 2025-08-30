@@ -32,10 +32,10 @@ return [
 
     'stripe' => [
         'model' => App\Models\Account\Account::class,
-        'key' => env('STRIPE_KEY', null),
-        'secret' => env('STRIPE_SECRET', null),
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
         'webhook' => [
-            'secret' => env('STRIPE_WEBHOOK_SECRET', null),
+            'secret' => env('STRIPE_WEBHOOK_SECRET'),
             'tolerance' => env('STRIPE_WEBHOOK_TOLERANCE', 300),
         ],
     ],

@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 use App\Models\User\User;
 use App\Models\Account\Photo;
@@ -48,7 +49,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         return $photo;
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_list_of_photos()
     {
         $user = $this->signin();
@@ -78,7 +79,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_applies_the_limit_parameter_in_search()
     {
         $user = $this->signin();
@@ -106,7 +107,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_photo()
     {
         $user = $this->signin();
@@ -122,7 +123,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function photo_show_gets_an_error_if_photo_is_not_linked_to_account()
     {
         $user = $this->signin();
@@ -139,7 +140,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_photo_for_a_specific_contact()
     {
         $user = $this->signin();
@@ -164,7 +165,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_store_a_photo_for_a_specific_contact()
     {
         Storage::fake();
@@ -193,20 +194,19 @@ class ApiPhotoControllerTest extends ApiTestCase
         Storage::disk('public')->assertExists($response->json('data.new_filename'));
     }
 
-    /** @test */
+    #[Test]
     public function photo_store_gets_an_error_if_fields_are_missing()
     {
         $user = $this->signin();
 
-        $response = $this->json('POST', '/api/photos', [
-        ]);
+        $response = $this->json('POST', '/api/photos');
 
         $this->expectDataError($response, [
             'The contact id field is required.',
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function photo_store_gets_an_error_if_contact_is_not_linked_to_user()
     {
         $user = $this->signin();
@@ -222,7 +222,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_destroy_a_photo()
     {
         $user = $this->signin();
@@ -244,7 +244,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function photo_destroy_gets_an_error_if_photo_is_not_linked_to_account()
     {
         $user = $this->signin();
@@ -261,7 +261,7 @@ class ApiPhotoControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_store_and_destroy_a_photo()
     {
         Storage::fake();

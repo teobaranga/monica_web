@@ -26,7 +26,7 @@ class UpdateAmountFormat extends Migration
     private function fixDebts()
     {
         Schema::table('debts', function (Blueprint $table) {
-            $table->decimal('amount', 13, 2)->change();
+            $table->decimal('amount', 13)->change();
             $table->unsignedInteger('currency_id')->after('amount')->nullable();
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null');
         });

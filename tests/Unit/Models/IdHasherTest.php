@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Contact;
 use App\Services\Instance\IdHasher;
@@ -11,7 +12,7 @@ class IdHasherTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_prepends_the_id_with_the_letter_h()
     {
         $idHasher = new IdHasher();
@@ -25,7 +26,7 @@ class IdHasherTest extends TestCase
         $this->assertEquals('h', $value);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_id_back()
     {
         $idHasher = new IdHasher();
@@ -39,7 +40,7 @@ class IdHasherTest extends TestCase
         $this->assertEquals($test_id, $result_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_an_exception_when_the_id_is_not_valid()
     {
         $idHasher = new IdHasher();
@@ -51,7 +52,7 @@ class IdHasherTest extends TestCase
         $idHasher->decodeId($test_id);
     }
 
-    /** @test */
+    #[Test]
     public function it_decodes_the_hash_and_returns_the_right_id()
     {
         $idHasher = new IdHasher();

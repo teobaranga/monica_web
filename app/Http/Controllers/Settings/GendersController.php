@@ -22,7 +22,7 @@ class GendersController extends Controller
      */
     public function index()
     {
-        $gendersData = collect([]);
+        $gendersData = collect();
         $genders = auth()->user()->account->genders;
 
         foreach ($genders as $gender) {
@@ -37,7 +37,7 @@ class GendersController extends Controller
      */
     public function types()
     {
-        $gendersData = collect([]);
+        $gendersData = collect();
 
         $types = [
             Gender::MALE,

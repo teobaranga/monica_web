@@ -297,14 +297,14 @@ class CardDAVTest extends ApiTestCase
 
     public function test_carddav_sync_collection_with_token()
     {
-        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9));
 
         $user = $this->signin();
         $contact = factory(Contact::class)->create([
             'account_id' => $user->account_id,
         ]);
 
-        Carbon::setTestNow(Carbon::create(2018, 1, 1, 8, 0, 0));
+        Carbon::setTestNow(Carbon::create(2018, 1, 1, 8));
         $token = factory(SyncToken::class)->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,
@@ -398,15 +398,15 @@ class CardDAVTest extends ApiTestCase
 
     public function test_carddav_sync_collection_deleted_contact()
     {
-        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9));
 
         $user = $this->signin();
         $contact = factory(Contact::class)->create([
             'account_id' => $user->account_id,
-            'deleted_at' => Carbon::create(2019, 3, 1, 9, 0, 0),
+            'deleted_at' => Carbon::create(2019, 3, 1, 9),
         ]);
 
-        Carbon::setTestNow(Carbon::create(2019, 2, 1, 9, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 2, 1, 9));
         $token = factory(SyncToken::class)->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,
@@ -414,7 +414,7 @@ class CardDAVTest extends ApiTestCase
             'timestamp' => now(),
         ]);
 
-        Carbon::setTestNow(Carbon::create(2019, 4, 1, 9, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 4, 1, 9));
 
         $response = $this->call('REPORT', "/dav/addressbooks/{$user->email}/contacts/", [], [], [],
             [

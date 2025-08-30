@@ -149,7 +149,7 @@ class ContactsController extends Controller
      */
     public function create(Request $request)
     {
-        return $this->createForm($request, false);
+        return $this->createForm($request);
     }
 
     /**
@@ -204,10 +204,10 @@ class ContactsController extends Controller
                 'account_id' => auth()->user()->account_id,
                 'author_id' => auth()->user()->id,
                 'first_name' => $request->input('first_name'),
-                'middle_name' => $request->input('middle_name', null),
-                'last_name' => $request->input('last_name', null),
-                'nickname' => $request->input('nickname', null),
-                'email' => $request->input('email', null),
+                'middle_name' => $request->input('middle_name'),
+                'last_name' => $request->input('last_name'),
+                'nickname' => $request->input('nickname'),
+                'email' => $request->input('email'),
                 'gender_id' => $request->input('gender'),
                 'is_birthdate_known' => false,
                 'is_deceased' => false,
@@ -418,11 +418,11 @@ class ContactsController extends Controller
             'author_id' => auth()->user()->id,
             'contact_id' => $contact->id,
             'first_name' => $request->input('firstname'),
-            'middle_name' => $request->input('middlename', null),
-            'last_name' => $request->input('lastname', null),
-            'nickname' => $request->input('nickname', null),
+            'middle_name' => $request->input('middlename'),
+            'last_name' => $request->input('lastname'),
+            'nickname' => $request->input('nickname'),
             'gender_id' => $request->input('gender'),
-            'description' => $request->input('description', null),
+            'description' => $request->input('description'),
             'is_birthdate_known' => ! empty($request->input('birthdate')) && $request->input('birthdate') !== 'unknown',
             'birthdate_day' => $day,
             'birthdate_month' => $month,

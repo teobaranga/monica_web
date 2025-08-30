@@ -34,7 +34,7 @@ class SendReminders extends Command
         // between two timezones and we need to take into accounts reminders
         // that are not in the same timezone.
         ReminderOutbox::where('planned_date', '<', now()->addDays(2))
-                    ->orderBy('planned_date', 'asc')
+                    ->orderBy('planned_date')
                     ->chunk(500, function ($reminderOutboxes) {
                         $this->send($reminderOutboxes);
                     });

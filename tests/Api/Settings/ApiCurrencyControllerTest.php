@@ -2,6 +2,7 @@
 
 namespace Tests\Api\Settings;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 use App\Models\Settings\Currency;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -18,7 +19,7 @@ class ApiCurrencyControllerTest extends ApiTestCase
         'symbol',
     ];
 
-    /** @test */
+    #[Test]
     public function it_gets_all_the_currencies()
     {
         // in theory the currencies table is seeded by the initial script
@@ -41,10 +42,10 @@ class ApiCurrencyControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_one_currency()
     {
-        $currency = factory(Currency::class)->create([]);
+        $currency = factory(Currency::class)->create();
 
         $response = $this->json('GET', '/api/currencies/'.$currency->id);
 
@@ -60,7 +61,7 @@ class ApiCurrencyControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_currency_that_is_invalid()
     {
         $response = $this->json('GET', '/api/currencies/0');

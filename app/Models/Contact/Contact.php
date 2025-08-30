@@ -1433,7 +1433,7 @@ class Contact extends Model
     {
         if ($tags == 'NONE') {
             // get tagless contacts
-            $query = $query->has('tags', '<', 1);
+            $query = $query->has('tags', '<');
         } elseif (! empty($tags)) {
             // gets users who have all the tags
             foreach ($tags as $tag) {

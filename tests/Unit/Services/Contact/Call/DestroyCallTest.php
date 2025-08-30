@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Call;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Call;
 use App\Models\Contact\Contact;
@@ -15,10 +16,10 @@ class DestroyCallTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_call()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $call = factory(Call::class)->create([
             'contact_id' => $contact->id,
             'called_at' => '2008-01-01',
@@ -40,15 +41,15 @@ class DestroyCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_removes_emotions()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $call = factory(Call::class)->create([
             'contact_id' => $contact->id,
         ]);
 
-        $emotion = factory(Emotion::class)->create([]);
+        $emotion = factory(Emotion::class)->create();
 
         DB::table('emotion_call')->insert([
             'account_id' => $call->account_id,
@@ -72,7 +73,7 @@ class DestroyCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_the_last_talked_to_information()
     {
         $contact = factory(Contact::class)->create([
@@ -104,7 +105,7 @@ class DestroyCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_update_the_last_talked_to_information()
     {
         $contact = factory(Contact::class)->create([
@@ -128,10 +129,10 @@ class DestroyCallTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_contact_is_archived()
     {
-        $contact = factory(Contact::class)->state('archived')->create([]);
+        $contact = factory(Contact::class)->state('archived')->create();
         $call = factory(Call::class)->create([
             'account_id' => $contact->account_id,
             'contact_id' => $contact->id,

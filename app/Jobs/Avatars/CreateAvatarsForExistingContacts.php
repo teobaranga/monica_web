@@ -55,7 +55,7 @@ class CreateAvatarsForExistingContacts implements ShouldQueue
                     GenerateDefaultAvatar::dispatch($contact)
                         ->delay($delay);
                 }
-                $delay = $delay->addMinutes(1);
+                $delay = $delay->addMinutes();
             });
     }
 }

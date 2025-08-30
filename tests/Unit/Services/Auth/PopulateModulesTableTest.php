@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Auth;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Account\Account;
@@ -14,7 +15,7 @@ class PopulateModulesTableTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -35,10 +36,10 @@ class PopulateModulesTableTest extends TestCase
         app(PopulateModulesTable::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_populate_modules_tables()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);
@@ -67,10 +68,10 @@ class PopulateModulesTableTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_only_populates_module_tables_partially()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);

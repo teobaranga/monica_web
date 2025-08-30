@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\ReminderRule;
@@ -11,16 +12,16 @@ class ReminderRuleTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $reminderRule = factory(ReminderRule::class)->create(['account_id' => $account->id]);
 
         $this->assertTrue($reminderRule->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_number_of_days_before_attribute()
     {
         $reminderRule = factory(ReminderRule::class)->create(['number_of_days_before' => '14']);
@@ -31,7 +32,7 @@ class ReminderRuleTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_number_of_days_before_attribute()
     {
         $reminderRule = new ReminderRule;

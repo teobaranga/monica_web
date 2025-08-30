@@ -2,29 +2,30 @@
 
 namespace Tests\Unit\Jobs\Reminder;
 
-use Carbon\Carbon;
-use Tests\TestCase;
-use App\Models\User\User;
+use App\Jobs\Reminder\NotifyUserAboutReminder;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
 use App\Models\Contact\Reminder;
+use App\Models\Contact\ReminderOutbox;
+use App\Models\User\User;
 use App\Notifications\UserNotified;
 use App\Notifications\UserReminded;
-use App\Models\Contact\ReminderOutbox;
-use Illuminate\Support\Facades\Notification;
-use App\Jobs\Reminder\NotifyUserAboutReminder;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class NotifyUserAboutReminderTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_sends_a_reminder_to_a_user()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',
@@ -65,12 +66,12 @@ class NotifyUserAboutReminderTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_sends_a_notification_to_a_user()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',
@@ -111,12 +112,12 @@ class NotifyUserAboutReminderTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_notify_a_user_if_he_is_on_the_free_plan()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
         config(['monica.requires_subscription' => true]);
 
         $account = factory(Account::class)->create([
@@ -148,12 +149,12 @@ class NotifyUserAboutReminderTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_notify_a_user_if_contact_deleted()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',
@@ -186,12 +187,12 @@ class NotifyUserAboutReminderTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_the_one_time_reminder_has_inactive_once_it_is_sent()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',
@@ -226,12 +227,12 @@ class NotifyUserAboutReminderTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_reschedule_a_recurring_reminder_once_it_is_sent()
     {
         Notification::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -12,10 +13,10 @@ class DocumentTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $document = factory(Document::class)->create([
             'account_id' => $account->id,
         ]);
@@ -23,7 +24,7 @@ class DocumentTest extends TestCase
         $this->assertTrue($document->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_contact()
     {
         $contact = factory(Contact::class)->create();
@@ -34,7 +35,7 @@ class DocumentTest extends TestCase
         $this->assertTrue($document->contact()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_download_link()
     {
         $document = factory(Document::class)->create();

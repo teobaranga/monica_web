@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Settings\Term;
@@ -30,19 +31,19 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
 
         $this->assertTrue($user->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_many_terms()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
         $term = factory(Term::class)->create();
         $user->terms()->sync([$term->id => ['account_id' => $account->id]]);
@@ -54,7 +55,7 @@ class UserTest extends TestCase
         $this->assertTrue($user->terms()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function name_accessor_returns_name_in_the_user_preferred_way()
     {
         $user = new User;
@@ -75,7 +76,7 @@ class UserTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_2fa_secret_attribute()
     {
         $user = new User;
@@ -90,7 +91,7 @@ class UserTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_fluid_layout()
     {
         $user = new User;
@@ -109,7 +110,7 @@ class UserTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_locale()
     {
         $user = new User;
@@ -121,10 +122,10 @@ class UserTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function user_should_not_be_reminded_because_dates_are_different()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
+        Carbon::setTestNow(Carbon::create(2017));
         $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
         $reminder = factory(Reminder::class)->create([
@@ -135,10 +136,10 @@ class UserTest extends TestCase
         $this->assertFalse($user->isTheRightTimeToBeReminded($reminder->initial_date));
     }
 
-    /** @test */
+    #[Test]
     public function user_should_not_be_reminded_because_hours_are_different()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
         $account = factory(Account::class)->create(['default_time_reminder_is_sent' => '08:00']);
         $user = factory(User::class)->create(['account_id' => $account->id]);
         $reminder = factory(Reminder::class)->create([
@@ -149,10 +150,10 @@ class UserTest extends TestCase
         $this->assertFalse($user->isTheRightTimeToBeReminded($reminder->initial_date));
     }
 
-    /** @test */
+    #[Test]
     public function user_should_not_be_reminded_because_timezone_is_different()
     {
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 7));
         $account = factory(Account::class)->create(['default_time_reminder_is_sent' => '07:00']);
         $user = factory(User::class)->create([
             'account_id' => $account->id,
@@ -166,7 +167,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->isTheRightTimeToBeReminded($reminder->initial_date));
     }
 
-    /** @test */
+    #[Test]
     public function user_should_be_reminded()
     {
         Carbon::setTestNow(Carbon::create(2017, 1, 1, 7, 32, 12));
@@ -180,12 +181,12 @@ class UserTest extends TestCase
         $this->assertTrue($user->isTheRightTimeToBeReminded($reminder->initial_date));
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_en()
     {
         App::setLocale('en');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'USD')->first();
 
@@ -202,12 +203,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_fr()
     {
         App::setLocale('fr');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -224,12 +225,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_cs()
     {
         App::setLocale('cs');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'CZK')->first();
 
@@ -246,12 +247,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_de()
     {
         App::setLocale('de');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -268,12 +269,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_es()
     {
         App::setLocale('es');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -290,12 +291,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_he()
     {
         App::setLocale('he');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'ILS')->first();
 
@@ -312,12 +313,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_it()
     {
         App::setLocale('it');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -334,12 +335,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_nl()
     {
         App::setLocale('nl');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -356,12 +357,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_pt()
     {
         App::setLocale('pt');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'EUR')->first();
 
@@ -378,12 +379,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_ru()
     {
         App::setLocale('ru');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'RUB')->first();
 
@@ -400,12 +401,12 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_default_user_zh()
     {
         App::setLocale('zh');
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = $this->createUser($account->id, 'John', 'Doe', 'john@doe.com', 'password');
         $currency = Currency::where('iso', 'CNY')->first();
 
@@ -422,7 +423,7 @@ class UserTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_sends_a_verification_email()
     {
         config(['monica.signup_double_optin' => true]);
@@ -431,7 +432,7 @@ class UserTest extends TestCase
         // Creating a fake account
         factory(Account::class)->create();
 
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $user->sendEmailVerificationNotification();
 
         Notification::assertSentTo(
@@ -439,13 +440,13 @@ class UserTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_send_a_verification_email_if_the_double_optin_is_disabled_at_the_instance_level()
     {
         config(['monica.signup_double_optin' => false]);
         Notification::fake();
 
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $user->sendEmailVerificationNotification();
 
         Notification::assertNothingSent();

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Instance\AuditLog;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Contact\Contact;
@@ -15,10 +16,10 @@ class LogAccountActionTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_logs_an_action(): void
     {
-        $michael = factory(User::class)->create([]);
+        $michael = factory(User::class)->create();
 
         $date = Carbon::now();
 
@@ -51,10 +52,10 @@ class LogAccountActionTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_logs_an_action_about_a_contact(): void
     {
-        $michael = factory(User::class)->create([]);
+        $michael = factory(User::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $michael->account_id,
         ]);
@@ -91,7 +92,7 @@ class LogAccountActionTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given(): void
     {
         $request = [

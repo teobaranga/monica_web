@@ -15,7 +15,7 @@ class ContactFieldsController extends Controller
      */
     public function getContactFields(Contact $contact)
     {
-        $contactInformationData = collect([]);
+        $contactInformationData = collect();
 
         foreach ($contact->contactFields as $contactField) {
             $data = [

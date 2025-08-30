@@ -16,7 +16,7 @@ class NotesController extends Controller
      */
     public function index(Contact $contact)
     {
-        $notesCollection = collect([]);
+        $notesCollection = collect();
         $notes = $contact->notes()->latest()->get();
 
         foreach ($notes as $note) {

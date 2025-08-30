@@ -69,7 +69,7 @@
             <ul class="chart-activities">
               @foreach ($activitiesPerMonthForYear->sortBy('month') as $activityMonth)
               <li>
-                <span class="f6" style="height: {{ $activityMonth['percent'] }}%" title="{{ \App\Helpers\DateHelper::getShortMonth(\Carbon\Carbon::create(1990, $activityMonth['month'], 1)) }}"></span>
+                <span class="f6" style="height: {{ $activityMonth['percent'] }}%" title="{{ \App\Helpers\DateHelper::getShortMonth(\Carbon\Carbon::create(1990, $activityMonth['month'])) }}"></span>
               </li>
               @endforeach
             </ul>

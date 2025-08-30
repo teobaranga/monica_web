@@ -56,7 +56,7 @@ class LifeEventsController extends Controller
      */
     public function index(Request $request, Contact $contact)
     {
-        $lifeEventsCollection = collect([]);
+        $lifeEventsCollection = collect();
         $lifeEvents = $contact->lifeEvents()->get();
 
         foreach ($lifeEvents as $lifeEvent) {

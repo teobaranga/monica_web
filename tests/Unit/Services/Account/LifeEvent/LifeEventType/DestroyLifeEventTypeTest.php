@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\LifeEvent\LifeEventType;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\LifeEventType;
@@ -14,10 +15,10 @@ class DestroyLifeEventTypeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_life_event_type()
     {
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $lifeEventType = factory(LifeEventType::class)->create();
 
         $request = [
             'account_id' => $lifeEventType->account_id,
@@ -31,11 +32,11 @@ class DestroyLifeEventTypeTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_is_not_linked_to_life_event_type()
     {
-        $account = factory(Account::class)->create([]);
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $account = factory(Account::class)->create();
+        $lifeEventType = factory(LifeEventType::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -46,7 +47,7 @@ class DestroyLifeEventTypeTest extends TestCase
         app(DestroyLifeEventType::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_ids_do_not_exist()
     {
         $request = [

@@ -182,7 +182,7 @@ class ApiOccupationControllerTest extends ApiTestCase
     {
         $user = $this->signin();
 
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $occupation = factory(Occupation::class)->create([
             'account_id' => $account->id,
         ]);

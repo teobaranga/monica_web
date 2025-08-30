@@ -294,7 +294,7 @@ class DateHelper
      */
     public static function getListOfYears($max = 120, $min = 0): Collection
     {
-        $years = collect([]);
+        $years = collect();
         $maxYear = now(static::getTimezone())->subYears($min)->year;
         $minYear = now(static::getTimezone())->subYears($max)->year;
 
@@ -315,7 +315,7 @@ class DateHelper
      */
     public static function getListOfMonths(): Collection
     {
-        $months = collect([]);
+        $months = collect();
         $currentDate = Carbon::parse('2000-01-01');
         $format = trans('format.full_month', [], Carbon::getLocale());
 
@@ -337,7 +337,7 @@ class DateHelper
      */
     public static function getListOfDays(): Collection
     {
-        $days = collect([]);
+        $days = collect();
         for ($day = 1; $day <= 31; $day++) {
             $days->push(['id' => $day, 'name' => $day]);
         }
@@ -355,7 +355,7 @@ class DateHelper
         $currentDate = Carbon::parse('2000-01-01 00:00:00');
         $format = trans('format.full_hour', [], Carbon::getLocale());
 
-        $hours = collect([]);
+        $hours = collect();
         for ($hour = 1; $hour <= 24; $hour++) {
             $currentDate->hour = $hour;
             $hours->push([

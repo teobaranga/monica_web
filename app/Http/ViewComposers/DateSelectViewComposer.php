@@ -19,7 +19,7 @@ class DateSelectViewComposer
         $months = DateHelper::getListOfMonths();
 
         // Years
-        $years = DateHelper::getListOfYears(120);
+        $years = DateHelper::getListOfYears();
 
         $view->with([
             'months' => $months,

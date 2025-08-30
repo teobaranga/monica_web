@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Activity\ActivityTypeCategory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\ActivityTypeCategory;
@@ -14,10 +15,10 @@ class DestroyActivityTypeCategoryTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_activity_type_category()
     {
-        $activityTypeCategory = factory(ActivityTypeCategory::class)->create([]);
+        $activityTypeCategory = factory(ActivityTypeCategory::class)->create();
 
         $request = [
             'account_id' => $activityTypeCategory->account_id,
@@ -31,11 +32,11 @@ class DestroyActivityTypeCategoryTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_is_not_linked_to_activity_type_category()
     {
-        $account = factory(Account::class)->create([]);
-        $activityTypeCategory = factory(ActivityTypeCategory::class)->create([]);
+        $account = factory(Account::class)->create();
+        $activityTypeCategory = factory(ActivityTypeCategory::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -46,7 +47,7 @@ class DestroyActivityTypeCategoryTest extends TestCase
         app(DestroyActivityTypeCategory::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_ids_do_not_exist()
     {
         $request = [

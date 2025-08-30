@@ -236,7 +236,7 @@ class VCardContactTest extends ApiTestCase
 
         $response = $this->call('PUT', "/dav/addressbooks/{$user->email}/contacts/{$filename}", [], [], [],
             [
-                'HTTP_If-Modified-Since' => $contact->updated_at->addDays(1)->toRfc7231String(),
+                'HTTP_If-Modified-Since' => $contact->updated_at->addDays()->toRfc7231String(),
                 'content-type' => 'application/xml; charset=utf-8',
             ],
             "BEGIN:VCARD\nVERSION:4.0\nFN:John Doex\nN:Doex;John;;;\nEND:VCARD"
@@ -266,7 +266,7 @@ class VCardContactTest extends ApiTestCase
 
         $response = $this->call('PUT', "/dav/addressbooks/{$user->email}/contacts/{$filename}", [], [], [],
             [
-                'HTTP_If-Unmodified-Since' => $contact->updated_at->addDays(1)->toRfc7231String(),
+                'HTTP_If-Unmodified-Since' => $contact->updated_at->addDays()->toRfc7231String(),
                 'content-type' => 'application/xml; charset=utf-8',
             ],
             "BEGIN:VCARD\nVERSION:4.0\nFN:John Doex\nN:Doex;John;;;\nEND:VCARD"

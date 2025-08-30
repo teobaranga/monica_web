@@ -276,7 +276,7 @@ class Account extends Model
      */
     public function tags()
     {
-        return $this->hasMany(Tag::class)->orderBy('name', 'asc');
+        return $this->hasMany(Tag::class)->orderBy('name');
     }
 
     /**

@@ -2,9 +2,10 @@
 
 namespace Tests\Api\Account\Activity;
 
-use Tests\ApiTestCase;
 use App\Models\Account\ActivityTypeCategory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\ApiTestCase;
 
 class ApiActivityTypeCategoryControllerTest extends ApiTestCase
 {
@@ -21,7 +22,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         'updated_at',
     ];
 
-    /** @test */
+    #[Test]
     public function it_gets_a_list_of_activity_type_categories()
     {
         $user = $this->signin();
@@ -39,7 +40,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_applies_limit_parameter()
     {
         $user = $this->signin();
@@ -67,7 +68,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_a_activity_type_category()
     {
         $user = $this->signin();
@@ -87,7 +88,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_a_activity_type_category()
     {
         $user = $this->signin();
@@ -96,7 +97,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/api/activitytypecategories/'.$activityTypeCategory->id, [
+        $response = $this->json('PUT', '/api/activitytypecategories/' . $activityTypeCategory->id, [
             'name' => 'Movies',
         ]);
 
@@ -111,7 +112,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_update_if_custom_field_not_found()
     {
         $user = $this->signin();
@@ -127,7 +128,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_a_activity_type_category()
     {
         $user = $this->signin();
@@ -137,7 +138,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
             'name' => 'France',
         ]);
 
-        $response = $this->delete('/api/activitytypecategories/'.$activityTypeCategory->id);
+        $response = $this->delete('/api/activitytypecategories/' . $activityTypeCategory->id);
 
         $response->assertStatus(200);
 
@@ -151,7 +152,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_delete_the_custom_field_if_not_found()
     {
         $user = $this->signin();
@@ -165,7 +166,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_single_activity_type_category()
     {
         $user = $this->signin();
@@ -174,7 +175,7 @@ class ApiActivityTypeCategoryControllerTest extends ApiTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('GET', '/api/activitytypecategories/'.$activityTypeCategory->id);
+        $response = $this->json('GET', '/api/activitytypecategories/' . $activityTypeCategory->id);
 
         $response->assertJsonStructure([
             'data' => $this->jsonStructureActivityTypeCategory,

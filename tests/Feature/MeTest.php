@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FeatureTestCase;
 use App\Models\Contact\Contact;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -10,7 +11,7 @@ class MeTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_stores_me()
     {
         $user = $this->signin();
@@ -33,12 +34,12 @@ class MeTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_error_wrong_parameter()
     {
         $this->signin();
 
-        $response = $this->json('POST', '/me/contact', []);
+        $response = $this->json('POST', '/me/contact');
 
         $response->assertStatus(422);
         $response->assertJson([
@@ -48,7 +49,7 @@ class MeTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_error_bad_account()
     {
         $this->signin();
@@ -65,7 +66,7 @@ class MeTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_me()
     {
         $user = $this->signin();

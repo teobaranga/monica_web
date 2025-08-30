@@ -14,11 +14,11 @@ class LifeEventCategoriesController extends Controller
      */
     public function index()
     {
-        $lifeEventCategoriesData = collect([]);
+        $lifeEventCategoriesData = collect();
         $lifeEventCategories = auth()->user()->account->lifeEventCategories;
 
         foreach ($lifeEventCategories as $lifeEventCategory) {
-            $lifeEventTypesData = collect([]);
+            $lifeEventTypesData = collect();
             $lifeEventTypes = $lifeEventCategory->lifeEventTypes;
 
             foreach ($lifeEventTypes as $lifeEventType) {

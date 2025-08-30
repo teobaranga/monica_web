@@ -41,8 +41,7 @@ class MultiFAController extends Controller
         $imageDataUri = Google2FA::getQRCodeInline(
             $request->getHttpHost(),
             $user->email,
-            $secret,
-            200
+            $secret
         );
 
         $request->session()->put($this->SESSION_TFA_SECRET, $secret);
