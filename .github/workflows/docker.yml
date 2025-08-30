@@ -28,6 +28,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup PHP ${{ env.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php-version }}
+          extensions: redis
+          coverage: none
+
       - name: Docker meta
         id: docker_meta
         uses: docker/metadata-action@v5
