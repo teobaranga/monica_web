@@ -102,11 +102,14 @@ jobs:
         if: matrix.connection == 'mysql'
         run: sudo systemctl start mysql.service
       - name: Create database
+
         if: matrix.connection == 'mysql'
-        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS monica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
       - name: Prepare database
         if: matrix.connection == 'mysql'
-        run: mysql --protocol=tcp -u root -proot testing < scripts/database.test.sql
+        run: mysql --protocol=tcp -u root -proot monica < scripts/database.test.sql
+
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
 
@@ -223,11 +226,11 @@ jobs:
 
       - name: Create database
         if: matrix.connection == 'mysql'
-        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS monica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
       - name: Prepare database
         if: matrix.connection == 'mysql'
-        run: mysql --protocol=tcp -u root -proot testing < scripts/database.test.sql
+        run: mysql --protocol=tcp -u root -proot monica < scripts/database.test.sql
 
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
