@@ -142,11 +142,26 @@ We try to cover most features and new methods with unit and functional tests. An
 
 To setup the test environment:
 
-* Create a database `mysql -e "CREATE DATABASE monica_test;"`
-* `php artisan migrate --database testing`
-   - If this fails due to the `oauth_auth_codes_table` already existing, edit `config/passport.php` to update the storage driver so `'connection' => 'testing'`, then run `php artisan migrate --database testing` again.
-   - For more information, see this [GitHub Issue](https://github.com/laravel/passport/issues/1370).
-* `php artisan db:seed --database testing`
+1. Make a copy of the `.env` file for the `testing` environment
+    ```shell
+    cp .env .env.testing
+    ```
+   
+2. Update the database name to `testing`. This way, the connection is the same as the local / development one
+  but we're using a different database for tests.
+    ```
+    DB_DATABASE=testing
+    ```
+
+3. Run migrations on the `testing` environment
+    ```shell
+    php artisan migrate --env=testing
+    ```
+
+4. Seed the test table
+    ```shell
+    php artisan db:seed --env=testing
+    ```
 
 <a id="markdown-run-the-test-suite" name="run-the-test-suite"></a>
 ### Run the test suite
