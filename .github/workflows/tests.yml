@@ -81,6 +81,7 @@ jobs:
       - name: Prepare environment
         run: |
           cp scripts/ci/.env.${{ matrix.connection }} .env
+          cp scripts/ci/.env.${{ matrix.connection }} .env.testing
           echo 'v2.17.0' > config/.version
           touch config/.release config/.commit
           mkdir -p public/js public/css results/coverage
@@ -210,6 +211,7 @@ jobs:
       - name: Prepare environment
         run: |
           cp scripts/ci/.env.${{ matrix.connection }} .env
+          cp scripts/ci/.env.${{ matrix.connection }} .env.testing
           echo 'v2.17.0' > config/.version
           touch config/.release config/.commit
           mkdir -p results/coverage results/cov results/console
