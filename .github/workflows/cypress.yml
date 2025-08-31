@@ -104,13 +104,13 @@ jobs:
         run: mysql --protocol=tcp -u root -proot testing < scripts/database.test.sql
 
       - name: Run migrations
-        run: php artisan migrate --no-interaction -vvv --database testing
+        run: php artisan migrate --no-interaction -vvv
 
       - name: Run seeds
-        run: php artisan db:seed --no-interaction -vvv --database testing
+        run: php artisan db:seed --no-interaction -vvv
 
       - name: Create passport keys
-        run: php artisan passport:keys --no-interaction -vvv --database testing
+        run: php artisan passport:keys --no-interaction -vvv
 
 
     # Cypress
