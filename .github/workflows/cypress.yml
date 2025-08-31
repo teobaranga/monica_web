@@ -96,17 +96,21 @@ jobs:
 
       - name: Start mysql
         run: sudo systemctl start mysql.service
+
       - name: Create database
-        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS monica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
       - name: Prepare database
-        run: mysql --protocol=tcp -u root -proot monica < scripts/database.test.sql
+        run: mysql --protocol=tcp -u root -proot testing < scripts/database.test.sql
+
       - name: Run migrations
-        run: php artisan migrate --no-interaction -vvv
+        run: php artisan migrate --no-interaction -vvv --database testing
 
       - name: Run seeds
-        run: php artisan db:seed --no-interaction -vvv
+        run: php artisan db:seed --no-interaction -vvv --database testing
+
       - name: Create passport keys
-        run: php artisan passport:keys --no-interaction -vvv
+        run: php artisan passport:keys --no-interaction -vvv --database testing
 
 
     # Cypress
