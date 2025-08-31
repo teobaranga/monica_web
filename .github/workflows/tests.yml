@@ -81,7 +81,6 @@ jobs:
       - name: Prepare environment
         run: |
           cp scripts/ci/.env.${{ matrix.connection }} .env
-          cp scripts/ci/.env.${{ matrix.connection }} .env.testing
           echo 'v2.17.0' > config/.version
           touch config/.release config/.commit
           mkdir -p public/js public/css results/coverage
@@ -132,7 +131,6 @@ jobs:
           DB_CONNECTION: ${{ matrix.connection }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
           XDEBUG_MODE: coverage
-          DB_HOST: 127.0.0.1
 
       - name: Fix results files
         run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
@@ -211,7 +209,6 @@ jobs:
       - name: Prepare environment
         run: |
           cp scripts/ci/.env.${{ matrix.connection }} .env
-          cp scripts/ci/.env.${{ matrix.connection }} .env.testing
           echo 'v2.17.0' > config/.version
           touch config/.release config/.commit
           mkdir -p results/coverage results/cov results/console
