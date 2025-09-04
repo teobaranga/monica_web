@@ -147,8 +147,8 @@ To setup the test environment:
     cp .env .env.testing
     ```
    
-2. Update the database name to `testing`. This way, the connection is the same as the local / development one
-  but we're using a different database for tests.
+2. Update the database name in `.env.testing` to `testing`. This way, the connection is the same as the local / development one
+  but we're using a different database for tests. This matches the 
     ```
     DB_DATABASE=testing
     ```
