@@ -62,7 +62,7 @@ class UploadVCardTest extends DuskTestCase
                 ->press('Upload');
 
             $browser
-                ->assertPathIs('/settings/import')
+                ->waitForText('1 imported', 3)
                 ->assertSee('1 imported');
         });
     }
