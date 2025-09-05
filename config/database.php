@@ -96,21 +96,6 @@ $db = [
             ]) : [],
         ],
 
-        'testing' => [
-            'driver' => env('DB_TEST_DRIVER', 'mysql'),
-            'host' => env('DB_TEST_HOST'),
-            'port' => env('DB_TEST_PORT', '3306'),
-            'unix_socket' => env('DB_TEST_UNIX_SOCKET', ''),
-            'database' => env('DB_TEST_DATABASE'),
-            'username' => env('DB_TEST_USERNAME'),
-            'password' => env('DB_TEST_PASSWORD'),
-            'charset' => env('DB_USE_UTF8MB4', true) ? 'utf8mb4' : 'utf8',
-            'collation' => env('DB_USE_UTF8MB4', true) ? 'utf8mb4_unicode_ci' : 'utf8_unicode_ci',
-            'prefix' => env('DB_TEST_PREFIX', ''),
-            'prefix_indexes' => true,
-            'strict' => false,
-        ],
-
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),
@@ -186,7 +171,7 @@ $db = [
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
+            'password' => env('REDIS_PASSWORD'),
             'port' => (int) env('REDIS_PORT', 6379),
             'database' => env('REDIS_DB', env('REDIS_DATABASE', 0)),
         ],
@@ -194,7 +179,7 @@ $db = [
         'cache' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
-            'password' => env('REDIS_PASSWORD', null),
+            'password' => env('REDIS_PASSWORD'),
             'port' => (int) env('REDIS_PORT', 6379),
             'database' => env('REDIS_CACHE_DB', 1),
         ],

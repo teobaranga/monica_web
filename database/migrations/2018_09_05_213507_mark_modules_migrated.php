@@ -19,7 +19,7 @@ class MarkModulesMigrated extends Migration
         Account::chunk(200, function ($accounts) {
             foreach ($accounts as $account) {
                 $modules = $account->modules;
-                $uniqueModules = collect([]);
+                $uniqueModules = collect();
                 foreach ($modules as $module) {
                     $deleted = false;
                     foreach ($uniqueModules as $uniqueModule) {

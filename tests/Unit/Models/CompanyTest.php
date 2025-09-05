@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\Company;
@@ -12,10 +13,10 @@ class CompanyTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $company = factory(Company::class)->create([
             'account_id' => $account->id,
         ]);
@@ -23,10 +24,10 @@ class CompanyTest extends TestCase
         $this->assertTrue($company->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_has_many_occupations()
     {
-        $company = factory(Company::class)->create([]);
+        $company = factory(Company::class)->create();
         $occupations = factory(Occupation::class)->create([
             'company_id' => $company->id,
         ]);

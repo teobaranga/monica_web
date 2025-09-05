@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Contact\Reminder;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Contact\Reminder;
@@ -14,7 +15,7 @@ class DestroyReminderTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_reminder()
     {
         $reminder = factory(Reminder::class)->create([
@@ -41,12 +42,12 @@ class DestroyReminderTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_destroys_scheduled_reminders()
     {
         // prepare a reminder and schedule some notifications
-        Carbon::setTestNow(Carbon::create(2017, 2, 1));
-        $user = factory(User::class)->create([]);
+        Carbon::setTestNow(Carbon::create(2017, 2));
+        $user = factory(User::class)->create();
         $reminder = factory(Reminder::class)->create([
             'account_id' => $user->account_id,
             'initial_date' => '2017-02-02',

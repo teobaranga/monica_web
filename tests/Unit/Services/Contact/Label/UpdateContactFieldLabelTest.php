@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Label;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\ContactField;
@@ -15,10 +16,10 @@ class UpdateContactFieldLabelTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_creates_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create([
             'account_id' => $account->id,
         ]);
@@ -45,10 +46,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_personal_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create([
             'account_id' => $account->id,
         ]);
@@ -75,10 +76,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_contact_field_multiple_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create([
             'account_id' => $account->id,
         ]);
@@ -131,10 +132,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_adds_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create([
             'account_id' => $account->id,
         ]);
@@ -172,10 +173,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_removes_contact_field_labels()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create([
             'account_id' => $account->id,
         ]);
@@ -213,7 +214,7 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_doesnt_exist()
     {
         $contactField = factory(ContactField::class)->create();
@@ -227,10 +228,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_field_doesnt_exist()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $this->expectException(ValidationException::class);
 
@@ -241,10 +242,10 @@ class UpdateContactFieldLabelTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_field_is_wrong_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contactField = factory(ContactField::class)->create();
 
         $this->expectException(ModelNotFoundException::class);

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Journal\Day;
@@ -13,19 +14,19 @@ class JournalHelperTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function you_can_vote_if_you_havent_voted_yet_today()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
 
         $this->assertFalse(JournalHelper::hasAlreadyRatedToday($user));
     }
 
-    /** @test */
+    #[Test]
     public function you_cant_vote_if_you_have_already_voted_today()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
         factory(Day::class)->create([
             'account_id' => $account->id,

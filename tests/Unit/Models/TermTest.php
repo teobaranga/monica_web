@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Settings\Term;
@@ -12,16 +13,16 @@ class TermTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_many_users()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create(['account_id' => $account->id]);
-        $term = factory(Term::class)->create([]);
+        $term = factory(Term::class)->create();
         $term->users()->sync([$user->id => ['account_id' => $account->id]]);
 
         $user = factory(User::class)->create(['account_id' => $account->id]);
-        $term = factory(Term::class)->create([]);
+        $term = factory(Term::class)->create();
         $term->users()->sync([$user->id => ['account_id' => $account->id]]);
 
         $this->assertTrue($term->users()->exists());

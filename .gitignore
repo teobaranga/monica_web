@@ -16,6 +16,7 @@
 /vendor
 .composer
 .env
+.env.testing
 .deploy.json
 .DS_Store
 .idea

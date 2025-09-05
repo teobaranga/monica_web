@@ -2,28 +2,13 @@
 
 namespace Tests\Unit\Helpers;
 
-use Tests\FeatureTestCase;
 use App\Helpers\CountriesHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\FeatureTestCase;
 
 class CountryHelperTest extends FeatureTestCase
 {
-    /**
-     * @dataProvider countryDefaultCountryFromLocaleProvider
-     */
-    public function test_country_getDefaultCountryFromLocale($locale, $expect)
-    {
-        $reflection = new \ReflectionClass(CountriesHelper::class);
-        $method = $reflection->getMethod('getDefaultCountryFromLocale');
-        $method->setAccessible(true);
-
-        $country = $method->invokeArgs(null, [$locale]);
-
-        $this->assertEquals(
-            $expect,
-            $country
-        );
-    }
-
     public static function countryDefaultCountryFromLocaleProvider(): array
     {
         return [
@@ -44,20 +29,6 @@ class CountryHelperTest extends FeatureTestCase
             ['tr', 'TR'],
             ['ja', null],
         ];
-    }
-
-    /**
-     * @dataProvider countryCountryFromLocaleProvider
-     */
-    public function test_country_getCountryFromLocale($locale, $expect)
-    {
-        $country = CountriesHelper::getCountryFromLocale($locale);
-
-        $this->assertNotNull($country);
-        $this->assertEquals(
-            $expect,
-            $country->getIsoAlpha2()
-        );
     }
 
     public static function countryCountryFromLocaleProvider(): array
@@ -86,22 +57,6 @@ class CountryHelperTest extends FeatureTestCase
         ];
     }
 
-    /**
-     * @dataProvider timezoneFromLocaleProvider
-     * @test
-     */
-    public function it_get_default_timezone($locale, $expect)
-    {
-        $country = CountriesHelper::getCountryFromLocale($locale);
-        $timezone = CountriesHelper::getDefaultTimezone($country);
-
-        $this->assertNotNull($timezone);
-        $this->assertEquals(
-            $expect,
-            $timezone
-        );
-    }
-
     public static function timezoneFromLocaleProvider(): array
     {
         return [
@@ -121,5 +76,48 @@ class CountryHelperTest extends FeatureTestCase
             ['tr', 'Europe/Istanbul'],
             ['ja', 'Asia/Tokyo'],
         ];
+    }
+
+    #[Test]
+    #[DataProvider('countryDefaultCountryFromLocaleProvider')]
+    public function country_getDefaultCountryFromLocale($locale, $expect)
+    {
+        $reflection = new \ReflectionClass(CountriesHelper::class);
+        $method = $reflection->getMethod('getDefaultCountryFromLocale');
+        $method->setAccessible(true);
+
+        $country = $method->invokeArgs(null, [$locale]);
+
+        $this->assertEquals(
+            $expect,
+            $country
+        );
+    }
+
+    #[Test]
+    #[DataProvider('countryCountryFromLocaleProvider')]
+    public function country_getCountryFromLocale($locale, $expect)
+    {
+        $country = CountriesHelper::getCountryFromLocale($locale);
+
+        $this->assertNotNull($country);
+        $this->assertEquals(
+            $expect,
+            $country->getIsoAlpha2()
+        );
+    }
+
+    #[Test]
+    #[DataProvider('timezoneFromLocaleProvider')]
+    public function it_get_default_timezone($locale, $expect)
+    {
+        $country = CountriesHelper::getCountryFromLocale($locale);
+        $timezone = CountriesHelper::getDefaultTimezone($country);
+
+        $this->assertNotNull($timezone);
+        $this->assertEquals(
+            $expect,
+            $timezone
+        );
     }
 }

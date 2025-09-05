@@ -50,7 +50,7 @@ class SettingsTest extends FeatureTestCase
 
         $response->assertSee(trans('settings.export_title'));
 
-        Carbon::setTestNow(Carbon::create(2021, 11, 25, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2021, 11, 25, 7));
 
         $response = $this->post(route('settings.export.store.sql'));
 

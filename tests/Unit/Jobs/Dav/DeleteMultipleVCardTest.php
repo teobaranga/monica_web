@@ -2,21 +2,22 @@
 
 namespace Tests\Unit\Jobs\Dav;
 
-use Tests\TestCase;
-use App\Models\User\User;
-use App\Jobs\Dav\DeleteVCard;
-use Illuminate\Bus\PendingBatch;
-use Illuminate\Support\Facades\Bus;
 use App\Jobs\Dav\DeleteMultipleVCard;
-use Illuminate\Bus\DatabaseBatchRepository;
+use App\Jobs\Dav\DeleteVCard;
 use App\Models\Account\AddressBookSubscription;
+use App\Models\User\User;
+use Illuminate\Bus\DatabaseBatchRepository;
+use Illuminate\Bus\PendingBatch;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class DeleteMultipleVCardTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_delete_cards()
     {
         $fake = Bus::fake();

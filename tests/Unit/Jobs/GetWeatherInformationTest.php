@@ -2,21 +2,22 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
-use Mockery\MockInterface;
-use App\Models\Account\Place;
-use Illuminate\Bus\PendingBatch;
 use App\Jobs\GetWeatherInformation;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Bus\DatabaseBatchRepository;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Models\Account\Place;
 use App\Services\Instance\Weather\GetWeatherInformation as GetWeatherInformationService;
+use Illuminate\Bus\DatabaseBatchRepository;
+use Illuminate\Bus\PendingBatch;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Bus;
+use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class GetWeatherInformationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_run_job_weather_information()
     {
         $fake = Bus::fake();

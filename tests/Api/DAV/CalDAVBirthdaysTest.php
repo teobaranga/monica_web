@@ -188,7 +188,7 @@ class CalDAVBirthdaysTest extends ApiTestCase
 
     public function test_caldav_birthdays_sync_collection_with_token()
     {
-        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 1, 1, 9));
 
         $user = $this->signin();
         $contact = factory(Contact::class)->create([
@@ -198,7 +198,7 @@ class CalDAVBirthdaysTest extends ApiTestCase
         $specialDate->uuid = Str::uuid();
         $specialDate->save();
 
-        Carbon::setTestNow(Carbon::create(2019, 1, 1, 8, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 1, 1, 8));
         $token = factory(SyncToken::class)->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,

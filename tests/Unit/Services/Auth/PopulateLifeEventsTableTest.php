@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Auth;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Account\Account;
@@ -14,7 +15,7 @@ class PopulateLifeEventsTableTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -34,10 +35,10 @@ class PopulateLifeEventsTableTest extends TestCase
         app(PopulateLifeEventsTable::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_populate_life_event_tables()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);
@@ -73,10 +74,10 @@ class PopulateLifeEventsTableTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_refuses_to_populate_table_if_account_doesnt_have_locale()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -86,10 +87,10 @@ class PopulateLifeEventsTableTest extends TestCase
         $this->assertFalse(app(PopulateLifeEventsTable::class)->execute($request));
     }
 
-    /** @test */
+    #[Test]
     public function it_only_populates_life_event_tables_partially()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);

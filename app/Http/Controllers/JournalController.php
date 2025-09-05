@@ -41,7 +41,7 @@ class JournalController extends Controller
         $sortOrder = $request->input('sort_order', 'desc');
         $perPage = $request->input('per_page', 30);
 
-        $entries = collect([]);
+        $entries = collect();
 
         $journalEntriesQuery = auth()->user()->account->journalEntries();
 

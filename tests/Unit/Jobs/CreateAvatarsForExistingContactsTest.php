@@ -2,19 +2,20 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
-use App\Models\Contact\Contact;
-use Illuminate\Support\Facades\Queue;
+use App\Jobs\Avatars\CreateAvatarsForExistingContacts;
 use App\Jobs\Avatars\GenerateDefaultAvatar;
 use App\Jobs\Avatars\GetAvatarsFromInternet;
-use App\Jobs\Avatars\CreateAvatarsForExistingContacts;
+use App\Models\Contact\Contact;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class CreateAvatarsForExistingContactsTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_creates_jobs_for_avatars_migration()
     {
         Queue::fake();

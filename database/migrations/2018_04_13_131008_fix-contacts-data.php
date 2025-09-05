@@ -17,8 +17,8 @@ class FixContactsData extends Migration
         // the actual object doesn't exist. we need to find those contacts and delete the entries in the
         // relationships table.
         $relationships = Relationship::select('id', 'contact_is', 'of_contact')->get();
-        $lineContactIsToDelete = collect([]);
-        $lineOfContactToDelete = collect([]);
+        $lineContactIsToDelete = collect();
+        $lineOfContactToDelete = collect();
 
         foreach ($relationships as $relationship) {
             $contact = DB::table('contacts')->where('id', $relationship->contact_is)->first();

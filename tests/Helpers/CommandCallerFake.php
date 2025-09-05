@@ -17,7 +17,7 @@ class CommandCallerFake implements CommandCallerContract
      */
     public function __construct()
     {
-        $this->buffer = collect([]);
+        $this->buffer = collect();
     }
 
     public function exec($command, $message, $commandline): void

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Relationship;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -16,10 +17,10 @@ class DestroyRelationshipTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_relationship()
     {
-        $contactA = factory(Contact::class)->create([]);
+        $contactA = factory(Contact::class)->create();
         $contactB = factory(Contact::class)->create([
             'account_id' => $contactA->account_id,
         ]);
@@ -42,10 +43,10 @@ class DestroyRelationshipTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_relationship_and_reverse()
     {
-        $contactA = factory(Contact::class)->create([]);
+        $contactA = factory(Contact::class)->create();
         $contactB = factory(Contact::class)->create([
             'account_id' => $contactA->account_id,
         ]);
@@ -96,10 +97,10 @@ class DestroyRelationshipTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_relationship_and_reverse_and_partial_contact()
     {
-        $contactA = factory(Contact::class)->create([]);
+        $contactA = factory(Contact::class)->create();
         $contactB = factory(Contact::class)->create([
             'account_id' => $contactA->account_id,
             'is_partial' => true,
@@ -155,10 +156,10 @@ class DestroyRelationshipTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -169,11 +170,11 @@ class DestroyRelationshipTest extends TestCase
         app(DestroyRelationship::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_relationship_is_not_linked_to_account()
     {
         $account = factory(Account::class)->create();
-        $relationship = factory(Relationship::class)->create([]);
+        $relationship = factory(Relationship::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -185,10 +186,10 @@ class DestroyRelationshipTest extends TestCase
         app(DestroyRelationship::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_relationship_between_two_contacts_and_deletes_the_contact()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $partner = factory(Contact::class)->create([
             'account_id' => $account->id,
@@ -219,10 +220,10 @@ class DestroyRelationshipTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_relationship_between_two_contacts_and_doesnt_delete_the_contact()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $partner = factory(Contact::class)->create([
             'account_id' => $account->id,

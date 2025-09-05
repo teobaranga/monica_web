@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Helpers;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Helpers\AuditLogHelper;
@@ -13,10 +14,10 @@ class AuditLogHelperTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_prepares_a_collection_of_audit_logs_for_the_settings_page()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $user->account_id,
             'first_name' => 'roger',
@@ -38,10 +39,10 @@ class AuditLogHelperTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_prepares_a_collection_of_audit_logs_without_likns_for_the_settings_page()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
 
         factory(AuditLog::class, 2)->create([
             'account_id' => $user->account_id,

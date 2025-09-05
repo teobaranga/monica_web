@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Note;
 use App\Models\Account\Account;
@@ -12,10 +13,10 @@ class NoteTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create(['account_id' => $account->id]);
         $note = factory(Note::class)->create([
             'account_id' => $account->id,
@@ -25,10 +26,10 @@ class NoteTest extends TestCase
         $this->assertTrue($note->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_contact()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $note = factory(Note::class)->create([
             'contact_id' => $contact->id,
         ]);
@@ -36,7 +37,7 @@ class NoteTest extends TestCase
         $this->assertTrue($note->contact()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_filters_by_favorited_notes()
     {
         $note = factory(Note::class)->create(['is_favorited' => true]);

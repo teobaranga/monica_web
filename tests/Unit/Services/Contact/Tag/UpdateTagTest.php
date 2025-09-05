@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Tag;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Tag;
 use App\Models\Account\Account;
@@ -14,10 +15,10 @@ class UpdateTagTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_tag()
     {
-        $tag = factory(Tag::class)->create([]);
+        $tag = factory(Tag::class)->create();
 
         $request = [
             'account_id' => $tag->account_id,
@@ -39,7 +40,7 @@ class UpdateTagTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -52,7 +53,7 @@ class UpdateTagTest extends TestCase
         app(UpdateTag::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_tag_does_not_exist()
     {
         $account = factory(Account::class)->create();

@@ -36,7 +36,7 @@ trait AmountFormatter
      */
     public function getAmountAttribute(): ?string
     {
-        if (! ($amount = Arr::get($this->attributes, 'amount', null))) {
+        if (! ($amount = Arr::get($this->attributes, 'amount'))) {
             return null;
         }
 
@@ -50,7 +50,7 @@ trait AmountFormatter
      */
     public function getValueAttribute(): string
     {
-        if (! ($amount = Arr::get($this->attributes, 'amount', null))) {
+        if (! ($amount = Arr::get($this->attributes, 'amount'))) {
             return '';
         }
 
@@ -64,7 +64,7 @@ trait AmountFormatter
      */
     public function getDisplayValueAttribute(): string
     {
-        if (! ($amount = Arr::get($this->attributes, 'amount', null))) {
+        if (! ($amount = Arr::get($this->attributes, 'amount'))) {
             return '';
         }
 

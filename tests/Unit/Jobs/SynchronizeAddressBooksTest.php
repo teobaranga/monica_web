@@ -2,21 +2,22 @@
 
 namespace Tests\Unit\Jobs;
 
-use Carbon\Carbon;
-use Tests\TestCase;
 use App\Jobs\SynchronizeAddressBooks;
 use App\Models\Account\AddressBookSubscription;
 use App\Services\DavClient\SynchronizeAddressBook;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class SynchronizeAddressBooksTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_run_synchronize()
     {
-        Carbon::setTestNow(Carbon::create(2021, 9, 1, 10, 0, 0));
+        Carbon::setTestNow(Carbon::create(2021, 9, 1, 10));
 
         $subscription = AddressBookSubscription::factory()->create();
 
@@ -30,10 +31,10 @@ class SynchronizeAddressBooksTest extends TestCase
                 ]);
         });
 
-        (new SynchronizeAddressBooks($subscription))
+        new SynchronizeAddressBooks($subscription)
             ->handle();
 
         $subscription->refresh();
-        $this->assertEquals(Carbon::create(2021, 9, 1, 10, 0, 0), $subscription->last_synchronized_at);
+        $this->assertEquals(Carbon::create(2021, 9, 1, 10), $subscription->last_synchronized_at);
     }
 }

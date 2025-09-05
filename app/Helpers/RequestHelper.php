@@ -55,7 +55,7 @@ class RequestHelper
 
         if (config('location.ipstack_apikey') != null) {
             $ipstack = new Ipstack(config('location.ipstack_apikey'));
-            $position = $ipstack->get($ip, true);
+            $position = $ipstack->get($ip);
 
             if ($position !== null && Arr::get($position, 'country_code')) {
                 return [

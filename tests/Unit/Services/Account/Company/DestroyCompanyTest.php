@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Company;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\Company;
@@ -14,10 +15,10 @@ class DestroyCompanyTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_company()
     {
-        $company = factory(Company::class)->create([]);
+        $company = factory(Company::class)->create();
 
         $request = [
             'account_id' => $company->account_id,
@@ -31,11 +32,11 @@ class DestroyCompanyTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_is_not_linked_to_company()
     {
-        $account = factory(Account::class)->create([]);
-        $company = factory(Company::class)->create([]);
+        $account = factory(Account::class)->create();
+        $company = factory(Company::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -46,7 +47,7 @@ class DestroyCompanyTest extends TestCase
         app(DestroyCompany::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_ids_do_not_exist()
     {
         $request = [

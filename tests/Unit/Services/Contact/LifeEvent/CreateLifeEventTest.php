@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\LifeEvent;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -16,10 +17,10 @@ class CreateLifeEventTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_stores_a_life_event()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $lifeEventType = factory(LifeEventType::class)->create([
             'account_id' => $contact->account_id,
         ]);
@@ -54,10 +55,10 @@ class CreateLifeEventTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_a_life_event_and_set_a_reminder()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $lifeEventType = factory(LifeEventType::class)->create([
             'account_id' => $contact->account_id,
         ]);
@@ -85,10 +86,10 @@ class CreateLifeEventTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'contact_id' => $contact->id,
@@ -100,11 +101,11 @@ class CreateLifeEventTest extends TestCase
         app(CreateLifeEvent::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_is_not_linked_to_account()
     {
         $account = factory(Account::class)->create();
-        $lifeEvent = factory(LifeEvent::class)->create([]);
+        $lifeEvent = factory(LifeEvent::class)->create();
 
         $request = [
             'contact_id' => $lifeEvent->contact_id,
@@ -123,11 +124,11 @@ class CreateLifeEventTest extends TestCase
         app(CreateLifeEvent::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_life_event_type_is_not_linked_to_account()
     {
-        $contact = factory(Contact::class)->create([]);
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $contact = factory(Contact::class)->create();
+        $lifeEventType = factory(LifeEventType::class)->create();
 
         $request = [
             'contact_id' => $contact->id,

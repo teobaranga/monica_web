@@ -67,6 +67,6 @@ return [
     | If null or empty, there will be no restriction.
     |
     */
-    'users' => env('DAV_USERS', null),
+    'users' => env('DAV_USERS'),
 
 ];

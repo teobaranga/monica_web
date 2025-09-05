@@ -2,47 +2,49 @@
 
 namespace App\Models\Contact;
 
-use DateTime;
-use App\Traits\HasUuid;
-use App\Traits\Searchable;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use App\Helpers\LocaleHelper;
-use App\Models\Account\Photo;
-use App\Models\Journal\Entry;
 use App\Helpers\StorageHelper;
 use App\Helpers\WeatherHelper;
-use Illuminate\Support\Carbon;
 use App\Models\Account\Account;
-use App\Models\Account\Weather;
 use App\Models\Account\Activity;
-use App\Models\Instance\AuditLog;
-use function Safe\preg_match_all;
-use Illuminate\Support\Collection;
+use App\Models\Account\ActivityStatistic;
 use App\Models\Account\AddressBook;
+use App\Models\Account\Photo;
+use App\Models\Account\Weather;
+use App\Models\Contact\QueryBuilder\ContactBuilder;
+use App\Models\Instance\AuditLog;
 use App\Models\Instance\SpecialDate;
+use App\Models\Journal\Entry;
+use App\Models\ModelBindingHasher as Model;
+use App\Models\Relationship\Relationship;
+use App\Traits\HasUuid;
+use App\Traits\Searchable;
+use DateTime;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Account\ActivityStatistic;
-use App\Models\Relationship\Relationship;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Prunable;
-use App\Models\ModelBindingHasher as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use function Safe\preg_match_all;
 
 /**
  * @method static \Illuminate\Database\Eloquent\Builder search()
  *
  * @property \App\Models\Instance\SpecialDate|null $birthdate
  */
+#[UseEloquentBuilder(ContactBuilder::class)]
 class Contact extends Model
 {
     use Searchable, SoftDeletes, Prunable, HasUuid;
@@ -184,10 +186,8 @@ class Contact extends Model
 
     /**
      * Get the list of contacts from the same address book as this contact.
-     *
-     * @return HasMany<self>|null
      */
-    public function siblingContacts(): ?HasMany
+    public function siblingContacts()
     {
         if ($this->account) {
             if ($this->addressBook) {
@@ -231,26 +231,6 @@ class Contact extends Model
     }
 
     /**
-     * Get the debt records associated with the contact.
-     *
-     * @return HasMany
-     */
-    public function debts()
-    {
-        return $this->hasMany(Debt::class);
-    }
-
-    /**
-     * Get the gift records associated with the contact.
-     *
-     * @return HasMany
-     */
-    public function gifts()
-    {
-        return $this->hasMany(Gift::class);
-    }
-
-    /**
      * Get the note records associated with the contact.
      *
      * @return HasMany
@@ -268,16 +248,6 @@ class Contact extends Model
     public function reminders()
     {
         return $this->hasMany(Reminder::class);
-    }
-
-    /**
-     * Get the task records associated with the contact.
-     *
-     * @return HasMany
-     */
-    public function tasks()
-    {
-        return $this->hasMany(Task::class);
     }
 
     /**
@@ -328,16 +298,6 @@ class Contact extends Model
     public function contactFields()
     {
         return $this->hasMany(ContactField::class);
-    }
-
-    /**
-     * Get the Address Field records associated with the contact.
-     *
-     * @return HasMany
-     */
-    public function addresses()
-    {
-        return $this->hasMany(Address::class);
     }
 
     /**
@@ -451,16 +411,6 @@ class Contact extends Model
     }
 
     /**
-     * Get the Avatar Photo records associated with the contact.
-     *
-     * @return HasOne
-     */
-    public function avatarPhoto()
-    {
-        return $this->hasOne(Photo::class, 'id', 'avatar_photo_id');
-    }
-
-    /**
      * Get the Audot log records associated with the contact.
      *
      * @return HasMany
@@ -481,212 +431,10 @@ class Contact extends Model
     }
 
     /**
-     * Sort the contacts according a given criteria.
-     *
-     * @param  Builder  $builder
-     * @param  string  $criteria
-     * @return Builder
-     */
-    public function scopeSortedBy(Builder $builder, string $criteria): Builder
-    {
-        switch ($criteria) {
-            case 'firstnameAZ':
-                return $builder->orderBy('first_name');
-            case 'firstnameZA':
-                return $builder->orderByDesc('first_name');
-            case 'lastnameAZ':
-                return $builder->orderBy('last_name');
-            case 'lastnameZA':
-                return $builder->orderByDesc('last_name');
-            case 'lastactivitydateNewtoOld':
-                return $this->sortedByLastActivity($builder, 'desc');
-            case 'lastactivitydateOldtoNew':
-                return $this->sortedByLastActivity($builder, 'asc');
-            default:
-                return $builder;
-        }
-    }
-
-    /**
-     * Sort the contacts using last activity.
-     *
-     * @param  Builder  $builder
-     * @param  string  $order
-     * @return Builder
-     */
-    private function sortedByLastActivity(Builder $builder, string $order): Builder
-    {
-        $builder->leftJoin('activity_contact', 'contacts.id', '=', 'activity_contact.contact_id');
-        $builder->leftJoin('activities', 'activity_contact.activity_id', '=', 'activities.id');
-        $builder->groupBy('contacts.id');
-        $builder->orderBy('activities.happened_at', $order);
-        $builder->select(['*', 'contacts.id as id']);
-
-        return $builder;
-    }
-
-    /**
-     * Scope a query to only include contacts who are not only a kid or a
-     * significant other without being a contact.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeReal($query)
-    {
-        return $query->where('is_partial', 0);
-    }
-
-    /**
-     * Scope a query to only include contacts who are active.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', 1);
-    }
-
-    /**
-     * Scope a query to only include contacts who are alive.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeAlive($query)
-    {
-        return $query->where('is_dead', 0);
-    }
-
-    /**
-     * Scope a query to only include contacts who are dead.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeDead($query)
-    {
-        return $query->where('is_dead', 1);
-    }
-
-    /**
-     * Scope a query to only include contacts who are not active.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeNotActive($query)
-    {
-        return $query->where('is_active', 0);
-    }
-
-    /**
-     * Scope a query to include contacts whose notes contain the search phrase.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeNotes($query, int $accountId = null, string $needle)
-    {
-        $maccountId = $accountId ?? Auth::user()->account_id;
-
-        return $query->orWhereHas('notes', function ($query) use ($maccountId, $needle) {
-            return $query->where([
-                ['account_id', $maccountId],
-                ['body', 'like', "%$needle%"],
-            ]);
-        });
-    }
-
-    /**
-     * Scope a query to include contacts whose introduction notes contain the search phrase.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeIntroductionAdditionalInformation($query, int $accountId = null, string $needle)
-    {
-        $maccountId = $accountId ?? Auth::user()->account_id;
-
-        return $query->orWhere([
-            ['account_id', $maccountId],
-            ['first_met_additional_info', 'like', "%$needle%"],
-        ]);
-    }
-
-    /**
-     * Scope a query to only include contacts from given address book.
-     * 'null' value for address book is the default address book.
-     *
-     * @param  Builder  $query
-     * @param  int|null  $accountId
-     * @param  string|null  $addressBookName
-     * @return Builder
-     */
-    public function scopeAddressBook($query, int $accountId = null, string $addressBookName = null)
-    {
-        $addressBook = null;
-        if ($accountId && $addressBookName) {
-            $addressBook = AddressBook::where([
-                'account_id' => $accountId,
-                'name' => $addressBookName,
-            ])->first();
-        }
-
-        return $query->where('address_book_id', $addressBook ? $addressBook->id : null);
-    }
-
-    /**
-     * Get contacts ordered by user preferences.
-     *
-     * @param  Builder  $query
-     * @return Builder
-     */
-    public function scopeOrderByUserPreference(Builder $query): Builder
-    {
-        switch (Auth::user()->name_order) {
-            case 'firstname_lastname':
-                $query = $query->orderBy('first_name')
-                    ->orderBy('last_name');
-                break;
-            case 'firstname_lastname_nickname':
-                $query = $query->orderBy('first_name')
-                    ->orderBy('last_name')
-                    ->orderBy('nickname');
-                break;
-            case 'firstname_nickname_lastname':
-                $query = $query->orderBy('first_name')
-                    ->orderBy('nickname')
-                    ->orderBy('last_name');
-                break;
-            case 'nickname':
-                $query = $query->orderBy('nickname');
-                break;
-            case 'lastname_firstname':
-                $query = $query->orderBy('last_name')
-                    ->orderby('first_name');
-                break;
-            case 'lastname_firstname_nickname':
-                $query = $query->orderBy('last_name')
-                    ->orderby('first_name')
-                    ->orderby('nickname');
-                break;
-            case 'lastname_nickname_firstname':
-                $query = $query->orderBy('last_name')
-                    ->orderby('nickname')
-                    ->orderby('first_name');
-                break;
-        }
-
-        return $query;
-    }
-
-    /**
      * Mutator first_name.
      * Get the first name of the contact.
      *
-     * @param  string|null  $value
+     * @param string|null $value
      */
     public function setFirstNameAttribute($value)
     {
@@ -698,7 +446,7 @@ class Contact extends Model
      *
      * It doesn't run ucfirst on purpose.
      *
-     * @param  string|null  $value
+     * @param string|null $value
      */
     public function setLastNameAttribute($value)
     {
@@ -709,7 +457,7 @@ class Contact extends Model
     /**
      * Set the name order attribute.
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function nameOrder($value)
@@ -720,7 +468,7 @@ class Contact extends Model
     /**
      * Mutator last_name.
      *
-     * @param  string|null  $value
+     * @param string|null $value
      */
     public function setNicknameAttribute($value)
     {
@@ -758,145 +506,145 @@ class Contact extends Model
             case 'firstname_lastname':
                 $completeName = $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
                 break;
             case 'lastname_firstname':
                 $completeName = '';
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                $completeName .= ' '.$this->first_name;
+                $completeName .= ' ' . $this->first_name;
                 break;
             case 'firstname_lastname_nickname':
                 $completeName = $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $completeName.' ('.$this->nickname.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $completeName . ' (' . $this->nickname . ')';
                 }
                 break;
             case 'firstname_nickname_lastname':
                 $completeName = $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $completeName.' ('.$this->nickname.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $completeName . ' (' . $this->nickname . ')';
                 }
 
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
 
                 break;
             case 'lastname_firstname_nickname':
                 $completeName = '';
-                if (! is_null($this->last_name)) {
+                if (!is_null($this->last_name)) {
                     $completeName = $this->last_name;
                 }
 
-                $completeName = $completeName.' '.$this->first_name;
+                $completeName = $completeName . ' ' . $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $completeName.' ('.$this->nickname.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $completeName . ' (' . $this->nickname . ')';
                 }
                 break;
             case 'nickname_firstname_lastname':
                 $completeName = $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $this->nickname.' ('.$completeName.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $this->nickname . ' (' . $completeName . ')';
                 }
                 break;
             case 'nickname_lastname_firstname':
                 $completeName = '';
-                if (! is_null($this->last_name)) {
-                    $completeName = $this->last_name.' ';
+                if (!is_null($this->last_name)) {
+                    $completeName = $this->last_name . ' ';
                 }
 
-                $completeName = $completeName.$this->first_name;
+                $completeName = $completeName . $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $this->nickname.' ('.$completeName.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $this->nickname . ' (' . $completeName . ')';
                 }
                 break;
             case 'lastname_nickname_firstname':
                 $completeName = '';
-                if (! is_null($this->last_name)) {
+                if (!is_null($this->last_name)) {
                     $completeName = $this->last_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $completeName.' ('.$this->nickname.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $completeName . ' (' . $this->nickname . ')';
                 }
 
-                $completeName = $completeName.' '.$this->first_name;
+                $completeName = $completeName . ' ' . $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
                 break;
             case 'nickname_bracketed_firstname_lastname':
                 $completeName = $this->first_name;
 
-                if (! is_null($this->middle_name)) {
-                    $completeName = $completeName.' '.$this->middle_name;
+                if (!is_null($this->middle_name)) {
+                    $completeName = $completeName . ' ' . $this->middle_name;
                 }
 
-                if (! is_null($this->nickname)) {
-                    $completeName = $this->nickname.' ('.$completeName.')';
+                if (!is_null($this->nickname)) {
+                    $completeName = $this->nickname . ' (' . $completeName . ')';
                 }
 
-                if (! is_null($this->last_name)) {
-                    $completeName = $completeName.' '.$this->last_name;
+                if (!is_null($this->last_name)) {
+                    $completeName = $completeName . ' ' . $this->last_name;
                 }
                 break;
             case 'nickname':
-                if (! is_null($this->nickname)) {
+                if (!is_null($this->nickname)) {
                     $completeName = $this->nickname;
                 }
 
                 if ($completeName == '') {
                     $completeName = $this->first_name;
 
-                    if (! is_null($this->last_name)) {
-                        $completeName = $completeName.' '.$this->last_name;
+                    if (!is_null($this->last_name)) {
+                        $completeName = $completeName . ' ' . $this->last_name;
                     }
                 }
                 break;
@@ -919,12 +667,12 @@ class Contact extends Model
         $incompleteName = '';
         $incompleteName = $this->first_name;
 
-        if ($this->nameOrder == 'nickname_bracketed_firstname_lastname' && ! is_null($this->nickname)) {
+        if ($this->nameOrder == 'nickname_bracketed_firstname_lastname' && !is_null($this->nickname)) {
             $incompleteName = $this->nickname;
         }
 
-        if (! is_null($this->last_name)) {
-            $incompleteName .= ' '.mb_substr($this->last_name, 0, 1);
+        if (!is_null($this->last_name)) {
+            $incompleteName .= ' ' . mb_substr($this->last_name, 0, 1);
         }
 
         if ($this->is_dead) {
@@ -964,14 +712,14 @@ class Contact extends Model
      * Get all the contacts related to the current contact by a specific
      * relationship type group.
      *
-     * @param  string  $type
+     * @param string $type
      * @return Collection|null
      */
     public function getRelationshipsByRelationshipTypeGroup(string $type): ?Collection
     {
         $relationshipTypeGroup = $this->account->getRelationshipTypeGroupByType($type);
 
-        if (! $relationshipTypeGroup) {
+        if (!$relationshipTypeGroup) {
             return null;
         }
 
@@ -983,7 +731,7 @@ class Contact extends Model
     /**
      * Set the default avatar color for this object.
      *
-     * @param  string|null  $color
+     * @param string|null $color
      * @return void
      */
     public function setAvatarColor($color = null)
@@ -1004,13 +752,8 @@ class Contact extends Model
 
     /**
      * Set the name of the contact.
-     *
-     * @param  string  $firstName
-     * @param  string  $middleName
-     * @param  string  $lastName
-     * @return bool
      */
-    public function setName(string $firstName, string $lastName = null, string $middleName = null)
+    public function setName(string $firstName, ?string $lastName = null, ?string $middleName = null): bool
     {
         if ($firstName === '') {
             return false;
@@ -1032,7 +775,7 @@ class Contact extends Model
      */
     public function getBirthdayState()
     {
-        if (! $this->birthday_special_date_id) {
+        if (!$this->birthday_special_date_id) {
             return 'unknown';
         }
 
@@ -1081,6 +824,16 @@ class Contact extends Model
     }
 
     /**
+     * Get the gift records associated with the contact.
+     *
+     * @return HasMany
+     */
+    public function gifts()
+    {
+        return $this->hasMany(Gift::class);
+    }
+
+    /**
      * Get all the gift ideas, if any.
      */
     public function getGiftIdeas()
@@ -1097,36 +850,21 @@ class Contact extends Model
     }
 
     /**
+     * Get the task records associated with the contact.
+     *
+     * @return HasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    /**
      * Get all the tasks in the in completed state, if any.
      */
     public function getCompletedTasks()
     {
         return $this->tasks()->completed()->get();
-    }
-
-    /**
-     * Get the default avatar URL.
-     *
-     * @return string
-     */
-    public function getAvatarDefaultURL()
-    {
-        if (empty($this->avatar_default_url)) {
-            return '';
-        }
-
-        if (config('filesystems.default_visibility') === 'public') {
-            $matches = Str::of($this->avatar_default_url)->split('/\?/');
-
-            $url = asset(StorageHelper::disk(config('filesystems.default'))->url($matches[0]));
-            if ($matches->count() > 1) {
-                $url .= '?'.$matches[1];
-            }
-
-            return $url;
-        }
-
-        return route('storage', ['file' => $this->avatar_default_url]);
     }
 
     /**
@@ -1163,46 +901,38 @@ class Contact extends Model
     }
 
     /**
-     * Delete avatars files.
-     * This does not touch avatar_location or avatar_file_name properties of the contact.
+     * Get the Avatar Photo records associated with the contact.
      *
-     * @param  bool  $force
+     * @return HasOne
      */
-    public function deleteAvatars(bool $force = false)
+    public function avatarPhoto()
     {
-        if (! $force && (! $this->has_avatar || $this->avatar_location == 'external')) {
-            return;
-        }
-
-        $storage = Storage::disk($this->avatar_location);
-        $this->deleteAvatarSize($storage);
-        $this->deleteAvatarSize($storage, 110);
-        $this->deleteAvatarSize($storage, 174);
+        return $this->hasOne(Photo::class, 'id', 'avatar_photo_id');
     }
 
     /**
-     * Delete avatar file for one size.
+     * Get the default avatar URL.
      *
-     * @param  Filesystem  $storage
-     * @param  int  $size
+     * @return string
      */
-    private function deleteAvatarSize(Filesystem $storage, int $size = null)
+    public function getAvatarDefaultURL()
     {
-        $avatarFileName = $this->avatar_file_name;
-
-        if (! is_null($size)) {
-            $filename = pathinfo($avatarFileName, PATHINFO_FILENAME);
-            $extension = pathinfo($avatarFileName, PATHINFO_EXTENSION);
-            $avatarFileName = 'avatars/'.$filename.'_'.$size.'.'.$extension;
+        if (empty($this->avatar_default_url)) {
+            return '';
         }
 
-        try {
-            if ($storage->exists($avatarFileName)) {
-                $storage->delete($avatarFileName);
+        if (config('filesystems.default_visibility') === 'public') {
+            $matches = Str::of($this->avatar_default_url)->split('/\?/');
+
+            $url = asset(StorageHelper::disk(config('filesystems.default'))->url($matches[0]));
+            if ($matches->count() > 1) {
+                $url .= '?' . $matches[1];
             }
-        } catch (FileNotFoundException $e) {
-            return;
+
+            return $url;
         }
+
+        return route('storage', ['file' => $this->avatar_default_url]);
     }
 
     /**
@@ -1213,6 +943,16 @@ class Contact extends Model
     public function hasDebt()
     {
         return $this->debts()->count() !== 0;
+    }
+
+    /**
+     * Get the debt records associated with the contact.
+     *
+     * @return HasMany
+     */
+    public function debts()
+    {
+        return $this->hasMany(Debt::class);
     }
 
     /**
@@ -1246,7 +986,7 @@ class Contact extends Model
             ->debts()
             ->inProgress()
             ->getResults()
-            ->filter(fn ($d) => Arr::has($d->attributes, 'amount'))
+            ->filter(fn($d) => Arr::has($d->attributes, 'amount'))
             ->sum(function ($d) {
                 $amount = $d->attributes['amount'];
 
@@ -1261,7 +1001,7 @@ class Contact extends Model
      */
     public function hasFirstMetInformation()
     {
-        return ! is_null($this->first_met_additional_info) || ! is_null($this->firstMetDate) || ! is_null($this->first_met_through_contact_id);
+        return !is_null($this->first_met_additional_info) || !is_null($this->firstMetDate) || !is_null($this->first_met_through_contact_id);
     }
 
     /**
@@ -1271,7 +1011,7 @@ class Contact extends Model
      */
     public function getIntroducer(): ?self
     {
-        if (! $this->first_met_through_contact_id) {
+        if (!$this->first_met_through_contact_id) {
             return null;
         }
 
@@ -1290,10 +1030,10 @@ class Contact extends Model
      * Sets a Special Date for this contact, for a specific occasion (birthday,
      * decease date,...) of which we know the date.
      *
-     * @param  string  $occasion
-     * @param  int  $year
-     * @param  int  $month
-     * @param  int  $day
+     * @param string $occasion
+     * @param int $year
+     * @param int $month
+     * @param int $day
      * @return SpecialDate|null
      */
     public function setSpecialDate($occasion, int $year, int $month, int $day): ?SpecialDate
@@ -1366,8 +1106,8 @@ class Contact extends Model
     public function getBirthdayRemindersAboutRelatedContacts()
     {
         $relationships = $this->relationships->filter(function ($item) {
-            return ! is_null($item->ofContact) &&
-                   $item->ofContact->birthday_special_date_id > 0;
+            return !is_null($item->ofContact) &&
+                $item->ofContact->birthday_special_date_id > 0;
         });
 
         $reminders = collect();
@@ -1381,29 +1121,6 @@ class Contact extends Model
         }
 
         return $reminders;
-    }
-
-    /**
-     * Gets the first contact related to this contact if the current contact is
-     * partial.
-     *
-     * @return self|null
-     */
-    public function getRelatedRealContact()
-    {
-        $contact = $this;
-
-        return self::setEagerLoads([])->where('account_id', $this->account_id)
-            ->where('id', function ($query) use ($contact) {
-                $query->select('of_contact')
-                        ->from('relationships')
-                        ->where([
-                            'account_id' => $contact->account_id,
-                            'contact_is' => $contact->id,
-                        ])
-                        ->first();
-            })
-            ->first();
     }
 
     /**
@@ -1422,28 +1139,26 @@ class Contact extends Model
     }
 
     /**
-     * Get the contacts that have all the provided $tags
-     * or if $tags is NONE get contacts that have no tags.
+     * Gets the first contact related to this contact if the current contact is
+     * partial.
      *
-     * @param  Builder  $query
-     * @param  mixed  $tags  string or Tag
-     * @return Builder $query
+     * @return self|null
      */
-    public function scopeTags($query, $tags)
+    public function getRelatedRealContact()
     {
-        if ($tags == 'NONE') {
-            // get tagless contacts
-            $query = $query->has('tags', '<', 1);
-        } elseif (! empty($tags)) {
-            // gets users who have all the tags
-            foreach ($tags as $tag) {
-                $query = $query->whereHas('tags', function (Builder $query) use ($tag) {
-                    $query->where('id', $tag->id);
-                });
-            }
-        }
+        $contact = $this;
 
-        return $query;
+        return self::setEagerLoads([])->where('account_id', $this->account_id)
+            ->where('id', function ($query) use ($contact) {
+                $query->select('of_contact')
+                    ->from('relationships')
+                    ->where([
+                        'account_id' => $contact->account_id,
+                        'contact_is' => $contact->id,
+                    ])
+                    ->first();
+            })
+            ->first();
     }
 
     /**
@@ -1453,7 +1168,7 @@ class Contact extends Model
      */
     public function getAgeAtDeath(): ?int
     {
-        if (! $this->deceasedDate) {
+        if (!$this->deceasedDate) {
             return null;
         }
 
@@ -1461,7 +1176,7 @@ class Contact extends Model
             return null;
         }
 
-        if (! $this->birthdate) {
+        if (!$this->birthdate) {
             return null;
         }
 
@@ -1472,12 +1187,12 @@ class Contact extends Model
      * Update the frequency for which user has to be warned to stay in touch
      * with the contact.
      *
-     * @param  int  $frequency
+     * @param int $frequency
      * @return bool
      */
     public function updateStayInTouchFrequency($frequency)
     {
-        if (! is_int($frequency)) {
+        if (!is_int($frequency)) {
             return false;
         }
 
@@ -1495,8 +1210,8 @@ class Contact extends Model
     /**
      * Update the date the notification about staying in touch should be sent.
      *
-     * @param  int  $frequency
-     * @param  Carbon|null  $triggerDate
+     * @param int $frequency
+     * @param Carbon|null $triggerDate
      */
     public function setStayInTouchTriggerDate($frequency, $triggerDate = null)
     {
@@ -1528,23 +1243,19 @@ class Contact extends Model
         return WeatherHelper::getWeatherForAddress($this->addresses()->first());
     }
 
-    public function updateConsulted()
+    /**
+     * Get the Address Field records associated with the contact.
+     *
+     * @return HasMany
+     */
+    public function addresses()
     {
-        // prevent timestamp update
-        $timestamps = $this->timestamps;
-        $this->timestamps = false;
-
-        $this->last_consulted_at = now();
-        $this->number_of_views = $this->number_of_views + 1;
-
-        $this->save();
-
-        $this->timestamps = $timestamps;
+        return $this->hasMany(Address::class);
     }
 
     public function throwInactive()
     {
-        if (! $this->is_active) {
+        if (!$this->is_active) {
             throw ValidationException::withMessages([
                 trans('people.archived_contact_readonly'),
             ]);
@@ -1571,5 +1282,48 @@ class Contact extends Model
     protected function pruning()
     {
         $this->deleteAvatars(true);
+    }
+
+    /**
+     * Delete avatars files.
+     * This does not touch avatar_location or avatar_file_name properties of the contact.
+     *
+     * @param bool $force
+     */
+    public function deleteAvatars(bool $force = false)
+    {
+        if (!$force && (!$this->has_avatar || $this->avatar_location == 'external')) {
+            return;
+        }
+
+        $storage = Storage::disk($this->avatar_location);
+        $this->deleteAvatarSize($storage);
+        $this->deleteAvatarSize($storage, 110);
+        $this->deleteAvatarSize($storage, 174);
+    }
+
+    /**
+     * Delete avatar file for one size.
+     *
+     * @param Filesystem $storage
+     * @param int $size
+     */
+    private function deleteAvatarSize(Filesystem $storage, ?int $size = null)
+    {
+        $avatarFileName = $this->avatar_file_name;
+
+        if (!is_null($size)) {
+            $filename = pathinfo($avatarFileName, PATHINFO_FILENAME);
+            $extension = pathinfo($avatarFileName, PATHINFO_EXTENSION);
+            $avatarFileName = 'avatars/' . $filename . '_' . $size . '.' . $extension;
+        }
+
+        try {
+            if ($storage->exists($avatarFileName)) {
+                $storage->delete($avatarFileName);
+            }
+        } catch (FileNotFoundException $e) {
+            return;
+        }
     }
 }

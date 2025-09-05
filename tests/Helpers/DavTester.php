@@ -8,23 +8,16 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Promise\PromiseInterface;
 use App\Services\DavClient\Utils\Dav\DavClient;
+use function PHPUnit\Framework\assertArrayHasKey;
+use function PHPUnit\Framework\assertEquals;
 
-class DavTester extends TestCase
+class DavTester
 {
-    /**
-     * @var array
-     */
-    public $responses;
+    public array $responses;
 
-    /**
-     * @var int
-     */
-    private $current;
+    private int $current;
 
-    /**
-     * @var string
-     */
-    public $baseUri;
+    public string $baseUri;
 
     public $container;
 
@@ -37,32 +30,32 @@ class DavTester extends TestCase
 
     public function client(): DavClient
     {
-        return (new DavClient())->setBaseUri($this->baseUri);
+        return new DavClient()->setBaseUri($this->baseUri);
     }
 
-    public function fake()
+    public function fake(): static
     {
-        Http::fake(function ($request) {
+        Http::fake(function () {
             return $this->responses[$this->current++]['response'];
         });
 
         return $this;
     }
 
-    public function assert()
+    public function assert(): void
     {
         Http::assertSentInOrder(array_map(function ($data) {
             return function (Request $request, Response $response) use ($data) {
                 $srequest = $request->method().' '.$request->url();
-                $this->assertEquals($data['method'], $request->method(), "method for request $srequest differs");
-                $this->assertEquals($data['uri'], $request->url(), "uri for request $srequest differs");
+                assertEquals($data['method'], $request->method(), "method for request $srequest differs");
+                assertEquals($data['uri'], $request->url(), "uri for request $srequest differs");
                 if (isset($data['body'])) {
-                    $this->assertEquals($data['body'], $request->body(), "body for request $srequest differs");
+                    assertEquals($data['body'], $request->body(), "body for request $srequest differs");
                 }
                 if (isset($data['headers'])) {
                     foreach ($data['headers'] as $key => $value) {
-                        $this->assertArrayHasKey($key, $request->headers(), "header $key for request $srequest is missing");
-                        $this->assertEquals($value, $request->header($key), "header $key for request $srequest differs");
+                        assertArrayHasKey($key, $request->headers(), "header $key for request $srequest is missing");
+                        assertEquals($value, $request->header($key), "header $key for request $srequest differs");
                     }
                 }
 
@@ -103,7 +96,7 @@ class DavTester extends TestCase
             ->supportedAddressData();
     }
 
-    public function addResponse(string $uri, PromiseInterface $response, string $body = null, string $method = 'PROPFIND', array $headers = null)
+    public function addResponse(string $uri, PromiseInterface $response, string $body = null, string $method = 'PROPFIND', array $headers = null): static
     {
         $this->responses[] = [
             'uri' => $uri,
@@ -116,27 +109,27 @@ class DavTester extends TestCase
         return $this;
     }
 
-    public function serviceUrl()
+    public function serviceUrl(): DavTester|static
     {
         return $this->addResponse('https://test/.well-known/carddav', Http::response(null, 301, ['Location' => $this->baseUri.'/dav/']), null, 'GET');
     }
 
-    public function nonStandardServiceUrl()
+    public function nonStandardServiceUrl(): DavTester|static
     {
-        return $this->addResponse('https://test/.well-known/carddav', Http::response(null, 301, ['Location' => '/dav/']), null, 'PROPFIND');
+        return $this->addResponse('https://test/.well-known/carddav', Http::response(null, 301, ['Location' => '/dav/']));
     }
 
-    public function optionsOk(string $url = 'https://test/dav/')
+    public function optionsOk(string $url = 'https://test/dav/'): DavTester|static
     {
         return $this->addResponse($url, Http::response(null, 200, ['Dav' => '1, 3, addressbook']), null, 'OPTIONS');
     }
 
-    public function optionsFail()
+    public function optionsFail(): DavTester|static
     {
         return $this->addResponse('https://test/dav/', Http::response(null, 200, ['Dav' => 'bad']), null, 'OPTIONS');
     }
 
-    public function userPrincipal(string $url = 'https://test/dav/')
+    public function userPrincipal(string $url = 'https://test/dav/'): DavTester|static
     {
         return $this->addResponse($url, Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -153,7 +146,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function userPrincipalEmpty()
+    public function userPrincipalEmpty(): DavTester|static
     {
         return $this->addResponse('https://test/dav/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -168,7 +161,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function addressbookHome()
+    public function addressbookHome(): DavTester|static
     {
         return $this->addResponse('https://test/dav/principals/user@test.com/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -185,7 +178,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function addressbookEmpty()
+    public function addressbookEmpty(): DavTester|static
     {
         return $this->addResponse('https://test/dav/principals/user@test.com/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -200,7 +193,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function resourceTypeAddressBook()
+    public function resourceTypeAddressBook(): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -217,7 +210,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function resourceTypeHomeOnly()
+    public function resourceTypeHomeOnly(): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -232,7 +225,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function resourceTypeEmpty()
+    public function resourceTypeEmpty(): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -247,7 +240,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function supportedReportSet(array $reportSet = ['card:addressbook-multiget', 'card:addressbook-query', 'd:sync-collection'])
+    public function supportedReportSet(array $reportSet = ['card:addressbook-multiget', 'card:addressbook-query', 'd:sync-collection']): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -266,7 +259,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function supportedAddressData(array $list = ['card:address-data-type content-type="text/vcard" version="4.0"'])
+    public function supportedAddressData(array $list = ['card:address-data-type content-type="text/vcard" version="4.0"']): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -285,7 +278,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function displayName(string $name = 'Test')
+    public function displayName(string $name = 'Test'): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -300,7 +293,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function getSynctoken(string $synctoken = '"test"')
+    public function getSynctoken(string $synctoken = '"test"'): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -315,7 +308,7 @@ class DavTester extends TestCase
         '</d:multistatus>'));
     }
 
-    public function getSyncCollection(string $synctoken = 'token', string $etag = '"etag"')
+    public function getSyncCollection(string $synctoken = 'token', string $etag = '"etag"'): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -332,7 +325,7 @@ class DavTester extends TestCase
         '</d:multistatus>'), null, 'REPORT');
     }
 
-    public function addressMultiGet($etag, $card, $url)
+    public function addressMultiGet($etag, $card, $url): DavTester|static
     {
         return $this->addResponse('https://test/dav/addressbooks/user@test.com/contacts/', Http::response($this->multistatusHeader().
         '<d:response>'.
@@ -355,7 +348,7 @@ class DavTester extends TestCase
         "</card:addressbook-multiget>\n", 'REPORT');
     }
 
-    public static function multistatusHeader()
+    public static function multistatusHeader(): string
     {
         return '<d:multistatus xmlns:d="DAV:" xmlns:card="urn:ietf:params:xml:ns:carddav">';
     }

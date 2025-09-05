@@ -2,12 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\User\User;
-use Tests\FeatureTestCase;
-use App\Models\Contact\Contact;
 use App\Models\Account\Activity;
 use App\Models\Account\ActivityType;
+use App\Models\Contact\Contact;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\FeatureTestCase;
 
 class ActivityTest extends FeatureTestCase
 {
@@ -36,7 +37,6 @@ class ActivityTest extends FeatureTestCase
         'id',
         'name',
     ];
-
     protected $jsonActivity = [
         'id',
         'object',
@@ -58,7 +58,7 @@ class ActivityTest extends FeatureTestCase
                 'created_at',
                 'updated_at',
             ],
-            'account'=> [
+            'account' => [
                 'id',
             ],
             'created_at',
@@ -89,7 +89,6 @@ class ActivityTest extends FeatureTestCase
         'created_at',
         'updated_at',
     ];
-
     protected $jsonActivityNoCategory = [
         'id',
         'object',
@@ -121,18 +120,24 @@ class ActivityTest extends FeatureTestCase
         'created_at',
         'updated_at',
     ];
-
-    private function createActivityAndAttachToContact(User $user, Contact $contact)
-    {
-        $activity = factory(Activity::class)->create([
-            'account_id' => $user->account_id,
-        ]);
-        $activity->contacts()->syncWithoutDetaching([$contact->id => [
-            'account_id' => $activity->account_id,
-        ]]);
+    private array $jsonStructureActivityCategoryType = [
+        'id',
+        'name'
+    ];
+    private array $jsonStructureActivityCategory {
+        get => [
+            '*' => [
+                'id',
+                'name',
+                'types' => [
+                    '*' => $this->jsonStructureActivityCategoryType
+                ]
+            ]
+        ];
     }
 
-    public function test_it_gets_the_list_of_activities()
+    #[Test]
+    public function it_gets_the_list_of_activities()
     {
         $user = $this->signin();
 
@@ -144,7 +149,7 @@ class ActivityTest extends FeatureTestCase
         $this->createActivityAndAttachToContact($user, $contact);
         $this->createActivityAndAttachToContact($user, $contact);
 
-        $response = $this->json('GET', '/people/'.$contact->hashID().'/activities');
+        $response = $this->json('GET', '/people/' . $contact->hashID() . '/activities');
 
         $response->assertStatus(200);
 
@@ -160,7 +165,34 @@ class ActivityTest extends FeatureTestCase
         );
     }
 
-    public function test_it_gets_the_list_of_contacts_to_associate_with_the_activity()
+    private function createActivityAndAttachToContact(User $user, Contact $contact)
+    {
+        $activity = factory(Activity::class)->create([
+            'account_id' => $user->account_id,
+        ]);
+        $activity->contacts()->syncWithoutDetaching([$contact->id => [
+            'account_id' => $activity->account_id,
+        ]]);
+    }
+
+    #[Test]
+    public function it_gets_the_list_of_activity_categories()
+    {
+        $this->signin(User::find(1));
+
+        $response = $this->getJson('/activityCategories');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure($this->jsonStructureActivityCategory);
+
+        $body = file_get_contents(base_path('tests/Fixtures/Services/Account/Activity/DefaultActivityTypes.json'));
+        $bodyJson = \Safe\json_decode($body);
+        $response->assertExactJson($bodyJson);
+    }
+
+    #[Test]
+    public function it_gets_the_list_of_contacts_to_associate_with_the_activity()
     {
         $user = $this->signin();
 
@@ -173,7 +205,7 @@ class ActivityTest extends FeatureTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('GET', '/people/'.$contact->hashID().'/activities/contacts/');
+        $response = $this->json('GET', '/people/' . $contact->hashID() . '/activities/contacts/');
 
         $response->assertStatus(200);
 
@@ -187,7 +219,7 @@ class ActivityTest extends FeatureTestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function activities_create()
     {
         $user = $this->signin();
@@ -231,7 +263,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_create_error_wrong_parameter()
     {
         $user = $this->signin();
@@ -253,7 +285,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_create_error_bad_account()
     {
         $this->signin();
@@ -273,7 +305,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_create_error_bad_account2()
     {
         $user = $this->signin();
@@ -297,7 +329,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update()
     {
         $user = $this->signin();
@@ -308,7 +340,7 @@ class ActivityTest extends FeatureTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/activities/'.$activity->id, [
+        $response = $this->json('PUT', '/activities/' . $activity->id, [
             'contacts' => [$contact->id],
             'description' => 'the description',
             'summary' => 'the activity',
@@ -340,7 +372,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update_category()
     {
         $user = $this->signin();
@@ -354,7 +386,7 @@ class ActivityTest extends FeatureTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/activities/'.$activity->id, [
+        $response = $this->json('PUT', '/activities/' . $activity->id, [
             'contacts' => [$contact->id],
             'description' => 'the description',
             'summary' => 'the activity',
@@ -395,7 +427,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update_existing()
     {
         $user = $this->signin();
@@ -425,7 +457,7 @@ class ActivityTest extends FeatureTestCase
             'activity_id' => $activity->id,
         ]);
 
-        $response = $this->json('PUT', '/activities/'.$activity->id, [
+        $response = $this->json('PUT', '/activities/' . $activity->id, [
             'contacts' => [$contact->id],
             'description' => 'the description',
             'summary' => 'the activity',
@@ -462,7 +494,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update_error_wrong_parameter()
     {
         $user = $this->signin();
@@ -479,7 +511,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update_error_wrong_account_for_activity()
     {
         $user = $this->signin();
@@ -489,7 +521,7 @@ class ActivityTest extends FeatureTestCase
         ]);
         $activity = factory(Activity::class)->create();
 
-        $response = $this->json('PUT', '/activities/'.$activity->id, [
+        $response = $this->json('PUT', '/activities/' . $activity->id, [
             'contacts' => [$contact->id],
             'description' => 'the description',
             'summary' => 'the activity',
@@ -502,7 +534,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_update_error_wrong_account_for_contacts()
     {
         $user = $this->signin();
@@ -512,7 +544,7 @@ class ActivityTest extends FeatureTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/activities/'.$activity->id, [
+        $response = $this->json('PUT', '/activities/' . $activity->id, [
             'contacts' => [$contact->id],
             'description' => 'the description',
             'summary' => 'the activity',
@@ -525,7 +557,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_delete()
     {
         $user = $this->signin();
@@ -536,7 +568,7 @@ class ActivityTest extends FeatureTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('DELETE', '/activities/'.$activity->id);
+        $response = $this->json('DELETE', '/activities/' . $activity->id);
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('activities', [
@@ -545,7 +577,7 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_delete_error()
     {
         $this->signin();
@@ -558,13 +590,13 @@ class ActivityTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function activities_delete_with_wrong_account()
     {
         $this->signin();
         $activity = factory(Activity::class)->create();
 
-        $response = $this->json('DELETE', '/activities/'.$activity->id);
+        $response = $this->json('DELETE', '/activities/' . $activity->id);
 
         $response->assertStatus(404);
         $response->assertJson([

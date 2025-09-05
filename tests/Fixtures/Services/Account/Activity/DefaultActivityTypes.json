@@ -1,0 +1,78 @@
+[
+    {
+        "id": 1,
+        "name": "Simple activities",
+        "types": [
+            {
+                "id": 1,
+                "name": "just hung out"
+            },
+            {
+                "id": 2,
+                "name": "watched a movie at home"
+            },
+            {
+                "id": 3,
+                "name": "just talked at home"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Sport",
+        "types": [
+            {
+                "id": 4,
+                "name": "played a sport together"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Food",
+        "types": [
+            {
+                "id": 5,
+                "name": "ate at their place"
+            },
+            {
+                "id": 6,
+                "name": "went to a bar"
+            },
+            {
+                "id": 7,
+                "name": "ate at home"
+            },
+            {
+                "id": 8,
+                "name": "picnicked"
+            },
+            {
+                "id": 9,
+                "name": "ate at a restaurant"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Cultural activities",
+        "types": [
+            {
+                "id": 10,
+                "name": "went to the theater"
+            },
+            {
+                "id": 11,
+                "name": "went to a concert"
+            },
+            {
+                "id": 12,
+                "name": "went to a play"
+            },
+            {
+                "id": 13,
+                "name": "went to the museum"
+            }
+        ]
+    }
+]

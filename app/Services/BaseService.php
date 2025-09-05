@@ -41,7 +41,7 @@ abstract class BaseService
      */
     public function nullOrValue($data, $index)
     {
-        $value = Arr::get($data, $index, null);
+        $value = Arr::get($data, $index);
 
         return is_null($value) || $value === '' ? null : $value;
     }
@@ -55,7 +55,7 @@ abstract class BaseService
      */
     public function nullOrDate($data, $index)
     {
-        $value = Arr::get($data, $index, null);
+        $value = Arr::get($data, $index);
 
         return is_null($value) || $value === '' ? null : Carbon::parse($value);
     }

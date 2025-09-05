@@ -166,7 +166,7 @@ $factory->define(App\Models\Contact\Note::class, function (Faker\Generator $fake
                 'account_id' => $data['account_id'],
             ])->id;
         },
-        'body' => encrypt($faker->text(200)),
+        'body' => encrypt($faker->text()),
     ];
 });
 

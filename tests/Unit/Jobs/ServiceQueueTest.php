@@ -2,14 +2,15 @@
 
 namespace Tests\Unit\Jobs;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ServiceQueueTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_run_a_service_ok(): void
     {
         config(['queue.default' => 'sync']);
@@ -20,7 +21,7 @@ class ServiceQueueTest extends TestCase
         $this->assertFalse(ServiceQueueTester::$failed);
     }
 
-    /** @test */
+    #[Test]
     public function it_run_a_service_sync(): void
     {
         ServiceQueueTester::dispatchSync();
@@ -29,7 +30,7 @@ class ServiceQueueTest extends TestCase
         $this->assertFalse(ServiceQueueTester::$failed);
     }
 
-    /** @test */
+    #[Test]
     public function it_run_a_service_which_failed(): void
     {
         $this->expectException(\Exception::class);
@@ -41,7 +42,7 @@ class ServiceQueueTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function service_is_not_run_if_queue_set(): void
     {
         config(['queue.default' => 'database']);

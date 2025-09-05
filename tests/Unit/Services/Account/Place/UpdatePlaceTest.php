@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Place;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Place;
 use App\Models\Account\Account;
@@ -15,10 +16,10 @@ class UpdatePlaceTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_place_without_fetching_geolocation_information()
     {
-        $place = factory(Place::class)->create([]);
+        $place = factory(Place::class)->create();
 
         $request = [
             'account_id' => $place->account_id,
@@ -47,7 +48,7 @@ class UpdatePlaceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_a_place_and_fetch_geolocation_information()
     {
         config(['monica.enable_geolocation' => true]);
@@ -55,10 +56,10 @@ class UpdatePlaceTest extends TestCase
 
         $body = file_get_contents(base_path('tests/Fixtures/Services/Account/Place/UpdatePlaceSampleResponse.json'));
         Http::fake([
-            'us1.locationiq.com/v1/*' => Http::response($body, 200),
+            'us1.locationiq.com/v1/*' => Http::response($body),
         ]);
 
-        $place = factory(Place::class)->create([]);
+        $place = factory(Place::class)->create();
 
         $request = [
             'account_id' => $place->account_id,
@@ -83,10 +84,10 @@ class UpdatePlaceTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $place = factory(Place::class)->create([]);
+        $place = factory(Place::class)->create();
 
         $request = [
             'street' => '199 Lafayette Street',
@@ -96,11 +97,11 @@ class UpdatePlaceTest extends TestCase
         app(UpdatePlace::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_place_is_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $place = factory(Place::class)->create([]);
+        $account = factory(Account::class)->create();
+        $place = factory(Place::class)->create();
 
         $request = [
             'account_id' => $account->id,

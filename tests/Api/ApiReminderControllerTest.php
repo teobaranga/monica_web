@@ -3,6 +3,7 @@
 namespace Tests\Api;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -32,7 +33,7 @@ class ApiReminderControllerTest extends ApiTestCase
         'updated_at',
     ];
 
-    /** @test */
+    #[Test]
     public function it_gets_all_reminders()
     {
         $user = $this->signin();
@@ -70,7 +71,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_all_the_reminders_of_a_contact()
     {
         $user = $this->signin();
@@ -105,7 +106,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_get_a_reminder_of_a_contact_with_an_invalid_id()
     {
         $user = $this->signin();
@@ -115,7 +116,7 @@ class ApiReminderControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_one_reminder()
     {
         $user = $this->signin();
@@ -147,7 +148,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_get_a_reminder_with_an_invalid_id()
     {
         $user = $this->signin();
@@ -157,10 +158,10 @@ class ApiReminderControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_a_reminder()
     {
-        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7));
 
         $user = $this->signin();
         $contact = factory(Contact::class)->create([
@@ -198,7 +199,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function create_reminders_gets_an_error_if_fields_are_missing()
     {
         $user = $this->signin();
@@ -218,10 +219,10 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function reminders_create_error_bad_account()
     {
-        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7));
 
         $user = $this->signin();
 
@@ -242,10 +243,10 @@ class ApiReminderControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_a_reminder()
     {
-        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7));
 
         $user = $this->signin();
         $contact = factory(Contact::class)->create([
@@ -291,7 +292,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function updating_reminder_generates_an_error()
     {
         $user = $this->signin();
@@ -310,14 +311,14 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function reminders_update_error_bad_account()
     {
-        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7, 0, 0));
+        Carbon::setTestNow(Carbon::create(2018, 1, 1, 7));
 
         $user = $this->signin();
 
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
         $reminder = factory(Reminder::class)->create([
             'account_id' => $contact->account_id,
             'contact_id' => $contact->id,
@@ -334,7 +335,7 @@ class ApiReminderControllerTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_a_reminder()
     {
         $user = $this->signin();
@@ -356,7 +357,7 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function reminders_delete_error()
     {
         $user = $this->signin();
@@ -368,12 +369,12 @@ class ApiReminderControllerTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_all_upcoming_reminders()
     {
         $user = $this->signin();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
+        Carbon::setTestNow(Carbon::create(2017));
 
         // add 2 reminders for the month of March
         $reminder1 = factory(Reminder::class)->create([

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -14,10 +15,10 @@ class DestroyContactTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_contact()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -32,10 +33,10 @@ class DestroyContactTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_contact_is_archived()
     {
-        $contact = factory(Contact::class)->state('archived')->create([]);
+        $contact = factory(Contact::class)->state('archived')->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -46,10 +47,10 @@ class DestroyContactTest extends TestCase
         app(DestroyContact::class)->handle($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $contact->account_id,
@@ -59,11 +60,11 @@ class DestroyContactTest extends TestCase
         app(DestroyContact::class)->handle($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_doesnt_exist()
     {
         $account = factory(Account::class)->create();
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $request = [
             'account_id' => $account->id,

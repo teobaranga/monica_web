@@ -2,6 +2,7 @@
 
 namespace Tests\Api;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 use App\Models\Journal\Entry;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -23,7 +24,7 @@ class ApiJournalTest extends ApiTestCase
         'updated_at',
     ];
 
-    /** @test */
+    #[Test]
     public function it_gets_all_the_journal_entries()
     {
         $user = $this->signin();
@@ -50,7 +51,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_one_journal_entry()
     {
         $user = $this->signin();
@@ -77,7 +78,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_get_a_journal_entry_with_an_invalid_id()
     {
         $user = $this->signin();
@@ -87,7 +88,7 @@ class ApiJournalTest extends ApiTestCase
         $this->expectNotFound($response);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_a_journal_entry()
     {
         $user = $this->signin();
@@ -121,12 +122,12 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_create_a_journal_entry_with_missing_parameters()
     {
         $user = $this->signin();
 
-        $response = $this->json('POST', '/api/journal', []);
+        $response = $this->json('POST', '/api/journal');
 
         $this->expectDataError($response, [
             'The post field is required.',
@@ -134,7 +135,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_updates_a_journal_entry()
     {
         $user = $this->signin();
@@ -174,7 +175,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_update_a_journal_entry_with_missing_parameters()
     {
         $user = $this->signin();
@@ -182,7 +183,7 @@ class ApiJournalTest extends ApiTestCase
             'account_id' => $user->account_id,
         ]);
 
-        $response = $this->json('PUT', '/api/journal/'.$entry->id, []);
+        $response = $this->json('PUT', '/api/journal/'.$entry->id);
 
         $this->expectDataError($response, [
             'The post field is required.',
@@ -190,7 +191,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_a_journal_entry()
     {
         $user = $this->signin();
@@ -211,7 +212,7 @@ class ApiJournalTest extends ApiTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_delete_a_journal_entry_with_an_invalid_id()
     {
         $user = $this->signin();

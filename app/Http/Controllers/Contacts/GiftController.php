@@ -28,7 +28,7 @@ class GiftController extends Controller
     public function index(Request $request, Contact $contact)
     {
         $gifts = $contact->gifts()
-                ->orderBy('created_at', 'asc')
+                ->orderBy('created_at')
                 ->paginate();
 
         return GiftResource::collection($gifts);

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Activity;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -17,7 +18,7 @@ class CreateActivityTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_stores_an_activity_and_creates_an_entry_in_the_journal()
     {
         $account = factory(Account::class)->create();
@@ -69,15 +70,15 @@ class CreateActivityTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_adds_emotions()
     {
         $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
         ]);
-        $emotion = factory(Emotion::class)->create([]);
-        $emotion2 = factory(Emotion::class)->create([]);
+        $emotion = factory(Emotion::class)->create();
+        $emotion2 = factory(Emotion::class)->create();
 
         $emotionArray = [];
         $emotionArray[] = $emotion->id;
@@ -112,10 +113,10 @@ class CreateActivityTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
 
         $request = [
             'account_id' => $account->id,
@@ -125,11 +126,11 @@ class CreateActivityTest extends TestCase
         app(CreateActivity::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_activity_type_is_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $activityType = factory(ActivityType::class)->create([]);
+        $account = factory(Account::class)->create();
+        $activityType = factory(ActivityType::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
         ]);

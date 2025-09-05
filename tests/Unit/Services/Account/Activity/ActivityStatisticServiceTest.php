@@ -3,6 +3,7 @@
 namespace Tests\Unit\Services\Account\Activity;
 
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -16,7 +17,7 @@ class ActivityStatisticServiceTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_gets_a_list_of_activities_since_a_given_number_of_months()
     {
         $service = new ActivityStatisticService;
@@ -41,7 +42,7 @@ class ActivityStatisticServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_an_empty_list_of_activities()
     {
         $service = new ActivityStatisticService;
@@ -61,7 +62,7 @@ class ActivityStatisticServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_list_of_unique_activity_types()
     {
         $service = new ActivityStatisticService;
@@ -125,7 +126,7 @@ class ActivityStatisticServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_breakdown_of_activities_per_year()
     {
         $service = new ActivityStatisticService;
@@ -187,7 +188,7 @@ class ActivityStatisticServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_list_of_activities_per_month_for_given_year()
     {
         $service = new ActivityStatisticService;
@@ -196,7 +197,7 @@ class ActivityStatisticServiceTest extends TestCase
             'account_id' => $account->id,
         ]);
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1));
+        Carbon::setTestNow(Carbon::create(2017));
 
         for ($i = 0; $i <= 2; $i++) {
             $activity = factory(Activity::class)->create([

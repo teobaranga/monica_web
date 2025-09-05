@@ -102,18 +102,23 @@ jobs:
         if: matrix.connection == 'mysql'
         run: sudo systemctl start mysql.service
       - name: Create database
+
         if: matrix.connection == 'mysql'
         run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS monica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
       - name: Prepare database
         if: matrix.connection == 'mysql'
         run: mysql --protocol=tcp -u root -proot monica < scripts/database.test.sql
+
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
 
       - name: Run seeds
         run: php artisan db:seed --no-interaction -vvv
+
       - name: Create passport keys
         run: php artisan passport:keys --no-interaction -vvv
+
       - name: Cache route
         run: php artisan route:cache
 
@@ -218,46 +223,39 @@ jobs:
       - name: Start mysql
         if: matrix.connection == 'mysql'
         run: sudo systemctl start mysql.service
+
       - name: Create database
         if: matrix.connection == 'mysql'
         run: mysql --protocol=tcp -u root -proot -e "CREATE DATABASE IF NOT EXISTS monica CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
       - name: Prepare database
         if: matrix.connection == 'mysql'
         run: mysql --protocol=tcp -u root -proot monica < scripts/database.test.sql
+
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
 
       - name: Run seeds
         run: php artisan db:seed --no-interaction -vvv
+
       - name: Create passport keys
         run: php artisan passport:keys --no-interaction -vvv
+
       - name: Cache route
         run: php artisan route:cache
-
-      - name: Test coverage page
-        run: REQUEST_URI=/ php scripts/tests/server-cc.php
 
       - uses: browser-actions/setup-chrome@v2
         id: setup-chrome
         with:
-          chrome-version: 126
           install-chromedriver: true
 
     # Test
       - name: Upgrade Chrome Driver
-        run: |
-          # https://stackoverflow.com/questions/78827506/invalid-path-to-chromedriver-when-running-laravel-dusk
-          # revert to `--detect` once updating to Laravel 9+
-          php artisan dusk:chrome-driver 126
-      - name: Start Chrome Driver
-        run: |
-          chmod -R 0755 vendor/laravel/dusk/bin/
-          ./vendor/laravel/dusk/bin/chromedriver-linux64/chromedriver &
+        run: php artisan dusk:chrome-driver --detect
 
-      - name: Run http server
-        run: |
-          php -S localhost:8000 -t public scripts/tests/server-cc.php &
-          php -S localhost:8001 -t public scripts/tests/server-cc.php &
+      # Start a basic Laravel server with no reloading
+      - name: Run Laravel Server
+        run: php artisan serve --no-reload &
 
       - name: Run browser tests
         run: php artisan dusk --log-junit results/junit/results0.xml
@@ -265,15 +263,11 @@ jobs:
           APP_URL: http://localhost:8000
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
-      - name: Fix results files
-        run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
-        working-directory: results
-
       - name: Store results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: results
+          name: results-Browser
           path: results
 
 

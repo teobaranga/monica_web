@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\LifeEvent\LifeEventType;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\LifeEventType;
@@ -15,10 +16,10 @@ class UpdateLifeEventTypeTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_life_event_type()
     {
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $lifeEventType = factory(LifeEventType::class)->create();
         $lifeEventCategory = factory(LifeEventCategory::class)->create([
             'account_id' => $lifeEventType->account_id,
         ]);
@@ -45,10 +46,10 @@ class UpdateLifeEventTypeTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $lifeEventType = factory(LifeEventType::class)->create();
         $lifeEventCategory = factory(LifeEventCategory::class)->create([
             'account_id' => $lifeEventType->account_id,
         ]);
@@ -63,11 +64,11 @@ class UpdateLifeEventTypeTest extends TestCase
         app(UpdateLifeEventType::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_life_event_is_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $lifeEventType = factory(LifeEventType::class)->create([]);
+        $account = factory(Account::class)->create();
+        $lifeEventType = factory(LifeEventType::class)->create();
 
         $request = [
             'account_id' => $account->id,

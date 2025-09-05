@@ -60,7 +60,7 @@ class MoveAvatarsToPhotosDirectory extends Command
                     }
                 }
                 // add some delay, so we treat 100 contacts each minutes
-                $delay = $delay->addMinutes(1);
+                $delay = $delay->addMinutes();
             });
     }
 

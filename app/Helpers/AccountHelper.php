@@ -135,7 +135,7 @@ class AccountHelper
                 'user_id' => auth()->user()->id,
                 'nature' => 'reminder',
             ])
-            ->orderBy('planned_date', 'asc')
+            ->orderBy('planned_date')
             ->get()
             ->filter(function ($reminderOutbox) {
                 return $reminderOutbox->reminder->contact !== null;
@@ -150,7 +150,7 @@ class AccountHelper
      */
     public static function getYearlyActivitiesStatistics(Account $account): Collection
     {
-        $activitiesStatistics = collect([]);
+        $activitiesStatistics = collect();
         $activities = $account->activities()
             ->select('happened_at')
             ->latest('happened_at')
@@ -187,7 +187,7 @@ class AccountHelper
      */
     public static function getYearlyCallStatistics(Account $account): Collection
     {
-        $callsStatistics = collect([]);
+        $callsStatistics = collect();
         $calls = $account->calls()
             ->select('called_at')
             ->latest('called_at')

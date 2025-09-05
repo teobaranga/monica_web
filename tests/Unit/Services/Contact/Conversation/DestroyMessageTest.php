@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Conversation;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Contact\Message;
 use App\Models\Contact\Conversation;
@@ -14,10 +15,10 @@ class DestroyMessageTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_a_message()
     {
-        $conversation = factory(Conversation::class)->create([]);
+        $conversation = factory(Conversation::class)->create();
 
         $message = factory(Message::class)->create([
             'conversation_id' => $conversation->id,
@@ -45,7 +46,7 @@ class DestroyMessageTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -58,11 +59,11 @@ class DestroyMessageTest extends TestCase
         app(DestroyMessage::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_message_doesnt_exist()
     {
-        $conversation = factory(Conversation::class)->create([]);
-        $message = factory(Message::class)->create([]);
+        $conversation = factory(Conversation::class)->create();
+        $message = factory(Message::class)->create();
 
         $request = [
             'account_id' => $conversation->account_id,

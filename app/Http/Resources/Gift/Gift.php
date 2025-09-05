@@ -3,22 +3,19 @@
 namespace App\Http\Resources\Gift;
 
 use App\Helpers\DateHelper;
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Photo\Photo as PhotoResource;
 use App\Http\Resources\Contact\ContactShort as ContactShortResource;
+use App\Http\Resources\Photo\Photo as PhotoResource;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-/**
- * @extends JsonResource<\App\Models\Contact\Gift>
- */
 class Gift extends JsonResource
 {
     /**
      * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray(Request $request): array|JsonSerializable|Arrayable
     {
         return [
             'id' => $this->id,

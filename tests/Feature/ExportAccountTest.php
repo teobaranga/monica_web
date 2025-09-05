@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\FeatureTestCase;
 use Illuminate\Support\Carbon;
 use App\Models\Account\ExportJob;
@@ -11,7 +12,7 @@ class ExportAccountTest extends FeatureTestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_create_export_job_json()
     {
         config(['queue.default' => 'database']);
@@ -30,7 +31,7 @@ class ExportAccountTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_create_export_job_sql()
     {
         config(['queue.default' => 'database']);
@@ -49,21 +50,21 @@ class ExportAccountTest extends FeatureTestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_delete_old_export()
     {
         config(['queue.default' => 'database']);
 
         $user = $this->signin();
 
-        Carbon::setTestNow(Carbon::create(2022, 1, 1, 0, 0, 0));
+        Carbon::setTestNow(Carbon::create(2022));
         $exportJob = ExportJob::factory()->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,
             'status' => ExportJob::EXPORT_DONE,
         ]);
 
-        Carbon::setTestNow(Carbon::create(2022, 1, 2, 0, 0, 0));
+        Carbon::setTestNow(Carbon::create(2022, 1, 2));
         ExportJob::factory()->count(4)->create([
             'account_id' => $user->account_id,
             'user_id' => $user->id,

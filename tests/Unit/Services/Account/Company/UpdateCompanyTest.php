@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Company;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Account\Company;
@@ -14,10 +15,10 @@ class UpdateCompanyTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_a_company()
     {
-        $company = factory(Company::class)->create([]);
+        $company = factory(Company::class)->create();
 
         $request = [
             'account_id' => $company->account_id,
@@ -43,10 +44,10 @@ class UpdateCompanyTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $company = factory(Company::class)->create([]);
+        $company = factory(Company::class)->create();
 
         $request = [
             'name' => '199 Lafayette Street',
@@ -56,11 +57,11 @@ class UpdateCompanyTest extends TestCase
         app(UpdateCompany::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_place_is_not_linked_to_account()
     {
-        $account = factory(Account::class)->create([]);
-        $company = factory(Company::class)->create([]);
+        $account = factory(Account::class)->create();
+        $company = factory(Company::class)->create();
 
         $request = [
             'account_id' => $account->id,

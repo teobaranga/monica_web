@@ -2,11 +2,12 @@
 
 namespace Tests\Api\Authentication;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\ApiTestCase;
 
 class ApiAuthenticateTest extends ApiTestCase
 {
-    /** @test */
+    #[Test]
     public function guest_is_rejected()
     {
         $response = $this->json('GET', '/api/contacts');

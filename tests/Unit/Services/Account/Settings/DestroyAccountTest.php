@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Settings;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Contact\Contact;
@@ -13,10 +14,10 @@ class DestroyAccountTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_destroys_an_account()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         factory(Contact::class, 3)->create([
             'account_id' => $user->account_id,
         ]);
@@ -36,7 +37,7 @@ class DestroyAccountTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [];

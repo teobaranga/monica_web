@@ -13,7 +13,7 @@ class TasksController extends Controller
      */
     public function index(Contact $contact)
     {
-        $tasks = collect([]);
+        $tasks = collect();
 
         foreach ($contact->tasks as $task) {
             $data = [

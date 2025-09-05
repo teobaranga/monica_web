@@ -78,7 +78,7 @@ class RecoveryCodesController extends Controller
     {
         // Generate new codes
         $random = new Random();
-        $random->uppercase(true);
+        $random->uppercase();
 
         $codes = [];
 

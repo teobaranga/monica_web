@@ -2,26 +2,27 @@
 
 namespace Tests\Unit\Jobs;
 
-use Carbon\Carbon;
-use Tests\TestCase;
-use App\Models\User\User;
+use App\Jobs\StayInTouch\ScheduleStayInTouch;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
+use App\Models\User\User;
 use App\Notifications\StayInTouchEmail;
-use App\Jobs\StayInTouch\ScheduleStayInTouch;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class ScheduleStayInTouchTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_dispatches_an_email()
     {
         NotificationFacade::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 12, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 12));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',
@@ -43,7 +44,7 @@ class ScheduleStayInTouchTest extends TestCase
         NotificationFacade::assertSentTo($user, StayInTouchEmail::class,
             function ($notification, $channels) use ($contact) {
                 return $channels[0] == 'mail'
-                && $notification->assertSentFor($contact);
+                    && $notification->assertSentFor($contact);
             }
         );
 
@@ -57,12 +58,12 @@ class ScheduleStayInTouchTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_dispatches_an_email_if_free_account()
     {
         NotificationFacade::fake();
 
-        Carbon::setTestNow(Carbon::create(2017, 1, 1, 5, 0, 0));
+        Carbon::setTestNow(Carbon::create(2017, 1, 1, 5));
 
         config(['monica.requires_subscription' => true]);
 
@@ -91,12 +92,12 @@ class ScheduleStayInTouchTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_reschedule_missed_stayintouch()
     {
         NotificationFacade::fake();
 
-        Carbon::setTestNow(Carbon::create(2019, 1, 1, 5, 0, 0));
+        Carbon::setTestNow(Carbon::create(2019, 1, 1, 5));
 
         $account = factory(Account::class)->create([
             'default_time_reminder_is_sent' => '07:00',

@@ -19,11 +19,11 @@ class ActivityTypeCategoriesController extends Controller
      */
     public function index()
     {
-        $activityTypeCategoriesData = collect([]);
+        $activityTypeCategoriesData = collect();
         $activityTypeCategories = auth()->user()->account->activityTypeCategories;
 
         foreach ($activityTypeCategories as $activityTypeCategory) {
-            $activityTypesData = collect([]);
+            $activityTypesData = collect();
             $activityTypes = $activityTypeCategory->activityTypes;
 
             foreach ($activityTypes as $activityType) {

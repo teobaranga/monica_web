@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use App\Models\Account\Account;
@@ -44,7 +45,7 @@ ADR:;;17 Shakespeare Ave.;Southampton;;SO17 2HB;United Kingdom
 END:VCARD
 ';
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_a_user()
     {
         $importJob = factory(ImportJob::class)->create();
@@ -52,10 +53,10 @@ END:VCARD
         $this->assertTrue($importJob->user()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_an_account()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);
@@ -67,10 +68,10 @@ END:VCARD
         $this->assertTrue($importJob->account()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_many_reports()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);
@@ -87,10 +88,10 @@ END:VCARD
         $this->assertTrue($importJob->importJobReports()->exists());
     }
 
-    /** @test */
+    #[Test]
     public function it_initiates_the_job()
     {
-        $importJob = factory(ImportJob::class)->make([]);
+        $importJob = factory(ImportJob::class)->make();
 
         $this->assertNull($importJob->started_at);
 
@@ -99,10 +100,10 @@ END:VCARD
         $this->assertNotNull($importJob->started_at);
     }
 
-    /** @test */
+    #[Test]
     public function it_finalizes_the_job()
     {
-        $importJob = factory(ImportJob::class)->make([]);
+        $importJob = factory(ImportJob::class)->make();
 
         $this->assertNull($importJob->ended_at);
 
@@ -111,10 +112,10 @@ END:VCARD
         $this->assertNotNull($importJob->ended_at);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_and_throws_an_exception()
     {
-        $importJob = factory(ImportJob::class)->create([]);
+        $importJob = factory(ImportJob::class)->create();
         $this->invokePrivateMethod($importJob, 'fail', [
             'reason',
         ]);
@@ -126,7 +127,7 @@ END:VCARD
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_the_physical_file()
     {
         Storage::fake('public');
@@ -147,7 +148,7 @@ END:VCARD
         $this->assertIsResource($importJob->physicalFile);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_file_doesnt_exist()
     {
         Storage::fake('public', [
@@ -165,7 +166,7 @@ END:VCARD
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_deletes_the_file()
     {
         Storage::fake('public');
@@ -183,7 +184,7 @@ END:VCARD
         Storage::disk('public')->assertMissing($importJob->filename);
     }
 
-    /** @test */
+    #[Test]
     public function it_calculates_how_many_entries_there_are_and_populate_the_entries_array()
     {
         Storage::fake('public');
@@ -206,7 +207,7 @@ END:VCARD
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_process_an_entry_if_import_is_not_feasible()
     {
         $importJob = $this->createImportJob();
@@ -225,7 +226,7 @@ END:VCARD
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_doesnt_process_an_entry_if_contact_already_exists()
     {
         $importJob = $this->createImportJob();
@@ -256,7 +257,7 @@ END:VCARD
         );
     }
 
-    /** @test */
+    #[Test]
     public function skipping_entries_increments_counter_and_file_job_report()
     {
         $importJob = $this->createImportJob();
@@ -276,7 +277,7 @@ END:VCARD
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_files_an_import_job_report()
     {
         $importJob = $this->createImportJob();
@@ -328,7 +329,7 @@ END:VCARD
 
     private function createImportJob()
     {
-        $account = factory(Account::class)->create([]);
+        $account = factory(Account::class)->create();
         $user = factory(User::class)->create([
             'account_id' => $account->id,
         ]);

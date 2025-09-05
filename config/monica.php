@@ -139,12 +139,12 @@ return [
     |
     |
     */
-    'paid_plan_monthly_friendly_name' => env('PAID_PLAN_MONTHLY_FRIENDLY_NAME', null),
-    'paid_plan_monthly_id' => env('PAID_PLAN_MONTHLY_ID', null),
-    'paid_plan_monthly_price' => env('PAID_PLAN_MONTHLY_PRICE', null),
-    'paid_plan_annual_friendly_name' => env('PAID_PLAN_ANNUAL_FRIENDLY_NAME', null),
-    'paid_plan_annual_id' => env('PAID_PLAN_ANNUAL_ID', null),
-    'paid_plan_annual_price' => env('PAID_PLAN_ANNUAL_PRICE', null),
+    'paid_plan_monthly_friendly_name' => env('PAID_PLAN_MONTHLY_FRIENDLY_NAME'),
+    'paid_plan_monthly_id' => env('PAID_PLAN_MONTHLY_ID'),
+    'paid_plan_monthly_price' => env('PAID_PLAN_MONTHLY_PRICE'),
+    'paid_plan_annual_friendly_name' => env('PAID_PLAN_ANNUAL_FRIENDLY_NAME'),
+    'paid_plan_annual_id' => env('PAID_PLAN_ANNUAL_ID'),
+    'paid_plan_annual_price' => env('PAID_PLAN_ANNUAL_PRICE'),
 
     /*
     |--------------------------------------------------------------------------
@@ -232,7 +232,7 @@ return [
     | LocationIQ offers 10,000 free requests per day.
     |
     */
-    'location_iq_api_key' => env('LOCATION_IQ_API_KEY', null),
+    'location_iq_api_key' => env('LOCATION_IQ_API_KEY'),
 
     /*
     |--------------------------------------------------------------------------
@@ -252,7 +252,7 @@ return [
     | To provide weather information, we use WeatherAPI.
     | See https://www.weatherapi.com/
     */
-    'weatherapi_key' => env('WEATHERAPI_KEY', null),
+    'weatherapi_key' => env('WEATHERAPI_KEY'),
 
     /*
     |--------------------------------------------------------------------------

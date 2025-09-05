@@ -14,7 +14,7 @@ class AddContactsUuid extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->uuid('uuid')->after('description')->nullable();
+            $table->uuid()->after('description')->nullable();
         });
     }
 

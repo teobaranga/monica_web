@@ -2,26 +2,27 @@
 
 namespace Tests\Unit\Jobs\Dav;
 
-use Tests\TestCase;
-use App\Models\User\User;
 use App\Jobs\Dav\GetVCard;
-use Tests\Api\DAV\CardEtag;
 use App\Jobs\Dav\UpdateVCard;
+use App\Models\Account\AddressBookSubscription;
 use App\Models\Contact\Contact;
+use App\Models\User\User;
+use App\Services\DavClient\Utils\Model\ContactDto;
+use Illuminate\Bus\DatabaseBatchRepository;
 use Illuminate\Bus\PendingBatch;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Bus\DatabaseBatchRepository;
-use App\Models\Account\AddressBookSubscription;
-use App\Services\DavClient\Utils\Model\ContactDto;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\Api\DAV\CardEtag;
+use Tests\TestCase;
 
 class GetVCardTest extends TestCase
 {
     use DatabaseTransactions;
     use CardEtag;
 
-    /** @test */
+    #[Test]
     public function it_get_card()
     {
         $fake = Bus::fake();
@@ -42,7 +43,7 @@ class GetVCardTest extends TestCase
         $etag = $this->getEtag($contact, true);
 
         Http::fake([
-            'https://test/dav/uri' => Http::response($card, 200),
+            'https://test/dav/uri' => Http::response($card),
         ]);
 
         $pendingBatch = $fake->batch([

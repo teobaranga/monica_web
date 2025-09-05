@@ -116,6 +116,6 @@ class Note extends Model
      */
     public function getContent()
     {
-        return wordwrap($this->getBody(), 75);
+        return wordwrap($this->getBody());
     }
 }

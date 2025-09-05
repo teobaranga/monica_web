@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Contact;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User\User;
 use function Safe\json_encode;
@@ -17,12 +18,12 @@ class UpdateWorkInformationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_updates_work_information()
     {
         Queue::fake();
 
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $user->account_id,
         ]);
@@ -80,10 +81,10 @@ class UpdateWorkInformationTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
 
         $request = [
             'account_id' => $user->account_id,
@@ -93,10 +94,10 @@ class UpdateWorkInformationTest extends TestCase
         app(UpdateWorkInformation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_doesnt_exist()
     {
-        $user = factory(User::class)->create([]);
+        $user = factory(User::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $user->account_id,
         ]);

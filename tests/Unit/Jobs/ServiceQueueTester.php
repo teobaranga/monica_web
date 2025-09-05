@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\Jobs;
 
-use Throwable;
 use App\Services\BaseService;
-use App\Services\QueuableService;
 use App\Services\DispatchableService;
+use App\Services\QueuableService;
+use Throwable;
 
 class ServiceQueueTester extends BaseService implements QueuableService
 {
@@ -19,7 +19,7 @@ class ServiceQueueTester extends BaseService implements QueuableService
     /**
      * Initialize the service.
      *
-     * @param  array  $data
+     * @param array $data
      */
     public function __construct()
     {
@@ -42,7 +42,7 @@ class ServiceQueueTester extends BaseService implements QueuableService
     /**
      * Handle a job failure.
      *
-     * @param  \Throwable  $exception
+     * @param \Throwable $exception
      */
     public function failed(Throwable $exception): void
     {

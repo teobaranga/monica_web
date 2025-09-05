@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Account\Photo;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Photo;
 use App\Models\Contact\Contact;
@@ -15,12 +16,12 @@ class UploadPhotoTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_uploads_a_photo()
     {
         Storage::fake('photos');
 
-        $contact = factory(Contact::class)->create([]);
+        $contact = factory(Contact::class)->create();
 
         $file = UploadedFile::fake()->image('imag.png');
 
@@ -44,7 +45,7 @@ class UploadPhotoTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -56,7 +57,7 @@ class UploadPhotoTest extends TestCase
         app(UploadPhoto::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_account_does_not_exist()
     {
         Storage::fake('photos');

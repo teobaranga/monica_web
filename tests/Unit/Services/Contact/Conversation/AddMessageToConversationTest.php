@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services\Contact\Conversation;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -16,7 +17,7 @@ class AddMessageToConversationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /** @test */
+    #[Test]
     public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
@@ -29,10 +30,10 @@ class AddMessageToConversationTest extends TestCase
         app(AddMessageToConversation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_stores_a_message()
     {
-        $conversation = factory(Conversation::class)->create([]);
+        $conversation = factory(Conversation::class)->create();
 
         $request = [
             'account_id' => $conversation->account_id,
@@ -60,7 +61,7 @@ class AddMessageToConversationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_contact_is_not_found()
     {
         $account = factory(Account::class)->create();
@@ -84,7 +85,7 @@ class AddMessageToConversationTest extends TestCase
         app(AddMessageToConversation::class)->execute($request);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_if_conversation_is_not_found2()
     {
         $account = factory(Account::class)->create();

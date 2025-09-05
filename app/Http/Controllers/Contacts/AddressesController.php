@@ -23,7 +23,7 @@ class AddressesController extends Controller
      */
     public function index(Contact $contact)
     {
-        $addresses = collect([]);
+        $addresses = collect();
 
         foreach ($contact->addresses as $address) {
             $addresses->push($this->addressObject($address));
