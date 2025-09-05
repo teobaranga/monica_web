@@ -67,7 +67,7 @@
         "nunomaduro/collision": "^8.1",
         "larastan/larastan": "^3.0",
         "phpunit/phpcov": "^10.0",
-        "phpunit/phpunit": "^11.0",
+        "phpunit/phpunit": "^12.0",
         "psalm/plugin-laravel": "^3.0",
         "ryoluo/sail-ssl": "^1.4",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
