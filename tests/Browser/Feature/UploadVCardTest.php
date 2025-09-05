@@ -2,8 +2,9 @@
 
 namespace Tests\Browser\Feature;
 
-use Tests\DuskTestCase;
+use Laravel\Dusk\Browser;
 use Tests\Browser\Pages\ImportVCardUpload;
+use Tests\DuskTestCase;
 
 class UploadVCardTest extends DuskTestCase
 {
@@ -17,11 +18,11 @@ class UploadVCardTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->login()
-                  ->visit('/people/add')
-                  ->assertSee('import your contacts');
+                ->visit('/people/add')
+                ->assertSee('import your contacts');
 
             $browser->clickLink('import your contacts')
-                    ->assertSee('You haven’t imported any contacts yet');
+                ->assertSee('You haven’t imported any contacts yet');
         });
     }
 
@@ -33,13 +34,13 @@ class UploadVCardTest extends DuskTestCase
      */
     public function test_import_button_leads_to_import_screen()
     {
-        $this->browse(function ($browser) {
+        $this->browse(function (Browser $browser) {
             $browser->login()
-                  ->visit('/settings/import')
-                  ->clickLink('Import vCard')
-                  ->assertPathIs('/settings/import/upload')
-                  ->clickLink('Cancel')
-                  ->assertPathIs('/settings/import');
+                ->visit('/settings/import')
+                ->clickLink('Import vCard')
+                ->assertPathIs('/settings/import/upload')
+                ->clickLink('Cancel')
+                ->assertPathIs('/settings/import');
         });
     }
 
@@ -50,15 +51,16 @@ class UploadVCardTest extends DuskTestCase
      */
     public function test_user_can_import_contacts_from_a_vcf_card()
     {
-        $this->browse(function ($browser) {
+        $this->browse(function (Browser $browser) {
             $browser->login()
-                  ->visit('/settings/import')
-                  ->clickLink('Import vCard')
-                  ->attach('vcard', base_path('tests/stubs/single_vcard_stub.vcard'))
-                  ->on(new ImportVCardUpload)
-                  ->scrollTo('upload')
-                  ->press('Upload')
-                  ->assertSee('1 imported');
+                ->visit('/settings/import')
+                ->clickLink('Import vCard')
+                ->attach('vcard', base_path('tests/stubs/single_vcard_stub.vcard'))
+                ->on(new ImportVCardUpload)
+                ->scrollTo('upload')
+                ->press('Upload')
+                ->on('/settings/import')
+                ->assertSee('1 imported');
         });
     }
 
@@ -71,13 +73,13 @@ class UploadVCardTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             $browser->login()
-                  ->visit('/settings/import')
-                  ->clickLink('Import vCard')
-                  ->attach('vcard', base_path('tests/stubs/broken_vcard_stub.vcard'))
-                  ->on(new ImportVCardUpload)
-                  ->scrollTo('upload')
-                  ->press('Upload')
-                  ->assertSee('The vcard must be a file of type: vcf, vcard.');
+                ->visit('/settings/import')
+                ->clickLink('Import vCard')
+                ->attach('vcard', base_path('tests/stubs/broken_vcard_stub.vcard'))
+                ->on(new ImportVCardUpload)
+                ->scrollTo('upload')
+                ->press('Upload')
+                ->assertSee('The vcard must be a file of type: vcf, vcard.');
         });
     }
 }
