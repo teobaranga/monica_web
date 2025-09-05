@@ -39,7 +39,7 @@
         "pragmarx/google2fa-laravel": "^2.3",
         "pragmarx/random": "^0",
         "predis/predis": "^2.0",
-        "rinvex/countries": "^8.1",
+        "rinvex/countries": "^9.0",
         "sabre/dav": "^4.0",
         "sentry/sentry-laravel": "^4.15",
         "spatie/laravel-ignition": "^2.0",

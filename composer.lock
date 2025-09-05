@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c761639e7850d61d7d78063ef49d595",
+    "content-hash": "74c5199bf3ba5b17d5d89054f70e64de",
     "packages": [
         {
             "name": "asbiin/laravel-webauthn",
@@ -6743,24 +6743,24 @@
         },
         {
             "name": "rinvex/countries",
-            "version": "v8.1.2",
+            "version": "v9.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rinvex/countries.git",
-                "reference": "b012697307453e7d9d2df25bd385904b3e2e9baf"
+                "reference": "7ece458023997be0a1ea2b547b3919818b70a6c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rinvex/countries/zipball/b012697307453e7d9d2df25bd385904b3e2e9baf",
-                "reference": "b012697307453e7d9d2df25bd385904b3e2e9baf",
+                "url": "https://api.github.com/repos/rinvex/countries/zipball/7ece458023997be0a1ea2b547b3919818b70a6c1",
+                "reference": "7ece458023997be0a1ea2b547b3919818b70a6c1",
                 "shasum": ""
             },
             "require": {
-                "php": "^8.0.0"
+                "php": "^8.2.0"
             },
             "require-dev": {
-                "codedungeon/phpunit-result-printer": "^0.31.0",
-                "phpunit/phpunit": "^9.5.0"
+                "codedungeon/phpunit-result-printer": "^0.32.0",
+                "phpunit/phpunit": "^10.1.0"
             },
             "type": "library",
             "extra": {
@@ -6822,7 +6822,7 @@
                 "issues": "https://github.com/rinvex/countries/issues",
                 "source": "https://github.com/rinvex/countries"
             },
-            "time": "2022-12-29T20:30:43+00:00"
+            "time": "2025-07-14T13:27:15+00:00"
         },
         {
             "name": "sabre/dav",
