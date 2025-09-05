@@ -256,10 +256,9 @@ jobs:
       - name: Upgrade Chrome Driver
         run: php artisan dusk:chrome-driver --detect
 
-      - name: Run http server
-        run: |
-          php -S localhost:8000 -t public scripts/tests/server-cc.php &
-          php -S localhost:8001 -t public scripts/tests/server-cc.php &
+      # Start a basic Laravel server with no reloading
+      - name: Run Laravel Server
+        run: php artisan serve --no-reload &
 
       - name: Run browser tests
         run: php artisan dusk --log-junit results/junit/results0.xml
@@ -267,15 +266,11 @@ jobs:
           APP_URL: http://localhost:8000
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
-      - name: Fix results files
-        run: sed -i -e "s%$GITHUB_WORKSPACE/%%g" **/*.xml
-        working-directory: results
-
       - name: Store results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: results
+          name: results-Browser
           path: results
 
 
