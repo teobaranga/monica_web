@@ -1135,9 +1135,9 @@
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
 "@snyk/protect@^1.1034.0":
-  version "1.1298.3"
-  resolved "https://registry.yarnpkg.com/@snyk/protect/-/protect-1.1298.3.tgz#f479fd3694ef05cc65e49b3e2620d07c2671cddd"
-  integrity sha512-SsNMmYd+9u6uQHjG+c+L+/OKzhNfb/qZR+eR5qjw2IwDLnNS8udaUexac6t7n23BQYifS6AX/cEryhQIgGoP8Q==
+  version "1.1299.0"
+  resolved "https://registry.yarnpkg.com/@snyk/protect/-/protect-1.1299.0.tgz#26fe43f075acaa2b849e7fef00efe517b1906744"
+  integrity sha512-MgwPMzeJfRkkLhh3YjiStsgf04BzvGhHRRiZkxGnXzRu9zHLNQM2aIp8pFfeC+E8w9O1cqXc3o4xRqBOJ62aBw==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
