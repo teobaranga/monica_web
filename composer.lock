@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "74c5199bf3ba5b17d5d89054f70e64de",
+    "content-hash": "7858d3effb8c130642bc9d3f74859879",
     "packages": [
         {
             "name": "asbiin/laravel-webauthn",
@@ -4176,20 +4176,23 @@
         },
         {
             "name": "matriphe/iso-639",
-            "version": "1.3",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matriphe/php-iso-639.git",
-                "reference": "9a4a5823147890e70e0e0f60f3baea95e8d3b5f1"
+                "reference": "3b7855e794ba31cdde1b464f66de3d39779b7a9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matriphe/php-iso-639/zipball/9a4a5823147890e70e0e0f60f3baea95e8d3b5f1",
-                "reference": "9a4a5823147890e70e0e0f60f3baea95e8d3b5f1",
+                "url": "https://api.github.com/repos/matriphe/php-iso-639/zipball/3b7855e794ba31cdde1b464f66de3d39779b7a9e",
+                "reference": "3b7855e794ba31cdde1b464f66de3d39779b7a9e",
                 "shasum": ""
             },
+            "require": {
+                "php": "8.*"
+            },
             "require-dev": {
-                "phpunit/phpunit": "^4.7"
+                "phpunit/phpunit": ">=10"
             },
             "type": "library",
             "autoload": {
@@ -4218,9 +4221,9 @@
             ],
             "support": {
                 "issues": "https://github.com/matriphe/php-iso-639/issues",
-                "source": "https://github.com/matriphe/php-iso-639/tree/1.3"
+                "source": "https://github.com/matriphe/php-iso-639/tree/2.0"
             },
-            "time": "2024-03-17T21:30:14+00:00"
+            "time": "2024-03-17T22:44:23+00:00"
         },
         {
             "name": "maxmind-db/reader",
