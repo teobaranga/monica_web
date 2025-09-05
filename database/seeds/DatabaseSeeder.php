@@ -1,6 +1,7 @@
 <?php
 
 use Database\Seeders\CurrenciesSeeder;
+use Database\Seeders\DefaultActivitiesSeeder;
 use Database\Seeders\TermsSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
@@ -12,6 +13,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TermsSeeder::class,
             CurrenciesSeeder::class,
+            DefaultActivitiesSeeder::class,
         ]);
 
         switch (App::environment()) {
