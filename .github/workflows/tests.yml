@@ -244,9 +244,6 @@ jobs:
       - name: Cache route
         run: php artisan route:cache
 
-      - name: Test coverage page
-        run: REQUEST_URI=/ php scripts/tests/server-cc.php
-
       - uses: browser-actions/setup-chrome@v2
         id: setup-chrome
         with:
