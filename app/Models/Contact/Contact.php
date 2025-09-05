@@ -1253,20 +1253,6 @@ class Contact extends Model
         return $this->hasMany(Address::class);
     }
 
-    public function updateConsulted()
-    {
-        // prevent timestamp update
-        $timestamps = $this->timestamps;
-        $this->timestamps = false;
-
-        $this->last_consulted_at = now();
-        $this->number_of_views = $this->number_of_views + 1;
-
-        $this->save();
-
-        $this->timestamps = $timestamps;
-    }
-
     public function throwInactive()
     {
         if (!$this->is_active) {
