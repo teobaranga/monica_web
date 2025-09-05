@@ -52,14 +52,19 @@ class UploadVCardTest extends DuskTestCase
     public function test_user_can_import_contacts_from_a_vcf_card()
     {
         $this->browse(function (Browser $browser) {
-            $browser->login()
+            $browser
+                ->login();
+
+            $browser
                 ->visit('/settings/import')
                 ->clickLink('Import vCard')
                 ->attach('vcard', base_path('tests/stubs/single_vcard_stub.vcard'))
                 ->on(new ImportVCardUpload)
                 ->scrollTo('upload')
-                ->press('Upload')
-                ->on('/settings/import')
+                ->press('Upload');
+
+            $browser
+                ->assertPathIs('/settings/import')
                 ->assertSee('1 imported');
         });
     }
