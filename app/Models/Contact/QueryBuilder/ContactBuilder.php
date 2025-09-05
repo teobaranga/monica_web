@@ -76,34 +76,6 @@ class ContactBuilder extends Builder
     }
 
     /**
-     * Scope a query to include contacts whose notes contain the search phrase.
-     */
-    public function notes(?int $accountId = null, string $needle): self
-    {
-        $maccountId = $accountId ?? Auth::user()->account_id;
-
-        return $this->orWhereHas('notes', function ($query) use ($maccountId, $needle) {
-            return $query->where([
-                ['account_id', $maccountId],
-                ['body', 'like', "%$needle%"],
-            ]);
-        });
-    }
-
-    /**
-     * Scope a query to include contacts whose introduction notes contain the search phrase.
-     */
-    public function introductionAdditionalInformation(int|null $accountId = null, string $needle): self
-    {
-        $maccountId = $accountId ?? Auth::user()->account_id;
-
-        return $this->orWhere([
-            ['account_id', $maccountId],
-            ['first_met_additional_info', 'like', "%$needle%"],
-        ]);
-    }
-
-    /**
      * Scope a query to only include contacts from given address book.
      * 'null' value for address book is the default address book.
      */

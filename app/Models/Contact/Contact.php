@@ -186,10 +186,8 @@ class Contact extends Model
 
     /**
      * Get the list of contacts from the same address book as this contact.
-     *
-     * @return HasMany<self>|null
      */
-    public function siblingContacts(): ?HasMany
+    public function siblingContacts()
     {
         if ($this->account) {
             if ($this->addressBook) {
@@ -754,13 +752,8 @@ class Contact extends Model
 
     /**
      * Set the name of the contact.
-     *
-     * @param string $firstName
-     * @param string $middleName
-     * @param string $lastName
-     * @return bool
      */
-    public function setName(string $firstName, string $lastName = null, string $middleName = null)
+    public function setName(string $firstName, ?string $lastName = null, ?string $middleName = null): bool
     {
         if ($firstName === '') {
             return false;
@@ -1329,7 +1322,7 @@ class Contact extends Model
      * @param Filesystem $storage
      * @param int $size
      */
-    private function deleteAvatarSize(Filesystem $storage, int $size = null)
+    private function deleteAvatarSize(Filesystem $storage, ?int $size = null)
     {
         $avatarFileName = $this->avatar_file_name;
 
