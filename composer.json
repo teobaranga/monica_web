@@ -38,7 +38,7 @@
         "pragmarx/google2fa": "^8.0",
         "pragmarx/google2fa-laravel": "^2.3",
         "pragmarx/random": "^0",
-        "predis/predis": "^2.0",
+        "predis/predis": "^3.0",
         "rinvex/countries": "^9.0",
         "sabre/dav": "^4.0",
         "sentry/sentry-laravel": "^4.15",
