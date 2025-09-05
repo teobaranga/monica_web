@@ -29,7 +29,7 @@
         "laravolt/avatar": "^6.0",
         "league/flysystem-aws-s3-v3": "^3.0",
         "mariuzzo/laravel-js-localization": "^2.0",
-        "matriphe/iso-639": "^1.0",
+        "matriphe/iso-639": "^2.0",
         "moneyphp/money": "^4.7",
         "monicahq/laravel-cloudflare": "^4.0",
         "monicahq/laravel-sabre": "^1.2",
