@@ -8,6 +8,7 @@ use Database\Seeders\DefaultLifeEventsSeeder;
 use Database\Seeders\DefaultRelationshipTypesSeeder;
 use Database\Seeders\EmotionsSeeder;
 use Database\Seeders\InstanceSeeder;
+use Database\Seeders\PetCategoriesSeeder;
 use Database\Seeders\TermsSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
             DefaultLifeEventsSeeder::class,
             DefaultRelationshipTypesSeeder::class,
             EmotionsSeeder::class,
+            PetCategoriesSeeder::class,
             InstanceSeeder::class,
         ]);
 
