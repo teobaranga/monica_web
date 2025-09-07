@@ -4,6 +4,7 @@ use Database\Seeders\CurrenciesSeeder;
 use Database\Seeders\DefaultActivitiesSeeder;
 use Database\Seeders\DefaultContactFieldTypesSeeder;
 use Database\Seeders\DefaultContactModulesSeeder;
+use Database\Seeders\DefaultLifeEventsSeeder;
 use Database\Seeders\InstanceSeeder;
 use Database\Seeders\TermsSeeder;
 use Illuminate\Database\Seeder;
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
             DefaultActivitiesSeeder::class,
             DefaultContactFieldTypesSeeder::class,
             DefaultContactModulesSeeder::class,
+            DefaultLifeEventsSeeder::class,
             InstanceSeeder::class,
         ]);
 
