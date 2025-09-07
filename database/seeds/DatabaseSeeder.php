@@ -6,6 +6,7 @@ use Database\Seeders\DefaultContactFieldTypesSeeder;
 use Database\Seeders\DefaultContactModulesSeeder;
 use Database\Seeders\DefaultLifeEventsSeeder;
 use Database\Seeders\DefaultRelationshipTypesSeeder;
+use Database\Seeders\EmotionsSeeder;
 use Database\Seeders\InstanceSeeder;
 use Database\Seeders\TermsSeeder;
 use Illuminate\Database\Seeder;
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
             DefaultContactModulesSeeder::class,
             DefaultLifeEventsSeeder::class,
             DefaultRelationshipTypesSeeder::class,
+            EmotionsSeeder::class,
             InstanceSeeder::class,
         ]);
 
