@@ -4,6 +4,7 @@ use Database\Seeders\CurrenciesSeeder;
 use Database\Seeders\DefaultActivitiesSeeder;
 use Database\Seeders\DefaultContactFieldTypesSeeder;
 use Database\Seeders\DefaultContactModulesSeeder;
+use Database\Seeders\InstanceSeeder;
 use Database\Seeders\TermsSeeder;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
@@ -18,6 +19,7 @@ class DatabaseSeeder extends Seeder
             DefaultActivitiesSeeder::class,
             DefaultContactFieldTypesSeeder::class,
             DefaultContactModulesSeeder::class,
+            InstanceSeeder::class,
         ]);
 
         switch (App::environment()) {
