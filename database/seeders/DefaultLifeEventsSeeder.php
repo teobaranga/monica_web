@@ -176,7 +176,7 @@ class DefaultLifeEventsSeeder extends Seeder
             'updated_at' => now(),
         ]);
         DB::table('default_life_event_types')->insert([
-            'translation_key' => 'new_vehicule',
+            'translation_key' => 'new_vehicle',
             'default_life_event_category_id' => $defaultCategoryId,
             'specific_information_structure' => '{"type": {"type": "string", "value": ""}, "model": {"type": "string", "value": ""}, "model_year": {"type": "string", "value": ""}}',
             'created_at' => now(),
