@@ -140,6 +140,7 @@
 <script>
 import moment from 'moment';
 import CreateActivity from './CreateActivity.vue';
+import { marked } from 'marked';
 
 export default {
   components: {

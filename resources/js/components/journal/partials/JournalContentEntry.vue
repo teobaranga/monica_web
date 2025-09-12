@@ -53,6 +53,7 @@
 
 <script>
 import Confirm from '../../partials/Confirm.vue';
+import { marked } from 'marked';
 
 export default {
 

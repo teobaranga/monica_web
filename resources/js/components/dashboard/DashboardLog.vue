@@ -277,6 +277,7 @@
 
 <script>
 import Avatar from '../partials/Avatar.vue';
+import { marked } from 'marked';
 
 export default {
 
