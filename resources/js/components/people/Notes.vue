@@ -84,6 +84,7 @@
 
 <script>
 import { SweetModal } from 'sweet-modal-vue';
+import { marked } from 'marked';
 
 export default {
 

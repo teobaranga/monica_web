@@ -257,6 +257,7 @@
 <script>
 import moment from 'moment';
 import Emotion from '../Emotion.vue';
+import { marked } from 'marked';
 
 export default {
   components: {
