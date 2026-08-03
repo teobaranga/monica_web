@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5226eaeaf066d4736d46e81a5380fb53",
+    "content-hash": "7f75c2ca15ccba34b7236d4f7a0363cc",
     "packages": [
         {
             "name": "asbiin/laravel-webauthn",
-            "version": "5.5.0",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/asbiin/laravel-webauthn.git",
-                "reference": "acbbc70cae2846aa926f84b77b236550c8bf7f66"
+                "reference": "7c65b5fbde8f081fff11ca0127328bc2dd79bd0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/asbiin/laravel-webauthn/zipball/acbbc70cae2846aa926f84b77b236550c8bf7f66",
-                "reference": "acbbc70cae2846aa926f84b77b236550c8bf7f66",
+                "url": "https://api.github.com/repos/asbiin/laravel-webauthn/zipball/7c65b5fbde8f081fff11ca0127328bc2dd79bd0e",
+                "reference": "7c65b5fbde8f081fff11ca0127328bc2dd79bd0e",
                 "shasum": ""
             },
             "require": {
@@ -28,11 +28,8 @@
                 "symfony/property-info": "^6.4 || ^7.0",
                 "symfony/serializer": "^6.4 || ^7.0",
                 "web-auth/cose-lib": "^4.0",
-                "web-auth/webauthn-lib": "^4.8 || ^5.2",
+                "web-auth/webauthn-lib": "^5.3",
                 "web-token/jwt-library": "^3.0 || ^4.0"
-            },
-            "conflict": {
-                "web-auth/webauthn-lib": "4.7.0"
             },
             "require-dev": {
                 "brainmaestro/composer-git-hooks": "^3.0",
@@ -105,7 +102,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-03-30T17:20:50+00:00"
+            "time": "2026-06-02T17:36:35+00:00"
         },
         {
             "name": "aws/aws-crt-php",
