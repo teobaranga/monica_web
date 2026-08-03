@@ -57,7 +57,7 @@
     },
     "require-dev": {
         "ext-mbstring": "*",
-        "barryvdh/laravel-debugbar": "^3",
+        "barryvdh/laravel-debugbar": "^4",
         "fakerphp/faker": "^1.10",
         "khanamiryan/qrcode-detector-decoder": "^2.0",
         "larastan/larastan": "^3.0",
