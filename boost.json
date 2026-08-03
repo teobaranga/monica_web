@@ -1,0 +1,19 @@
+{
+    "agents": [
+        "opencode"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch": false,
+    "packages": [
+        "psalm/plugin-laravel"
+    ],
+    "sail": true,
+    "skills": [
+        "cashier-stripe-development",
+        "laravel-best-practices",
+        "socialite-development",
+        "psalm-security-analysis"
+    ]
+}

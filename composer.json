@@ -61,6 +61,7 @@
         "fakerphp/faker": "^1.10",
         "khanamiryan/qrcode-detector-decoder": "^2.0",
         "larastan/larastan": "^3.0",
+        "laravel/boost": "^2.4",
         "laravel/dusk": "^8.0",
         "laravel/legacy-factories": "^1.0",
         "laravel/sail": "^1.44",
