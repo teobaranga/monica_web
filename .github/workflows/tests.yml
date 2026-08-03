@@ -137,7 +137,7 @@ jobs:
 
       - name: Store results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: results-${{ matrix.testsuite }}
           path: results
@@ -257,7 +257,7 @@ jobs:
 
       - name: Store results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: results-Browser
           path: results
@@ -284,7 +284,7 @@ jobs:
           php-version: ${{ env.default-php-version }}
 
       - name: Download results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: results
           merge-multiple: true
