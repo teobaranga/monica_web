@@ -101,7 +101,7 @@ jobs:
     # Build docker
       - name: Docker build
         id: docker_build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
