@@ -5,13 +5,17 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions:
+  issues: write
+  pull-requests: write
+  discussions: write
+
 jobs:
   lock:
     runs-on: ubuntu-latest
     steps:
-      - uses: dessant/lock-threads@v5
+      - uses: dessant/lock-threads@v6
         with:
-          github-token: ${{ github.token }}
           exclude-any-issue-labels: retained
           issue-comment: |
             This issue has been automatically locked since there
