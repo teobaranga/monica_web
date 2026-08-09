@@ -2,20 +2,35 @@
 
 namespace Tests\Feature;
 
-use Carbon\Carbon;
-use PHPUnit\Framework\Attributes\Test;
-use Tests\FeatureTestCase;
-use App\Models\Account\Photo;
 use App\Helpers\StorageHelper;
+use App\Models\Account\Photo;
 use App\Models\Contact\Contact;
 use App\Models\Contact\Document;
+use Carbon\Carbon;
 use Illuminate\Http\Testing\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\FeatureTestCase;
 
 class StorageControllerTest extends FeatureTestCase
 {
-    use DatabaseTransactions;
+    #[Test]
+    public function it_get_photo_content()
+    {
+        config(['filesystems.default' => 'local']);
+
+        [$user, $contact] = $this->fetchUser();
+
+        $file = $this->storeImage($contact);
+
+        $response = $this->get('/store/' . $file);
+
+        $response->assertStatus(200);
+        $response->assertHeader('Last-Modified', 'Sat, 19 Jun 2021 07:00:00 GMT');
+        $response->assertHeader('Cache-Control', 'max-age=2628000, private');
+        // TODO: restore etag support
+        // $response->assertHeader('etag', '"'.sha1('/store/'.$file).'"');
+    }
 
     /**
      * Returns an array containing a user object along with
@@ -34,22 +49,28 @@ class StorageControllerTest extends FeatureTestCase
         return [$user, $contact];
     }
 
-    #[Test]
-    public function it_get_photo_content()
+    public function storeImage(Contact $contact)
     {
-        config(['filesystems.default' => 'local']);
+        Storage::fake('local');
+        $image = File::createWithContent('avatar.png', file_get_contents(base_path('public/img/favicon.png')));
 
-        [$user, $contact] = $this->fetchUser();
+        $file = Storage::putFile('/photos', $image, [
+            'disk' => 'local',
+        ]);
 
-        $file = $this->storeImage($contact);
+        $photo = factory(Photo::class)->create([
+            'account_id' => $contact->account_id,
+            'original_filename' => 'avatar.png',
+            'filesize' => $image->getSize(),
+            'mime_type' => $image->getMimeType(),
+            'new_filename' => $file,
+        ]);
 
-        $response = $this->get('/store/'.$file);
+        $contact->photos()->syncWithoutDetaching([$photo->id]);
 
-        $response->assertStatus(200);
-        $response->assertHeader('Last-Modified', 'Sat, 19 Jun 2021 07:00:00 GMT');
-        $response->assertHeader('Cache-Control', 'max-age=2628000, private');
-        // TODO: restore etag support
-        // $response->assertHeader('etag', '"'.sha1('/store/'.$file).'"');
+        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
+
+        return $file;
     }
 
     #[Test]
@@ -61,13 +82,31 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeAvatar($contact);
 
-        $response = $this->get('/store/'.$file);
+        $response = $this->get('/store/' . $file);
 
         $response->assertStatus(200);
         $response->assertHeader('Last-Modified', 'Sat, 19 Jun 2021 07:00:00 GMT');
         $response->assertHeader('Cache-Control', 'max-age=2628000, private');
         // TODO: restore etag support
         // $response->assertHeader('etag', '"'.sha1('/store/'.$file).'"');
+    }
+
+    public function storeAvatar(Contact $contact)
+    {
+        $disk = Storage::fake('local');
+        $image = File::createWithContent('avatar.png', file_get_contents(base_path('public/img/favicon.png')));
+
+        $file = Storage::putFile('/avatars', $image, [
+            'disk' => 'local',
+        ]);
+
+        $contact->avatar_source = 'default';
+        $contact->avatar_default_url = $file . '?123';
+        $contact->save();
+
+        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
+
+        return $file;
     }
 
     #[Test]
@@ -79,13 +118,34 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeDocument($contact);
 
-        $response = $this->get('/store/'.$file);
+        $response = $this->get('/store/' . $file);
 
         $response->assertStatus(200);
         $response->assertHeader('Last-Modified', 'Sat, 19 Jun 2021 07:00:00 GMT');
         $response->assertHeader('Cache-Control', 'max-age=2628000, private');
         // TODO: restore etag support
         // $response->assertHeader('etag', '"'.sha1('/store/'.$file).'"');
+    }
+
+    public function storeDocument(Contact $contact)
+    {
+        Storage::fake('local');
+        $image = File::createWithContent('file.png', file_get_contents(base_path('public/img/favicon.png')));
+
+        $file = Storage::putFile('/documents', $image, [
+            'disk' => 'local',
+        ]);
+
+        factory(Document::class)->create([
+            'account_id' => $contact->account_id,
+            'contact_id' => $contact->id,
+            'original_filename' => 'file.png',
+            'new_filename' => $file,
+        ]);
+
+        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
+
+        return $file;
     }
 
     #[Test]
@@ -121,7 +181,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-Modified-Since' => 'Sat, 12 Jun 2021 07:00:00 GMT',
         ]);
 
@@ -141,7 +201,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-Modified-Since' => 'Sat, 26 Jun 2021 07:00:00 GMT',
         ]);
 
@@ -161,7 +221,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-Unmodified-Since' => 'Sat, 26 Jun 2021 07:00:00 GMT',
         ]);
 
@@ -181,7 +241,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-Unmodified-Since' => 'Sat, 12 Jun 2021 07:00:00 GMT',
         ]);
 
@@ -233,7 +293,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $this->signIn();
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-Unmodified-Since' => 'Sat, 12 Jun 2021 07:00:00 GMT',
         ]);
 
@@ -249,8 +309,8 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
-            'If-Match' => '"'.sha1('/store/'.$file).'"',
+        $response = $this->get('/store/' . $file, [
+            'If-Match' => '"' . sha1('/store/' . $file) . '"',
         ]);
 
         $response->assertNoContent(200);
@@ -269,7 +329,7 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
+        $response = $this->get('/store/' . $file, [
             'If-None-Match' => '"test"',
         ]);
 
@@ -289,8 +349,8 @@ class StorageControllerTest extends FeatureTestCase
 
         $file = $this->storeImage($contact);
 
-        $response = $this->get('/store/'.$file, [
-            'If-None-Match' => '"'.sha1('/store/'.$file).'"',
+        $response = $this->get('/store/' . $file, [
+            'If-None-Match' => '"' . sha1('/store/' . $file) . '"',
         ]);
 
         // TODO: restore etag support
@@ -298,68 +358,5 @@ class StorageControllerTest extends FeatureTestCase
         // $response->assertHeaderMissing('Last-Modified');
         $response->assertHeader('Cache-Control', 'max-age=2628000, private');
         // $response->assertHeader('etag', '"'.sha1('/store/'.$file).'"');
-    }
-
-    public function storeImage(Contact $contact)
-    {
-        Storage::fake('local');
-        $image = File::createWithContent('avatar.png', file_get_contents(base_path('public/img/favicon.png')));
-
-        $file = Storage::putFile('/photos', $image, [
-            'disk' => 'local',
-        ]);
-
-        $photo = factory(Photo::class)->create([
-            'account_id' => $contact->account_id,
-            'original_filename' => 'avatar.png',
-            'filesize' => $image->getSize(),
-            'mime_type' => $image->getMimeType(),
-            'new_filename' => $file,
-        ]);
-
-        $contact->photos()->syncWithoutDetaching([$photo->id]);
-
-        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
-
-        return $file;
-    }
-
-    public function storeDocument(Contact $contact)
-    {
-        Storage::fake('local');
-        $image = File::createWithContent('file.png', file_get_contents(base_path('public/img/favicon.png')));
-
-        $file = Storage::putFile('/documents', $image, [
-            'disk' => 'local',
-        ]);
-
-        factory(Document::class)->create([
-            'account_id' => $contact->account_id,
-            'contact_id' => $contact->id,
-            'original_filename' => 'file.png',
-            'new_filename' => $file,
-        ]);
-
-        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
-
-        return $file;
-    }
-
-    public function storeAvatar(Contact $contact)
-    {
-        $disk = Storage::fake('local');
-        $image = File::createWithContent('avatar.png', file_get_contents(base_path('public/img/favicon.png')));
-
-        $file = Storage::putFile('/avatars', $image, [
-            'disk' => 'local',
-        ]);
-
-        $contact->avatar_source = 'default';
-        $contact->avatar_default_url = $file.'?123';
-        $contact->save();
-
-        touch(StorageHelper::disk('local')->path($file), Carbon::create(2021, 6, 19, 7, 0, 0, 'UTC')->timestamp);
-
-        return $file;
     }
 }

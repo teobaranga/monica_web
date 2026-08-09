@@ -2,13 +2,13 @@
 
 namespace Tests;
 
-use Tests\Traits\SignIn;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\Asserts;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Traits\SignIn;
 
 class FeatureTestCase extends TestCase
 {
     use SignIn,
         Asserts,
-        DatabaseTransactions;
+        RefreshDatabase;
 }
