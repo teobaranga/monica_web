@@ -96,5 +96,6 @@
     "vuejs-clipper": "4.1.0",
     "vuelidate": "^0.7"
   },
-  "snyk": true
+  "snyk": true,
+  "packageManager": "yarn@4.18.0"
 }
