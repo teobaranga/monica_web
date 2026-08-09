@@ -35,8 +35,7 @@
     "composer update": "COMPOSER_MEMORY_LIMIT=-1 composer update"
   },
   "engines": {
-    "node": "22.x",
-    "yarn": "1.22.x"
+    "node": "22.x"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
