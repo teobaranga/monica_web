@@ -1,15 +1,7 @@
 <?php
 
-use Database\Seeders\CurrenciesSeeder;
-use Database\Seeders\DefaultActivitiesSeeder;
-use Database\Seeders\DefaultContactFieldTypesSeeder;
-use Database\Seeders\DefaultContactModulesSeeder;
-use Database\Seeders\DefaultLifeEventsSeeder;
-use Database\Seeders\DefaultRelationshipTypesSeeder;
-use Database\Seeders\EmotionsSeeder;
-use Database\Seeders\InstanceSeeder;
-use Database\Seeders\PetCategoriesSeeder;
-use Database\Seeders\TermsSeeder;
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\App;
 

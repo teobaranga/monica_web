@@ -2,15 +2,15 @@
 
 namespace Tests\Commands\Other;
 
+use App\Console\Commands\CreateAccount;
+use App\Models\User\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use App\Models\User\User;
-use App\Console\Commands\CreateAccount;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CreateAccountTest extends TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     #[Test]
     public function it_creates_account()

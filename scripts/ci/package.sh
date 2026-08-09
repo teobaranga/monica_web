@@ -63,7 +63,7 @@ ln -s $ROOT/vendor $package/
 
 ln -s $ROOT/database/factories $package/database/
 ln -s $ROOT/database/migrations $package/database/
-ln -s $ROOT/database/seeds $package/database/
+ln -s $ROOT/database/seeders $package/database/
 
 mkdir -p $package/storage/app/public
 mkdir -p $package/storage/logs
