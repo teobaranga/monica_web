@@ -3,6 +3,19 @@ const path = require('path');
 require('laravel-mix-purgecss');
 
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+
+// Tell Mix to use Vue 3 and the appropriate compat options when compiling .vue files
+mix.vue({
+  version: 3,
+  options: {
+    compilerOptions: {
+      compatConfig: {
+        MODE: 3,
+      },
+    },
+  },
+});
+
 mix.webpackConfig({
   plugins: [
     new MomentLocalesPlugin({
@@ -28,6 +41,12 @@ mix.webpackConfig({
       ],
     }),
   ],
+  resolve: {
+    alias: {
+      vue: '@vue/compat',
+      '@vue/composition-api': '@vue/compat',
+    }
+  },
 });
 
 const purgeCssOptions = {
@@ -49,7 +68,7 @@ mix.js('resources/js/app.js', 'public/js').vue()
   .sass('resources/sass/stripe.scss', 'public/css')
 
   .alias({
-    vue$: path.join(__dirname, 'node_modules/vue/dist/vue.esm.js'),
+    vue$: path.join(__dirname, 'node_modules/vue/dist/vue.esm-bundler.js'),
   })
 
   // global commands
