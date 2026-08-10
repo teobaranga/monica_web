@@ -81,7 +81,7 @@
     "sass": "^1.32",
     "sweet-modal-vue": "^2.0",
     "tachyons": "^4.12",
-    "vue": "^3.1.0",
+    "vue": "^3.5.0",
     "vue-autosuggest": "^2.2",
     "vue-checkbox-radio": "^0.6",
     "vue-clipboard2": "^0.3",
@@ -95,7 +95,7 @@
     "vue-select": "^3.11",
     "vuejs-clipper": "4.1.0",
     "vuelidate": "^0.7",
-    "@vue/compat": "^3.1.0"
+    "@vue/compat": "^3.5.0"
   },
   "snyk": true
 }
