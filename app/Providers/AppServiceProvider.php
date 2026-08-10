@@ -12,6 +12,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -206,6 +207,10 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perDay(5000),
             ];
         });
+
+        if (!$this->app->environment('testing')) {
+            URL::forceScheme('https');
+        }
     }
 
     /**
