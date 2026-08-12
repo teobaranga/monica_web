@@ -69,7 +69,7 @@
         "nunomaduro/collision": "^8.1",
         "phpunit/phpcov": "^11.0",
         "phpunit/phpunit": "^12.3",
-        "psalm/plugin-laravel": "^3.0",
+        "psalm/plugin-laravel": "^4.0",
         "ryoluo/sail-ssl": "^1.4",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
         "vimeo/psalm": "^6.0"
