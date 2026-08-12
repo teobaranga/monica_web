@@ -17,7 +17,7 @@
         "creativeorange/gravatar": "^1.0",
         "erusev/parsedown": "^1.7",
         "giggsey/libphonenumber-for-php": "^8.9",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^8.0",
         "guzzlehttp/psr7": "^2.1",
         "intervention/image": "^3.0",
         "intervention/image-laravel": "^1.5",
