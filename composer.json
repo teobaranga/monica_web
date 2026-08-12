@@ -49,7 +49,7 @@
         "symfony/mailgun-mailer": "^8.0",
         "thecodingmachine/safe": "^3.0",
         "vectorface/whip": "^0.5",
-        "vinkla/hashids": "^13.0",
+        "vinkla/hashids": "^14.0",
         "vluzrmos/language-detector": "^2.2",
         "web-token/jwt-library": "^4.0",
         "xantios/mimey": "^2.0",
