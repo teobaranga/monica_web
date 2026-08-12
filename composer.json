@@ -18,7 +18,7 @@
         "erusev/parsedown": "^1.7",
         "giggsey/libphonenumber-for-php": "^8.9",
         "guzzlehttp/guzzle": "^7.2",
-        "guzzlehttp/psr7": "^2.1",
+        "guzzlehttp/psr7": "^3.0",
         "intervention/image": "^3.0",
         "intervention/image-laravel": "^1.5",
         "laravel/cashier": "^16.0",
