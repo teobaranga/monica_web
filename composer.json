@@ -26,7 +26,7 @@
         "laravel/passport": "^12.0",
         "laravel/socialite": "^5.0",
         "laravel/ui": "^4.0",
-        "laravolt/avatar": "^6.0",
+        "laravolt/avatar": "^7.0",
         "league/flysystem-aws-s3-v3": "^3.0",
         "mariuzzo/laravel-js-localization": "^2.0",
         "matriphe/iso-639": "^2.0",
