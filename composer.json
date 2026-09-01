@@ -23,7 +23,7 @@
         "intervention/image-laravel": "^1.5",
         "laravel/cashier": "^16.0",
         "laravel/framework": "^12.0",
-        "laravel/passport": "^12.0",
+        "laravel/passport": "^13.0",
         "laravel/socialite": "^5.0",
         "laravel/ui": "^4.0",
         "laravolt/avatar": "^6.0",
